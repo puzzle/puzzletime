@@ -517,8 +517,8 @@ reasoning behind each decision and the phase sections for full verification deta
     <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="ee53e323"><span class="vh">ee53e323</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content">The contrast finding has <strong>no colour-only fix</strong>: with body text at
       <code>#4A4A4A</code>, a link reaching 3:1 against it is 2.95:1 against white. Measured which non-colour
-      distinctions axe accepts (underline yes, bold/italic yes, background tint no, hover-only no) and took
-      underline — scoped to <code>p a, label a</code>, which is <strong>two links in the whole app</strong>.
+      distinctions axe accepts (bold, italic, underline and borders yes; background tint and hover-only no) and
+      took <strong>bold</strong> — scoped to <code>p a, label a</code>, two links in the whole app.
       See <a href="#int">§10.5</a>.</div>
   </div>
 
@@ -800,13 +800,19 @@ copied-out assets and the <code>COMMIT</code> file need to survive, and now they
       (<code>49d558e</code>) and a 404 for <code>/assets/.manifest.json</code> (<code>44dd265</code>). Independent
       of this branch — master's Sprockets digests are content-addressed too. See <a href="#int">§10.3</a>.</li>
   <li class="done">The link-contrast finding is fixed rather than deferred: no link colour can satisfy both rules
-      at once (<a href="#int">§10.5</a>), so <code>p a, label a</code> are underlined — two links app-wide.</li>
+      at once (<a href="#int">§10.5</a>), so <code>p a, label a</code> are bold — two links app-wide.</li>
   <li class="todo"><strong>Two pre-existing a11y findings left</strong>, both master's and both one-line
       (<a href="#int">§10.5</a>): <code>alt: ''</code> on the weekly graph's 74 spacer <code>img</code>s, and an
       <code>aria-label</code> fallback in <code>direct_filter</code> for the two unlabelled filter selects.</li>
-  <li class="todo"><strong>Teach CI the 72-character subject cap</strong>, or the next
-      <code>--no-verify</code> plants another over-long subject that <code>commit-lint</code> waves through —
-      which is what forced the third history rewrite (§9.3).</li>
+  <li class="done"><strong>CI now checks the 72-character cap.</strong> <code>bin/commit-lint</code> reads
+      <code>CommitMsg/TextWidth/max_subject_width</code> out of <code>.overcommit.yml</code> alongside the
+      Conventional Commits pattern, so the two gates cannot drift again — which is what let a
+      <code>--no-verify</code> plant the subject that forced the third history rewrite (§9.3).</li>
+  <li class="todo"><strong><code>RetryOnFlakyTests</code> retries every failing test, not the three named
+      exception classes</strong> — <code>Array#first</code> takes no block, so the filter never runs. Every flaky
+      rate in this document is therefore a rate of three consecutive failures. Fixing it will turn currently-green
+      assertion failures red, so it wants its own branch and its own measurement. See
+      <code>plannings_orders_test_failure.txt</code>.</li>
 </ul>
 </div>
 
@@ -1305,8 +1311,18 @@ value to the datepicker's own <code>dd.mm.yy</code> format (<code>01.11.2006</co
 the <code>Rememberable</code> fix (1 in 2 whole-file runs) and without it (1 in 5), and the assertion is unchanged from
 <code>master</code> — the upgrade only touched a different test in that file. Now asserts the field is non-blank, which
 is all the test needs before the shortcut clears it; that the typed date actually filters is covered by <em>live
-reloads when period filter change</em>. Worth knowing that <code>RetryOnFlakyTests</code> would never have masked it:
-it retries three Ferrum/Cuprite exception classes, not assertion failures.</p>
+reloads when period filter change</em>.</p>
+<p class="box bad"><strong>This paragraph used to claim <code>RetryOnFlakyTests</code> could not have masked the
+flake, "it retries three Ferrum/Cuprite exception classes, not assertion failures". That is wrong.</strong>
+<code>test/support/retry_on_flaky_tests.rb:36</code> asks
+<code>error_classes.first { |c| failure_msg =~ c.name }</code> — and <code>Array#first</code> takes no block, so the
+block never runs and <code>first</code> returns a Class, which is truthy. <em>Every</em> failing test is retried up
+to three times, assertion failures included; the intended class filter has never executed (and would raise
+<code>TypeError</code> if it did — <code>String#=~ String</code>). So the 1-in-2 and 1-in-5 rates above are rates of
+<em>three consecutive</em> failures, and every flaky-test number in this document is understated the same way. Left
+unfixed here deliberately: narrowing the retry will turn currently-green assertion failures red across the suite,
+which is a change that needs its own measurement and does not belong in an asset-pipeline branch. Written up in
+<code>plannings_orders_test_failure.txt</code>.</p>
 
 <p class="box warn"><strong>The lesson for phases 1–6, not just this one:</strong> a scoped run proves the code you
 touched, not the code you broke. Two of these three were caused by a <em>deliberate, plausible-looking</em> fix to a
@@ -2837,8 +2853,12 @@ caught it until the subjects were measured by hand again. Now
 <code>ci(lint): parallelise linters, add reek, rbp, erb_lint, fasterer</code> (64), rewritten over
 <code>adeef56d~1..HEAD</code> and force-pushed; tree diff against
 <code>backup/pre-msg-rewrite-20260929</code> empty, eight SHAs changed.
-<strong>The durable fix is to teach CI the width rule</strong> so the two gates agree — until then every
-<code>--no-verify</code> can plant another one.</p>
+<strong>The durable fix landed with it:</strong> <code>bin/commit-lint</code> now reads
+<code>CommitMsg/TextWidth/max_subject_width</code> from <code>.overcommit.yml</code> next to the pattern it
+already read there, and reports both reasons per offending commit. Same file, same single source of truth, no
+workflow change — <code>test-on-pr.yaml</code> already runs the script. Checked both ways: clean on
+<code>origin/master..HEAD</code>, and re-run against the pre-rewrite range it names <code>adeef56d</code> with
+"subject is 73 chars, max 72".</p>
 
 <h3 id="membertest">9.4 The one red test <span class="tag low">fixed</span></h3>
 <p><code>MemberTest#test_members_absences_sorted_by_vacations_left</code> was the only failing test on the branch. It
@@ -3147,11 +3167,16 @@ measured rather than assumed — the rule injected into the live page, axe re-ru
   <tr><td><code>background-color</code> tint</td><td><strong>fails</strong></td><td>axe compares text colour, not the box</td></tr>
   <tr><td>underline on <code>:hover</code> only</td><td><strong>fails</strong></td><td>the resting state is what is judged</td></tr>
 </table>
-<p><strong>Taken: underline, scoped to <code>p a, label a</code>.</strong> The scope is what makes this small rather
-than a redesign — a census of every <code>a</code> with sibling text across twelve INT pages found
-<strong>two</strong>, this one and the flash message's <code>×</code>. Nav, table, action and breadcrumb links are
-not in a text block and are untouched; re-running axe with the rule in place clears
-<code>/ordertimes/new</code> and changes nothing else.</p>
+<p><strong>Taken: bold, scoped to <code>p a, label a</code></strong> — <code>font-weight: 700</code>, colour
+unchanged, the underline still appearing on hover and focus. The scope is what makes this small rather than a
+redesign: a census of every <code>a</code> with sibling text across twelve INT pages found <strong>two</strong>,
+this one and the flash message's <code>×</code>. Nav, table, action and breadcrumb links are not in a text block
+and are untouched. Re-running axe with the rule live clears <code>/ordertimes/new</code> and changes nothing
+else.</p>
+<p class="small">Bold satisfies the rule because the distinction is no longer carried by colour alone — but it is a
+weaker signal than an underline for anyone who has to guess what is clickable, and it competes with
+<code>&lt;strong&gt;</code> for meaning. Switching to <code>text-decoration: underline</code> is a one-word change
+in the same rule if that trade turns out wrong.</p>
 <p class="small">Still open, both pre-existing: <code>alt: ''</code> on the two graph <code>image_tag</code>s
 (decorative by construction — the tooltip already carries the text) and an <code>aria-label</code> fallback in
 <code>filter_helper.rb#direct_filter</code> when <code>label</code> is <code>nil</code>. Two small diffs, no design
