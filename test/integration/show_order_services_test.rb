@@ -56,7 +56,9 @@ class ShowOrderServices < ActionDispatch::IntegrationTest
 
       fill_in('start_date', with: '1.11.2006')
 
-      assert_equal '1.11.2006', page.find('#start_date')[:value]
+      # jQuery UI rewrites the value into its own dd.mm.yy format at a
+      # nondeterministic moment, so read it with a waiting matcher.
+      assert_selector(:field, 'start_date', with: '01.11.2006')
 
       select('Dieser Monat', from: 'period_shortcut')
 
