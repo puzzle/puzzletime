@@ -1,11 +1,13 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-# Lints commit subjects against the Conventional Commits pattern that overcommit
-# enforces locally, so CI catches messages authored without the git hooks.
+# Lints commit subjects against the rules overcommit enforces locally, so CI
+# catches messages authored without the git hooks.
 #
-# Single source of truth: the regex is read from .overcommit.yml
-# (CommitMsg/MessageFormat/pattern) — keep the rule in one place.
+# Single source of truth: both the Conventional Commits regex
+# (CommitMsg/MessageFormat/pattern) and the subject cap
+# (CommitMsg/TextWidth/max_subject_width) are read from .overcommit.yml —
+# keep the rules in one place.
 #
 # Usage:
 #   bin/commit-lint                       # lints origin/master..HEAD
@@ -14,10 +16,12 @@
 
 require 'yaml'
 
-pattern = YAML.load_file(File.expand_path('../.overcommit.yml', __dir__))
-               .dig('CommitMsg', 'MessageFormat', 'pattern')
+overcommit = YAML.load_file(File.expand_path('../.overcommit.yml', __dir__))
+pattern = overcommit.dig('CommitMsg', 'MessageFormat', 'pattern')
 abort 'No CommitMsg/MessageFormat/pattern in .overcommit.yml' unless pattern
 regex = Regexp.new(pattern)
+max_width = overcommit.dig('CommitMsg', 'TextWidth', 'max_subject_width')
+abort 'No CommitMsg/TextWidth/max_subject_width in .overcommit.yml' unless max_width
 
 range =
   case ARGV.length
@@ -31,17 +35,23 @@ abort "git log failed for range: #{range}" unless $?.success?
 
 offenders = log.lines.filter_map do |line|
   sha, subject = line.chomp.split("\t", 2)
-  next if subject.nil? || regex.match?(subject)
+  next if subject.nil?
 
-  "#{sha[0, 8]}  #{subject}"
+  reasons = []
+  reasons << 'not Conventional Commits' unless regex.match?(subject)
+  reasons << "subject is #{subject.length} chars, max #{max_width}" if subject.length > max_width
+  next if reasons.empty?
+
+  "#{sha[0, 8]}  #{subject}\n            #{reasons.join('; ')}"
 end
 
 if offenders.empty?
-  puts "commit-lint: all commit subjects in #{range} follow Conventional Commits"
+  puts "commit-lint: all commit subjects in #{range} are well-formed " \
+       "(Conventional Commits, <= #{max_width} chars)"
   exit 0
 end
 
-warn "commit-lint: #{offenders.size} commit(s) do not follow Conventional Commits:"
+warn "commit-lint: #{offenders.size} commit(s) violate the commit message rules:"
 offenders.each { |o| warn "  #{o}" }
 warn ''
 warn 'Expected e.g. "feat(scope): summary" — see CONTRIBUTING.md#commit-messages'
