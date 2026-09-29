@@ -53,10 +53,13 @@
   .meta { color: var(--muted); font-size: .875rem; }
   .cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 0 1.5rem; }
   .check { list-style: none; padding-left: 0; }
-  .check li { padding-left: 1.6rem; position: relative; }
-  .check li::before { content: "☐"; position: absolute; left: 0; color: var(--muted); }
+  li.done, li.todo { list-style: none; padding-left: 1.6rem; position: relative; }
+  li.done::before, li.todo::before { position: absolute; left: 0; font-size: 1.05em; line-height: 1.5; }
+  li.done::before { content: "☑"; color: var(--ok); }
+  li.todo::before { content: "☐"; color: var(--muted); }
   hr { border: 0; border-top: 1px solid var(--line); margin: 2.5rem 0; }
   .small { font-size: .85rem; color: var(--muted); }
+  .vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 
   .timeline { display: grid; grid-template-columns: 8rem 1.5rem 1fr; margin: 1rem 0 1.5rem; }
   .timeline-entry { display: contents; }
@@ -99,11 +102,11 @@
   .timeline-content strong { font-weight: 600; }
   .timeline-legend { display: flex; flex-wrap: wrap; gap: .3rem 1.1rem; font-size: .8rem; color: var(--muted); margin: .5rem 0 0; }
   .timeline-legend span { display: inline-flex; align-items: center; gap: .4rem; }
-  .timeline-legend i { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
-  .timeline-legend i.accent { background: var(--accent); }
-  .timeline-legend i.ok { background: var(--ok); }
-  .timeline-legend i.warn { background: var(--warn); }
-  .timeline-legend i.bad { background: var(--bad); }
+  .timeline-legend .key::before { content: ""; width: 9px; height: 9px; flex: none; border-radius: 50%; display: inline-block; }
+  .timeline-legend .key.accent::before { background: var(--accent); }
+  .timeline-legend .key.ok::before { background: var(--ok); }
+  .timeline-legend .key.warn::before { background: var(--warn); }
+  .timeline-legend .key.bad::before { background: var(--bad); }
 </style>
 </head>
 <body>
@@ -124,7 +127,7 @@
     <li><a href="#shims">Shim catalogue — the classes we actually use</a></li>
     <li><a href="#risks">Risks and traps</a></li>
     <li><a href="#decisions">Decisions</a></li>
-    <li><a href="#a11y">Accessibility and lint cleanup</a></li>
+    <li><a href="#a11y">Accessibility, lint and release-check cleanup</a></li>
   </ol>
 </nav>
 
@@ -137,14 +140,14 @@ reasoning behind each decision and the phase sections for full verification deta
 
   <div class="timeline-entry ok">
     <div class="timeline-date">Mo, 27.07.2026</div>
-    <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="d3575ad819329959dbcf6347f102136d9155686d"></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="d3575ad819329959dbcf6347f102136d9155686d"><span class="vh">d3575ad8</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content"><a href="#p0"><strong>Phase 0 complete</strong></a> — baseline captured,
       scoped runs green.</div>
   </div>
 
   <div class="timeline-entry warn">
     <div class="timeline-date repeat">Mo, 27.07.2026</div>
-    <div class="timeline-spine warn"><button type="button" class="timeline-dot" data-sha="84ef0bdf649c6211b789d282e0adedc283e28b9c"></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine warn"><button type="button" class="timeline-dot" data-sha="84ef0bdf649c6211b789d282e0adedc283e28b9c"><span class="vh">84ef0bdf</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content">The <em>full</em> suite (not the scoped runs) finds 15 further failures in 3
       causes — a dead callback guard, the Rails 8.1 schema dumper reordering columns, and the jsonapi-serializer
       swap changing an exception class. All Rails-upgrade fallout, none asset-related — but this is why every
@@ -153,14 +156,14 @@ reasoning behind each decision and the phase sections for full verification deta
 
   <div class="timeline-entry ok">
     <div class="timeline-date">Mo, 03.08.2026</div>
-    <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="643e0fc33eed7edf993f68a98507b555a4afe458"></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="643e0fc33eed7edf993f68a98507b555a4afe458"><span class="vh">643e0fc3</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content"><a href="#p1"><strong>Phase 1 complete</strong></a> — Bootstrap 3 frozen into
       a static CSS file.</div>
   </div>
 
   <div class="timeline-entry bad">
     <div class="timeline-date repeat">Mo, 03.08.2026</div>
-    <div class="timeline-spine bad"><button type="button" class="timeline-dot" data-sha="643e0fc33eed7edf993f68a98507b555a4afe458"></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine bad"><button type="button" class="timeline-dot" data-sha="643e0fc33eed7edf993f68a98507b555a4afe458"><span class="vh">643e0fc3</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content">The phase-0 baseline turns out to be gone (<code>/tmp</code> was cleared).
       Re-deriving it just in time catches a <strong>119 kB → 471 byte regression in <code>print.css</code></strong>
       that "it compiles" had already let through. See <a href="#p1">Phase 1</a>.</div>
@@ -168,7 +171,7 @@ reasoning behind each decision and the phase sections for full verification deta
 
   <div class="timeline-entry accent">
     <div class="timeline-date">Mo, 10.08.2026</div>
-    <div class="timeline-spine"><button type="button" class="timeline-dot" data-sha="56a02f529e9b1f602bebba400f4d5fb8ac3380b7"></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine"><button type="button" class="timeline-dot" data-sha="56a02f529e9b1f602bebba400f4d5fb8ac3380b7"><span class="vh">56a02f52</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content"><strong>This document is added to the repo</strong>, written up against what
       phases 0–1 had already found — including two corrections to phase 1 itself: its "byte-comparable"
       claim was wrong (a mixin can't be byte-identical to an <code>@extend</code>), and its
@@ -177,14 +180,14 @@ reasoning behind each decision and the phase sections for full verification deta
 
   <div class="timeline-entry ok">
     <div class="timeline-date repeat">Mo, 10.08.2026</div>
-    <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="67c44a65c0221e5c076b85527a1a7929294978f3"></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="67c44a65c0221e5c076b85527a1a7929294978f3"><span class="vh">67c44a65</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content"><a href="#p2"><strong>Phase 2 complete</strong></a> — CoffeeScript to
       jsbundling + esbuild.</div>
   </div>
 
   <div class="timeline-entry bad">
     <div class="timeline-date repeat">Mo, 10.08.2026</div>
-    <div class="timeline-spine bad"><button type="button" class="timeline-dot" data-sha="67c44a65c0221e5c076b85527a1a7929294978f3"></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine bad"><button type="button" class="timeline-dot" data-sha="67c44a65c0221e5c076b85527a1a7929294978f3"><span class="vh">67c44a65</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content">Four silent Sprockets → esbuild interop traps found, all real breakages: turbolinks
       never starting when bundled, jquery-ui's AMD-only dependency lists, dead <code>//= require</code> comments,
       and jquery-ujs no-oping without a global jQuery. See <a href="#p2">Phase 2</a>.</div>
@@ -192,7 +195,7 @@ reasoning behind each decision and the phase sections for full verification deta
 
   <div class="timeline-entry warn">
     <div class="timeline-date repeat">Mo, 10.08.2026</div>
-    <div class="timeline-spine warn"><button type="button" class="timeline-dot" data-sha="67c44a65c0221e5c076b85527a1a7929294978f3"></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine warn"><button type="button" class="timeline-dot" data-sha="67c44a65c0221e5c076b85527a1a7929294978f3"><span class="vh">67c44a65</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content">Phase 2's drop-list was wrong: <code>turbolinks</code>,
       <code>jquery-ui-rails</code> and <code>selectize-rails</code> all had to stay — a gem's asset payload and
       its Ruby payload can retire on different phases.</div>
@@ -200,7 +203,7 @@ reasoning behind each decision and the phase sections for full verification deta
 
   <div class="timeline-entry bad">
     <div class="timeline-date">Di, 11.08.2026</div>
-    <div class="timeline-spine bad"><button type="button" class="timeline-dot" data-sha="963874a3b916e6476f5569c14af6f11abf8c763a"></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine bad"><button type="button" class="timeline-dot" data-sha="963874a3b916e6476f5569c14af6f11abf8c763a"><span class="vh">963874a3</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content">Pre-existing pg heap corruption found and fixed: planning-board AJAX could
       still be executing when <code>DatabaseCleaner</code> truncated the tables underneath it.
       <code>js_errors</code> made default rather than opt-in. See <a href="#p2">Phase 2</a>.</div>
@@ -208,7 +211,7 @@ reasoning behind each decision and the phase sections for full verification deta
 
   <div class="timeline-entry warn">
     <div class="timeline-date repeat">Di, 11.08.2026</div>
-    <div class="timeline-spine warn"><button type="button" class="timeline-dot" data-sha="3ee4082341eba0845b75aeaa1ac2e415cf5ed60b"></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine warn"><button type="button" class="timeline-dot" data-sha="3ee4082341eba0845b75aeaa1ac2e415cf5ed60b"><span class="vh">3ee40823</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content">Orphaned-headless-Chrome hazard documented — and a wrong claim in this very
       document's pre-flight section corrected (a loose <code>chrome.*headless</code> pattern does not, in fact,
       risk matching a developer's own browser).</div>
@@ -216,7 +219,7 @@ reasoning behind each decision and the phase sections for full verification deta
 
   <div class="timeline-entry bad">
     <div class="timeline-date">Do, 13.08.2026</div>
-    <div class="timeline-spine bad"><button type="button" class="timeline-dot" data-sha="aa6c532c66f649baacc4cea8892694a5b5db54d2"></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine bad"><button type="button" class="timeline-dot" data-sha="aa6c532c66f649baacc4cea8892694a5b5db54d2"><span class="vh">aa6c532c</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content"><code>docker build</code> found broken since Phase 2 landed —
       <code>BUILD_PACKAGES</code> lost <code>libvips42</code>, and <code>assets:precompile</code> boots the full
       app. Fixed, unrelated to Phase 3 but caught by its verification step. See <a href="#p3">Phase 3</a>.</div>
@@ -224,14 +227,14 @@ reasoning behind each decision and the phase sections for full verification deta
 
   <div class="timeline-entry ok">
     <div class="timeline-date repeat">Do, 13.08.2026</div>
-    <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="741087b86b4598f83a2c0f9d1c159b7dd869def6"></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="741087b86b4598f83a2c0f9d1c159b7dd869def6"><span class="vh">741087b8</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content"><a href="#p3"><strong>Phase 3 complete</strong></a> — dartsass-rails and
       Sprockets to Propshaft, merged into one commit per <a href="#decisions">D3</a>.</div>
   </div>
 
   <div class="timeline-entry warn">
     <div class="timeline-date repeat">Do, 13.08.2026</div>
-    <div class="timeline-spine warn"><button type="button" class="timeline-dot" data-sha="741087b86b4598f83a2c0f9d1c159b7dd869def6"></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine warn"><button type="button" class="timeline-dot" data-sha="741087b86b4598f83a2c0f9d1c159b7dd869def6"><span class="vh">741087b8</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content">Two blockers the plan missed entirely: the <code>components/*</code> glob
       import (dart-sass has no glob support) and <code>jquery-ui-rails</code>'s transitively-required
       <code>.erb</code> theme file. Real <code>url()</code> count is 25, not the ~35 estimated. Gem drop-list
@@ -241,14 +244,14 @@ reasoning behind each decision and the phase sections for full verification deta
 
   <div class="timeline-entry accent">
     <div class="timeline-date repeat">Do, 13.08.2026</div>
-    <div class="timeline-spine"><button type="button" class="timeline-dot" data-sha="8d8121bcfbd6474153aeb7d04a6b566705b282f4"></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine"><button type="button" class="timeline-dot" data-sha="8d8121bcfbd6474153aeb7d04a6b566705b282f4"><span class="vh">8d8121bc</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content">The CSS/JS baseline moves out of <code>/tmp</code> for good, to a persistent
       path inside the project tree — it had gone missing a third time, same root cause each time.</div>
   </div>
 
   <div class="timeline-entry bad">
     <div class="timeline-date">Fr, 14.08.2026</div>
-    <div class="timeline-spine bad"><button type="button" class="timeline-dot" data-sha="e203db71a6f888e110053747b7b115b4433eee8c"></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine bad"><button type="button" class="timeline-dot" data-sha="e203db71a6f888e110053747b7b115b4433eee8c"><span class="vh">e203db71</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content">A collision §4.2's table missed entirely: Tailwind's <code>[hidden]</code>
       <code>!important</code> rule beats jQuery's inline-style <code>.show()</code>, permanently hiding the planning
       board's add-row selects. Caught by the full suite, not by eyeballing — confirmed a real regression by re-running
@@ -257,14 +260,14 @@ reasoning behind each decision and the phase sections for full verification deta
 
   <div class="timeline-entry ok">
     <div class="timeline-date repeat">Fr, 14.08.2026</div>
-    <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="e203db71a6f888e110053747b7b115b4433eee8c"></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="e203db71a6f888e110053747b7b115b4433eee8c"><span class="vh">e203db71</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content"><a href="#p4"><strong>Phase 4 complete</strong></a> — Tailwind in, layered,
       Preflight on, the three known Bootstrap/Tailwind class collisions fixed.</div>
   </div>
 
   <div class="timeline-entry warn">
     <div class="timeline-date repeat">Fr, 14.08.2026</div>
-    <div class="timeline-spine warn"><button type="button" class="timeline-dot" data-sha="e203db71a6f888e110053747b7b115b4433eee8c"></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine warn"><button type="button" class="timeline-dot" data-sha="e203db71a6f888e110053747b7b115b4433eee8c"><span class="vh">e203db71</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content">The plan never named an install step for Tailwind itself, and named a dead view
       (<code>expense_reviews/show.html.haml</code>, no route, deleted instead of fixed) alongside the live one. The
       Preflight border audit found one real hit outside the two known collisions. See <a href="#p4">Phase 4</a>.</div>
@@ -272,7 +275,7 @@ reasoning behind each decision and the phase sections for full verification deta
 
   <div class="timeline-entry ok">
     <div class="timeline-date repeat">Fr, 14.08.2026</div>
-    <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="de848d2d6d92202df69814f19c19c34f9fe6ba05"></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="de848d2d6d92202df69814f19c19c34f9fe6ba05"><span class="vh">de848d2d</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content"><strong>Phase 5.1 complete</strong> — type &amp; utilities shimmed
       (<code>h3</code>/<code>h4</code>, <code>lead</code>, <code>dl-horizontal</code>, <code>pull-right</code>,
       <code>visible-xs</code>/<code>hidden-*</code>) and deleted from <code>bootstrap-frozen.css</code>. See
@@ -281,7 +284,7 @@ reasoning behind each decision and the phase sections for full verification deta
 
   <div class="timeline-entry accent">
     <div class="timeline-date repeat">Fr, 14.08.2026</div>
-    <div class="timeline-spine accent"><button type="button" class="timeline-dot" data-sha="de848d2d6d92202df69814f19c19c34f9fe6ba05"></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine accent"><button type="button" class="timeline-dot" data-sha="de848d2d6d92202df69814f19c19c34f9fe6ba05"><span class="vh">de848d2d</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content">Phase 5's plan claimed the frozen file's Bootstrap source comments make component
       boundaries obvious — three comments survive in 6536 lines. Boundaries are found by selector grep instead. See
       <a href="#p5">Phase 5</a>.</div>
@@ -289,7 +292,7 @@ reasoning behind each decision and the phase sections for full verification deta
 
   <div class="timeline-entry bad">
     <div class="timeline-date repeat">Fr, 14.08.2026</div>
-    <div class="timeline-spine bad"><button type="button" class="timeline-dot" data-sha="70129fcc19904a21de85489f0cb2bf46982a8f67"></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine bad"><button type="button" class="timeline-dot" data-sha="70129fcc19904a21de85489f0cb2bf46982a8f67"><span class="vh">70129fcc</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content"><code>print.scss</code> imports <code>bootstrap-frozen.css</code> unlayered, so
       every class the shim deletes also vanishes from print output — except <code>layouts/print.html.haml</code>, its
       only caller, has been dead since a pre-branch commit replaced the web report with a PDF download. Deleted the
@@ -299,7 +302,7 @@ reasoning behind each decision and the phase sections for full verification deta
 
   <div class="timeline-entry accent">
     <div class="timeline-date repeat">Fr, 14.08.2026</div>
-    <div class="timeline-spine accent"><button type="button" class="timeline-dot" data-sha="dc843bccd5ccb056cd79e931636605d74725bccb"></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine accent"><button type="button" class="timeline-dot" data-sha="dc843bccd5ccb056cd79e931636605d74725bccb"><span class="vh">dc843bcc</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content"><strong>daisyUI evaluated</strong> —
       <a href="upgrade-daisyui.html"><code>upgrade-daisyui.html</code></a>. A visual redesign rather than a
       compatibility layer, so design sign-off would have gated it. Raised a timing fork for phase 5 (then 1/8 done),
@@ -308,7 +311,7 @@ reasoning behind each decision and the phase sections for full verification deta
 
   <div class="timeline-entry accent">
     <div class="timeline-date">Fr, 21.08.2026</div>
-    <div class="timeline-spine accent"><button type="button" class="timeline-dot" data-sha="565e564ec8a110a3b33c88300acc97e1b4027ac7"></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine accent"><button type="button" class="timeline-dot" data-sha="565e564ec8a110a3b33c88300acc97e1b4027ac7"><span class="vh">565e564e</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content"><strong>The daisyUI fork is taken — as (a), finish the shim by hand</strong>
       (<a href="#decisions">D5</a>). It decides on coupling rather than on line count: (b) would have left a Ruby/Rails
       upgrade unable to merge until design signed off on eight components. Two knock-on corrections — daisyUI's coverage
@@ -318,14 +321,14 @@ reasoning behind each decision and the phase sections for full verification deta
 
   <div class="timeline-entry ok">
     <div class="timeline-date">Mo, 24.08.2026</div>
-    <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="894a540e259fece7bd90d019bfa9d8e49e8f8e55"></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="894a540e259fece7bd90d019bfa9d8e49e8f8e55"><span class="vh">894a540e</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content"><a href="#p5"><strong>Phase 5.2 complete</strong></a> — grid shimmed, 766 lines out
       of the frozen file.</div>
   </div>
 
   <div class="timeline-entry warn">
     <div class="timeline-date repeat">Mo, 24.08.2026</div>
-    <div class="timeline-spine warn"><button type="button" class="timeline-dot" data-sha="894a540e259fece7bd90d019bfa9d8e49e8f8e55"></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine warn"><button type="button" class="timeline-dot" data-sha="894a540e259fece7bd90d019bfa9d8e49e8f8e55"><span class="vh">894a540e</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content">§6.3's class list was wrong <em>in both directions</em>:
       <code>col-md-10</code> was missing — zero literal occurrences anywhere, reachable only through
       <code>col-md-#{span}</code> — and eight <code>col-xs</code> entries were stale, counted from
@@ -335,7 +338,7 @@ reasoning behind each decision and the phase sections for full verification deta
 
   <div class="timeline-entry ok">
     <div class="timeline-date repeat">Mo, 24.08.2026</div>
-    <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="c4b23f958559e7fad023eaec76e60360536cc0a7"></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="c4b23f958559e7fad023eaec76e60360536cc0a7"><span class="vh">c4b23f95</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content"><a href="#p5"><strong>Phase 5.3 complete</strong></a> — tables shimmed, 231 lines out.
       <code>th { text-align: left }</code> is Bootstrap's, not the browser's, and Preflight does not restore it: dropping
       it would have re-centred every table header in the app. A catalogue of <em>classes</em> cannot warn about a rule
@@ -345,7 +348,7 @@ reasoning behind each decision and the phase sections for full verification deta
 
   <div class="timeline-entry ok">
     <div class="timeline-date repeat">Mo, 24.08.2026</div>
-    <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="7ccd0735cfb28b1733445a20ad721e1cd1626f03"></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="7ccd0735cfb28b1733445a20ad721e1cd1626f03"><span class="vh">7ccd0735</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content"><a href="#p5"><strong>Phase 5.4 complete</strong></a> — buttons shimmed, 582 lines out,
       the largest cut yet. <code>.btn.active</code> drives the planning board's fix/provisorisch toggle and the
       integration test asserts only that the <em>class</em> is present — so a dropped active state would have shipped
@@ -355,7 +358,7 @@ reasoning behind each decision and the phase sections for full verification deta
 
   <div class="timeline-entry ok">
     <div class="timeline-date">Fr, 18.09.2026</div>
-    <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="62262d37df61ba68b45da27ef103eeb6d0d58385"></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="62262d37df61ba68b45da27ef103eeb6d0d58385"><span class="vh">62262d37</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content"><a href="#p5"><strong>Phases 5.5–5.8 complete</strong></a> — forms (748 lines out),
       nav/navbar/breadcrumb/pagination (952), the alerts/labels/panels/… component set (1185), and modal/tooltip/fade
       (verbatim, identical rule set). The frozen file fell 4854 → 1667. Each cut verified by a layer-transparent
@@ -365,7 +368,7 @@ reasoning behind each decision and the phase sections for full verification deta
 
   <div class="timeline-entry warn">
     <div class="timeline-date repeat">Fr, 18.09.2026</div>
-    <div class="timeline-spine warn"><button type="button" class="timeline-dot" data-sha="866ecac05d5ea1aa7f3932756d18390a0d0c2afb"></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine warn"><button type="button" class="timeline-dot" data-sha="866ecac05d5ea1aa7f3932756d18390a0d0c2afb"><span class="vh">866ecac0</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content">§2/§6.7's pagination premise was stale: <code>kaminari-bootstrap</code> is still installed
       (<a href="#p0">phase 0</a> restored it), so pagination still renders Bootstrap's <code>ul.pagination</code> and
       <code>.pagination</code> moved verbatim. Dropping the gem and retargeting Kaminari's own theme is a behaviour
@@ -375,7 +378,7 @@ reasoning behind each decision and the phase sections for full verification deta
 
   <div class="timeline-entry ok">
     <div class="timeline-date repeat">Fr, 18.09.2026</div>
-    <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="d42b86866e18c361fa703d238aed0d9374905dd8"></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="d42b86866e18c361fa703d238aed0d9374905dd8"><span class="vh">d42b8686</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content"><a href="#p6"><strong>Phase 6 complete</strong></a> — frozen file and
       <code>bootstrap</code> layer deleted, Preflight now unopposed, the §4.2 reboot residues (body type + link colours)
       preserved in the shim. Verified with the §4.6 harness for real: baseline <code>d00ae213</code> on <code>:3001</code>
@@ -384,26 +387,101 @@ reasoning behind each decision and the phase sections for full verification deta
       is met: no Bootstrap CSS remains except the vendored glyphicons font.</div>
   </div>
 
+  <div class="timeline-entry bad">
+    <div class="timeline-date">Fr, 25.09.2026</div>
+    <div class="timeline-spine bad"><button type="button" class="timeline-dot" data-sha="96b3d233"><span class="vh">96b3d233</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-content">The before/after screenshot pass found <strong>six regressions phase 6's harness
+      missed</strong> — it diffed six pages against <code>d00ae213</code>, this one diffed every element on fifteen
+      against <code>master</code>: bare <code>h1</code>/<code>h2</code>/<code>h5</code>/<code>h6</code> unstyled,
+      <code>p</code>'s bottom margin gone, <code>div.table</code> turned into <code>display: table</code>, Preflight
+      stripping native <code>button</code>/<code>select</code> chrome and overriding <code>img</code> height
+      attributes, <code>.text-danger</code> in brand red. Fixed in the shim (<code>cfa41627</code>).</div>
+  </div>
+
+  <div class="timeline-entry bad">
+    <div class="timeline-date repeat">Fr, 25.09.2026</div>
+    <div class="timeline-spine bad"><button type="button" class="timeline-dot" data-sha="eb75175c"><span class="vh">eb75175c</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-content">axe-core over ten pages showed the eyeballed contrast fixes had treated symptoms of
+      one cause — <strong>the palette itself</strong>. <code>$gray</code>, <code>$link-color</code>, the hover green,
+      <code>.btn-primary</code> and two <code>.label-*</code> backgrounds all failed AA; same hues, darker. Two invalid
+      ARIA roles removed. See <a href="#a11y">§9.1</a>.</div>
+  </div>
+
+  <div class="timeline-entry ok">
+    <div class="timeline-date repeat">Fr, 25.09.2026</div>
+    <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="645f8207"><span class="vh">645f8207</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-content">D4's review burden comes due: the JS linters had never seen a real file. 2522
+      findings → 0; <code>JsHint</code>/<code>JsLint</code> disabled as ES5-only. Also
+      <code>_bootstrap_variables.scss</code> shrunk 853 → 83 lines. See <a href="#a11y">§9.2</a>.</div>
+  </div>
+
+  <div class="timeline-entry ok">
+    <div class="timeline-date repeat">Fr, 25.09.2026</div>
+    <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="26a5ba20"><span class="vh">26a5ba20</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-content">Dependencies refreshed — Ruby 4.0.7, Rails 8.1.4, seven waiting majors,
+      <code>selenium-webdriver</code> deleted (Capybara has driven Cuprite since phase 2).
+      <code>bundle audit</code> clean; 1565 tests, one failure.</div>
+  </div>
+
+  <div class="timeline-entry accent">
+    <div class="timeline-date">Sa, 26.09.2026</div>
+    <div class="timeline-spine accent"><button type="button" class="timeline-dot" data-sha="9520bf5e"><span class="vh">9520bf5e</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-content">The branch was in violation of the commit rule it had itself introduced: 24
+      non-compliant subjects, and <code>test-on-pr.yaml</code> runs <code>bin/commit-lint</code> as a job. All 90
+      subjects rewritten and force-pushed — <strong>every SHA on the branch changed</strong>. CI's check is also weaker
+      than the local hook (no 72-char cap). See §9.3.</div>
+  </div>
+
+  <div class="timeline-entry bad">
+    <div class="timeline-date repeat">Sa, 26.09.2026</div>
+    <div class="timeline-spine bad"><button type="button" class="timeline-dot" data-sha="5c09a299"><span class="vh">5c09a299</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-content">The one red test was not ours: <code>MemberTest</code> is red on <code>master</code>
+      and <code>stable</code> too, from master's own <code>b00f30f8</code> updating three unit suites and missing the
+      integration test. Fixed on both branches instead of here. See <a href="#membertest">§9.4</a>.</div>
+  </div>
+
+  <div class="timeline-entry bad">
+    <div class="timeline-date">Mo, 28.09.2026</div>
+    <div class="timeline-spine bad"><button type="button" class="timeline-dot" data-sha="653b8675"><span class="vh">653b8675</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-content">Three real defects off the release checks: Brakeman's high-confidence warnings
+      (<code>current_user.id</code> interpolated into SQL, a params-built regex for nested parent paths — now
+      <code>sanitize_sql_array</code> and <code>String#include?</code>), the CI buildcache ref lacking a registry host
+      so it resolved to Docker Hub and failed auth (<code>f0bff168</code>), and <code>database.yml</code> setting
+      <code>max_connections</code> where <code>bleib</code> hardcodes <code>pool: 1</code> — Rails 8.1 aborts when the
+      two disagree (<code>1ab8c929</code>).</div>
+  </div>
+
+  <div class="timeline-entry accent">
+    <div class="timeline-date repeat">Mo, 28.09.2026</div>
+    <div class="timeline-spine accent"><button type="button" class="timeline-dot" data-sha="3e9ab08f"><span class="vh">3e9ab08f</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-content">Housekeeping the upgrade dragged in: RuboCop autocorrected for the new Rails 8.1 cops
+      and <code>.rubocop_todo.yml</code> regenerated, the manual build workflow's lint/test/build/sbom steps made
+      selectable, and <code>script/department_export.rb</code> made executable —
+      <code>Lint/ScriptPermission</code> conflicts with overcommit, so <code>script/</code> is excluded there like
+      <code>bin/</code>.</div>
+  </div>
+
 </div>
 
 <p class="timeline-legend">
-  <span><i class="ok"></i> phase completed &amp; verified</span>
-  <span><i class="warn"></i> plan corrected / blocker found</span>
-  <span><i class="bad"></i> real bug found &amp; fixed</span>
-  <span><i class="accent"></i> doc / process change</span>
+  <span class="key ok">phase completed &amp; verified</span>
+  <span class="key warn">plan corrected / blocker found</span>
+  <span class="key bad">real bug found &amp; fixed</span>
+  <span class="key accent">doc / process change</span>
 </p>
 <p class="small">Each dot's tooltip shows the short hash of the commit it evidences; click a dot to copy the full
 hash.</p>
 
 <div class="box ok">
 <h3 style="margin-top: 0">Phase progress</h3>
-<p><strong>Phase 0 — Get back to a green baseline</strong> <span class="tag low">complete</span></p>
+<p><strong>Phase 0 — Get back to a green baseline</strong> <span class="tag low">complete · 1 / 1</span>
+<span class="tag med">est ½ day · landed 27.07.2026</span></p>
 <ul style="margin: 0.5rem 0">
-  <li>✓ Revert Gemfile/SCSS: <code>bootstrap-sass</code>, <code>kaminari-bootstrap</code>, <code>sprockets-rails</code> restored</li>
-  <li>✓ Delete empty asset directories: <code>app/assets/{builds,tailwind}/</code></li>
-  <li>✓ Capture CSS/JS baseline: 225 kB CSS + 579 kB JS → <code>/tmp/baseline/</code>, then clear <code>public/assets</code>
+  <li class="done">Revert Gemfile/SCSS: <code>bootstrap-sass</code>, <code>kaminari-bootstrap</code>, <code>sprockets-rails</code> restored</li>
+  <li class="done">Delete empty asset directories: <code>app/assets/{builds,tailwind}/</code></li>
+  <li class="done">Capture CSS/JS baseline: 225 kB CSS + 579 kB JS → <code>/tmp/baseline/</code>, then clear <code>public/assets</code>
       — CSS re-captured at <code>HEAD</code> afterwards, the 12:44 copy predated the reduced-motion rule (below)</li>
-  <li>✓ Fix the two suite failures found by the scoped runs — both real Rails-upgrade fallout, neither asset-related:
+  <li class="done">Fix the two suite failures found by the scoped runs — both real Rails-upgrade fallout, neither asset-related:
     <ul>
       <li><strong>Required <code>belongs_to</code>.</strong> Commit <code>2ecdfcb0</code> commented out
           <code>belongs_to_required_by_default = false</code>, making 31 unaudited associations required. Audited all 52
@@ -448,7 +526,7 @@ hash.</p>
           <code>ReducedMotionTest</code>. <em>create_order_test: 22 tests, 168 assertions, 0 failures.</em></li>
     </ul>
   </li>
-  <li>✓ <strong>Confirm green on the full suite</strong> — the gate the scoped runs above could not provide. It found
+  <li class="done"><strong>Confirm green on the full suite</strong> — the gate the scoped runs above could not provide. It found
       15 further failures in three causes, all Rails-upgrade fallout and none asset-related: a callback guard that
       silently disabled filter-remembering on six controllers, Rails 8.1's schema dumper sorting columns, and the
       <code>fast_jsonapi</code> → <code>jsonapi-serializer</code> swap breaking <code>include</code> validation twice
@@ -463,33 +541,34 @@ in app code. Three findings carried forward: the stale-<code>public/assets</code
 means anything order-dependent behaves differently in test than in production.</p>
 
 <p style="margin-top:1.5rem"><strong>Phase 1 — Freeze Bootstrap 3 into a static CSS file</strong>
-<span class="tag low">complete</span> — commit <code>d00ae213</code></p>
+<span class="tag low">complete · 1 / 1</span> <span class="tag med">est 1–2 days · landed 03.08.2026</span>
+— commit <code>d00ae213</code></p>
 <ul style="margin: 0.5rem 0">
-  <li>✓ <code>vendor/bootstrap-3.4.1.css</code> (6537 lines) compiled from the gem against our variables;
+  <li class="done"><code>vendor/bootstrap-3.4.1.css</code> (6537 lines) compiled from the gem against our variables;
       <code>vendor/glyphicons.scss</code> split out verbatim; all 25 <code>@extend</code>s replaced by local mixins;
       <code>bootstrap-sass</code> no longer imported by any stylesheet.</li>
-  <li>✓ <strong>Verified against the baseline</strong> — <code>application.js</code> and <code>phone.css</code>
+  <li class="done"><strong>Verified against the baseline</strong> — <code>application.js</code> and <code>phone.css</code>
       byte-for-byte identical, <code>print.css</code> an identical rule set, and <code>application.css</code>
       identical across all 2558 Bootstrap rules. See <a href="#p1">phase 1</a> for the four defects the comparison
       caught and the three residual deltas it cleared.</li>
 </ul>
 
 <p style="margin-top:1.5rem"><strong>Phase 2 — JavaScript to jsbundling + esbuild</strong>
-<span class="tag low">complete</span></p>
+<span class="tag low">complete · 1 / 1</span> <span class="tag med">est 3–5 days · landed 11.08.2026</span></p>
 <ul style="margin: 0.5rem 0">
-  <li>✓ 36 CoffeeScript files converted into <code>app/javascript/</code>, <code>vendor/assets/javascripts/</code> gone,
+  <li class="done">36 CoffeeScript files converted into <code>app/javascript/</code>, <code>vendor/assets/javascripts/</code> gone,
       one esbuild bundle (546 kB) served by Sprockets from <code>app/assets/builds/</code>; npm versions pinned to what
       the gems shipped; <code>modernizr-custom.js</code> replaced by two lines.</li>
-  <li>✓ <strong>CSS byte-identical</strong> to the phase-1 baseline (this phase touches no CSS), and the full suite green
+  <li class="done"><strong>CSS byte-identical</strong> to the phase-1 baseline (this phase touches no CSS), and the full suite green
       — 1515 tests, 6006 assertions.</li>
-  <li>✓ Five defects found, four of them silent, and all four caused by the same thing: <strong>Sprockets semantics that
+  <li class="done">Five defects found, four of them silent, and all four caused by the same thing: <strong>Sprockets semantics that
       have no esbuild equivalent and fail quietly rather than loudly</strong> — turbolinks not self-starting when bundled,
       jquery-ui's AMD-only dependency lists, <code>//= require</code> directives surviving as dead comments, and
       jquery-ujs no-oping without a global jQuery. See <a href="#p2">phase 2</a>.</li>
-  <li>✓ Three gems could not be dropped as listed (<code>turbolinks</code>, <code>jquery-ui-rails</code>,
+  <li class="done">Three gems could not be dropped as listed (<code>turbolinks</code>, <code>jquery-ui-rails</code>,
       <code>selectize-rails</code>) — the recurring lesson that a gem's asset payload and its Ruby payload retire on
       different phases.</li>
-  <li>✓ <code>js_errors: true</code> found every silent JS trap above, and is now enabled by default. Doing so first
+  <li class="done"><code>js_errors: true</code> found every silent JS trap above, and is now enabled by default. Doing so first
       exposed a <em>pre-existing</em> harness bug — requests outliving their test while
       <code>DatabaseCleaner</code> truncated underneath them, corrupting the pg connection's heap. Confirmed
       pre-existing by reproducing it on the phase-1 tree, fixed by draining in-flight requests in
@@ -515,16 +594,16 @@ copied-out assets and the <code>COMMIT</code> file need to survive, and now they
 </div>
 
 <p style="margin-top:1.5rem"><strong>Phase 3 — dartsass-rails and Sprockets to Propshaft</strong>
-<span class="tag low">complete</span></p>
+<span class="tag low">complete · 1 / 1</span> <span class="tag med">est 2–3 days · landed 13.08.2026</span></p>
 <ul style="margin: 0.5rem 0">
-  <li>✓ The real <code>asset-url()</code>/<code>image-url()</code>/<code>font-path()</code> count was <strong>25</strong>,
+  <li class="done">The real <code>asset-url()</code>/<code>image-url()</code>/<code>font-path()</code> count was <strong>25</strong>,
       not this document's original ~35 estimate — the <code>jquery-ui-1.10.0.custom.scss</code> guess of ~30 was 3×
       too high (actual 11); 5 in <code>_icons.scss</code>, 6 in <code>vendor/glyphicons.scss</code>, 3 in
       <code>_worktimes.scss</code>. All rewritten to plain <code>url()</code>.</li>
-  <li>✓ <strong>New blocker the plan missed:</strong> <code>puzzletime.scss:334</code>'s
+  <li class="done"><strong>New blocker the plan missed:</strong> <code>puzzletime.scss:334</code>'s
       <code>@import "components/*";</code> has no dart-sass equivalent — dart-sass does not support glob imports.
       Expanded into 10 explicit <code>@import</code>s, alphabetical order preserved.</li>
-  <li>✓ <strong>New blocker the plan missed:</strong> §3.1's "no <code>.erb</code>-processed assets exist" claim held
+  <li class="done"><strong>New blocker the plan missed:</strong> §3.1's "no <code>.erb</code>-processed assets exist" claim held
       for the app's own assets but not a gem's. <code>jquery-ui-rails</code>'s <code>datepicker.css</code> and
       <code>autocomplete.css</code> both transitively <code>*= require jquery-ui/theme</code>, which resolves to the
       gem's own <code>theme.css.erb</code> — 6 <code>image_path()</code> calls needing the same conversion, plus the 6
@@ -532,9 +611,9 @@ copied-out assets and the <code>COMMIT</code> file need to survive, and now they
       <code>jquery-ui/</code> segment) before the gem could be dropped. <code>@import</code> has no dedup the way
       Sprockets' <code>*= require</code> did, so the theme is imported explicitly once, at the position Sprockets used
       to inject it.</li>
-  <li>✓ 20 real division sites (not an estimate this time — compiler-confirmed), across 5 files; 8 of them collapse to
+  <li class="done">20 real division sites (not an estimate this time — compiler-confirmed), across 5 files; 8 of them collapse to
       4 mixins in <code>_mixins.scss</code>.</li>
-  <li>✓ Gem drop-list corrected: <code>sass-rails</code>, <code>sassc-rails</code> (transitive),
+  <li class="done">Gem drop-list corrected: <code>sass-rails</code>, <code>sassc-rails</code> (transitive),
       <code>autoprefixer-rails</code>, <code>mini_racer</code>, <code>libv8-node</code> (transitive),
       <code>jquery-ui-rails</code> and <code>selectize-rails</code> all drop cleanly. <code>execjs</code> does not:
       <code>nested_form_fields</code>'s gemspec hard-depends on <code>coffee-rails</code> →
@@ -542,7 +621,7 @@ copied-out assets and the <code>COMMIT</code> file need to survive, and now they
       <code>gem 'execjs'</code> line could go — the gem stays resolved. <strong>This corrects phase 2 too</strong>:
       its "Drop: … <code>jquery-rails</code>" line has the identical inaccuracy
       (<code>nested_form_fields</code> → <code>jquery-rails</code> gemspec dependency also keeps that gem resolved).</li>
-  <li>✓ <strong>Autoprefixer audit needed correcting.</strong> The earlier "clean, nothing needs a prefix" finding was
+  <li class="done"><strong>Autoprefixer audit needed correcting.</strong> The earlier "clean, nothing needs a prefix" finding was
       scoped to the app's own SCSS and true as far as it went — but <code>autoprefixer-rails</code> was also quietly
       stripping obsolete vendor prefixes out of vendored third-party CSS every time it ran over the whole compiled
       file, not just failing to add new ones. Losing the gem lets 2011-era prefixes
@@ -552,50 +631,50 @@ copied-out assets and the <code>COMMIT</code> file need to survive, and now they
       dead, evergreen-browser-inert declarations or a pure Sass-compiler serialisation difference (color notation,
       selector grouping) between the old libsass/sassc pipeline and dart-sass — zero missing or altered selectors,
       colors, or targets.</li>
-  <li>✓ Found and deleted one genuinely dead file while moving its neighbour:
+  <li class="done">Found and deleted one genuinely dead file while moving its neighbour:
       <code>vendor/assets/stylesheets/jquery.ui.1.10.0.ie.css</code>, unreferenced by any manifest or layout.</li>
-  <li>✓ Dev builds are unminified (<code>--style=expanded</code>) with source maps; production stays compressed with
+  <li class="done">Dev builds are unminified (<code>--style=expanded</code>) with source maps; production stays compressed with
       no source map (the gem's own default) — an ergonomics addition beyond the original plan.</li>
-  <li>✓ <strong>Unrelated bug surfaced by actually running the phase's own gate:</strong> <code>docker build</code> has
+  <li class="done"><strong>Unrelated bug surfaced by actually running the phase's own gate:</strong> <code>docker build</code> has
       been broken since phase 2 landed. <code>BUILD_PACKAGES="nodejs npm"</code> dropped the <code>libvips42</code>
       the build stage needs just to <em>boot</em> — <code>assets:precompile</code> depends on <code>:environment</code>,
       and <code>config/initializers/vips.rb</code> does <code>require 'vips'</code> unconditionally on every boot, not
       only when an image is processed. CI passes no override, so this has been failing quietly since Phase 2; fixed
       and committed separately.</li>
-  <li>✓ <strong>Verify:</strong> normalised CSS diff clean (above); <code>parallel:test[16]</code> — 1515 tests, 6006
+  <li class="done"><strong>Verify:</strong> normalised CSS diff clean (above); <code>parallel:test[16]</code> — 1515 tests, 6006
       assertions, 0 failures; production-mode boot with every <code>url()</code>-referenced asset in the compiled CSS
       resolving 200; <code>docker build</code> end to end.</li>
 </ul>
 
 <p style="margin-top:1.5rem"><strong>Phase 4 — Tailwind in, layered, Preflight on</strong>
-<span class="tag low">complete</span></p>
+<span class="tag low">complete · 1 / 1</span> <span class="tag med">est 1 day · landed 14.08.2026</span></p>
 <ul style="margin: 0.5rem 0">
-  <li>✓ Tailwind 4 behind the §4.1 layer stack, Preflight on, the known Bootstrap/Tailwind class collisions fixed —
+  <li class="done">Tailwind 4 behind the §4.1 layer stack, Preflight on, the known Bootstrap/Tailwind class collisions fixed —
       plus the <code>[hidden]</code> / jQuery <code>.show()</code> collision the full suite caught. See
       <a href="#p4">phase 4</a>.</li>
 </ul>
 
 <p style="margin-top:1.5rem"><strong>Phase 5 — Shim the components</strong>
-<span class="tag low">complete — 8 / 8</span></p>
+<span class="tag low">complete · 8 / 8</span> <span class="tag med">est 4–6 days · landed 18.09.2026</span></p>
 <ul style="margin: 0.5rem 0">
-  <li>✓ All eight component groups shimmed into <code>@layer components</code> and cut from the frozen file, each
+  <li class="done">All eight component groups shimmed into <code>@layer components</code> and cut from the frozen file, each
       verified by a rule-set diff of the compiled CSS. See <a href="#p5">phase 5</a>.</li>
 </ul>
 
 <p style="margin-top:1.5rem"><strong>Phase 6 — Delete the frozen file</strong>
-<span class="tag low">complete</span></p>
+<span class="tag low">complete · 1 / 1</span> <span class="tag med">est ½ day · landed 18.09.2026</span></p>
 <ul style="margin: 0.5rem 0">
-  <li>✓ <code>bootstrap-frozen.css</code> and the <code>bootstrap</code> layer gone; computed styles identical to the
+  <li class="done"><code>bootstrap-frozen.css</code> and the <code>bootstrap</code> layer gone; computed styles identical to the
       <code>d00ae213</code> baseline across six pages plus the modal. See <a href="#p6">phase 6</a>.</li>
 </ul>
 
 <p style="margin-top:1.5rem"><strong>Open before merge</strong></p>
 <ul style="margin: 0.5rem 0">
-  <li>☐ Production: classify and clear the four null-<code>employee_id</code> worktimes, or
+  <li class="todo">Production: classify and clear the four null-<code>employee_id</code> worktimes, or
       <code>20260727130000</code> aborts the release (<a href="#p0">phase 0</a>).</li>
-  <li>✓ <code>_bootstrap_variables.scss</code> shrunk 853 → 83 lines: only the 56 variables the SCSS still reads
+  <li class="done"><code>_bootstrap_variables.scss</code> shrunk 853 → 83 lines: only the 56 variables the SCSS still reads
       (transitively) kept; compiled <code>application.css</code> and <code>phone.css</code> byte-identical before/after.</li>
-  <li>✓ Before/after screenshots in <code>doc/screenshots/upgrade/</code> — <code>master</code> on <code>:3002</code>
+  <li class="done">Before/after screenshots in <code>doc/screenshots/upgrade/</code> — <code>master</code> on <code>:3002</code>
       vs the branch on <code>:3001</code>, six pages. <strong>Taking them found six regressions phase 6's harness
       missed</strong> (it diffed against <code>d00ae213</code> on six pages; this pass diffed computed styles of every
       element on fifteen): bare <code>h1</code>/<code>h2</code>/<code>h5</code>/<code>h6</code> unstyled (phase 5.1
@@ -607,25 +686,28 @@ copied-out assets and the <code>COMMIT</code> file need to survive, and now they
       <code>.text-danger</code> rendered brand red instead of Bootstrap's <code>#a94442</code>. All fixed in
       <code>app/assets/tailwind/application.css</code>; the 15-page diff is now clean except sub-pixel line-height
       rounding, 0-width border styles, and one ~1px label-with-checkbox height on <code>/employees/settings</code>.</li>
-  <li>✓ Accessibility: axe-core over ten pages reports zero wcag2a/wcag2aa violations. The palette carried the bulk of
+  <li class="done">Accessibility: axe-core over ten pages reports zero wcag2a/wcag2aa violations. The palette carried the bulk of
       it — <code>$gray</code>, <code>$link-color</code>, hover green, <code>.btn-primary</code> and two
       <code>.label-*</code> backgrounds all failed AA. See <a href="#a11y">§9.1</a>.</li>
-  <li>✓ <code>standard</code> clean across <code>app/javascript/</code> (2522 → 0); <code>JsHint</code> and
+  <li class="done"><code>standard</code> clean across <code>app/javascript/</code> (2522 → 0); <code>JsHint</code> and
       <code>JsLint</code> disabled as ES5-only. See <a href="#a11y">§9.2</a>.</li>
-  <li>✓ Dependencies refreshed on 2026-09-25, six weeks after the lockfile was last touched: Ruby 4.0.7, Rails 8.1.4,
+  <li class="done">Dependencies refreshed on 2026-09-25, six weeks after the lockfile was last touched: Ruby 4.0.7, Rails 8.1.4,
       and the seven majors that were waiting (<code>json</code> 3, <code>bindata</code> 3, <code>rdoc</code> 8,
       <code>rails-erd</code> 2.2, <code>sentry-*</code> 7.0). <code>selenium-webdriver</code> deleted — Capybara has
       driven Cuprite/Ferrum since phase 2 and nothing outside <code>Gemfile.lock</code> referenced it. Full suite:
       1565 tests, 1 failure (<code>MemberTest</code>, see <a href="#membertest">§9.4</a>).
       <code>bundle audit</code>: no vulnerabilities.</li>
-  <li>✓ <strong><code>MemberTest</code> reported 27.73 remaining vacation days where it expected 29.00.</strong> Not
+  <li class="done"><strong><code>MemberTest</code> reported 27.73 remaining vacation days where it expected 29.00.</strong> Not
       branch fallout: master's own <code>b00f30f8</code> made remaining vacations count to the report period's end
       instead of the end of the year, and updated only the three unit suites it touched — this integration test was red
       on <code>master</code> and <code>stable</code> too. Fixed there (<code>73468ee8</code> / <code>b5eeed8b</code>). See <a href="#membertest">§9.4</a>.</li>
-  <li>☐ All 90 commit subjects rewritten to Conventional Commits and force-pushed
-      (<code>f3a6cbe0...7e6df3c3</code>) — anyone holding the branch must reset, and the backup ref
-      <code>backup/pre-msg-rewrite-20260926</code> can be deleted once that is done. See §9.3.</li>
-  <li>☐ Design sign-off on the darkened brand colours. They are the same hues, but <code>.btn-primary</code> and the
+  <li class="todo">Everyone holding the branch resets to it, then <code>backup/pre-msg-rewrite-20260926</code> is
+      deleted. The rewrite itself is done — all 90 subjects rewritten to Conventional Commits and force-pushed
+      (<code>f3a6cbe0...7e6df3c3</code>), so every SHA changed. See §9.3.</li>
+  <li class="todo">Add the 28.09 release-check work to the merge request's review scope:
+      <code>config/brakeman.ignore</code>'s 14 entries want a second reader, and
+      <code>exit_on_warn</code> stays <code>false</code> until they have one. See <a href="#checks">§9.5</a>.</li>
+  <li class="todo">Design sign-off on the darkened brand colours. They are the same hues, but <code>.btn-primary</code> and the
       status badges are visibly darker than <code>master</code>. The alternative (dark text on the light brand
       backgrounds) changes the look more, not less.</li>
 </ul>
@@ -1011,11 +1093,14 @@ remaining SCSS all agree:</p>
 values as <code>var(--color-…)</code>. Not required for the migration — do it opportunistically.</p>
 
 <h2 id="plan">5. The phase plan</h2>
+<p class="small">Estimates are pre-work guesses at the effort, not measured time. Phases 0–2 were estimated before the
+work; 3–7 were never given a number at the time and theirs are back-filled from the scope that actually shipped —
+comparable in scale, but written with hindsight.</p>
 <p>Eight phases, each one a mergeable commit with its own verification gate. Phases 1–3 change <em>how</em> CSS/JS is built
 and must leave the rendered output byte-comparable; phases 4–6 change what the CSS <em>is</em>.</p>
 
 <div class="phase">
-<h3 id="p0">Phase 0 — Get back to a green baseline <span class="tag low">½ day</span></h3>
+<h3 id="p0">Phase 0 — Get back to a green baseline <span class="tag low">complete · 1 / 1</span> <span class="tag med">est ½ day · landed 27.07.2026</span></h3>
 <p class="goal">Goal: <code>bin/rails assets:precompile</code> succeeds and the test suite is green before anything else moves.</p>
 <h4>Done — the revert (2026-07-27, tree clean at <code>67d6369b</code>)</h4>
 <ul>
@@ -1267,7 +1352,7 @@ tests already cover the functional half.</p>
 </div>
 
 <div class="phase">
-<h3 id="p1">Phase 1 — Freeze Bootstrap 3 into a static CSS file <span class="tag med">1–2 days</span></h3>
+<h3 id="p1">Phase 1 — Freeze Bootstrap 3 into a static CSS file <span class="tag low">complete · 1 / 1</span> <span class="tag med">est 1–2 days · landed 03.08.2026</span></h3>
 <p class="goal">Goal: Bootstrap stops being a Sass dependency and becomes an inert, deletable CSS artifact. Still on
 Sprockets. Rendered output unchanged.</p>
 
@@ -1423,7 +1508,7 @@ gem any more (<code>selectize.bootstrap3.scss</code> has no <code>@import</code>
 </div>
 
 <div class="phase">
-<h3 id="p2">Phase 2 — JavaScript to jsbundling + esbuild <span class="tag high">3–5 days</span></h3>
+<h3 id="p2">Phase 2 — JavaScript to jsbundling + esbuild <span class="tag low">complete · 1 / 1</span> <span class="tag med">est 3–5 days · landed 11.08.2026</span></h3>
 <p class="goal">Goal: one esbuild bundle at <code>app/assets/builds/application.js</code>. Sprockets still serves it
 (<code>link_tree ../builds</code> is already in the manifest), so this phase is independent of Propshaft.</p>
 
@@ -1749,7 +1834,7 @@ as memory corruption rather than a deadlock — worth grepping for before theori
 </div>
 
 <div class="phase">
-<h3 id="p3">Phase 3 — dartsass-rails <em>and</em> Sprockets → Propshaft <span class="tag low">complete</span></h3>
+<h3 id="p3">Phase 3 — dartsass-rails <em>and</em> Sprockets → Propshaft <span class="tag low">complete · 1 / 1</span> <span class="tag med">est 2–3 days · landed 13.08.2026</span></h3>
 <p class="goal">Goal: dart-sass compiles the SCSS into <code>app/assets/builds/</code> and Propshaft serves it.
 <strong>One commit</strong> — see <a href="#decisions">D3</a>: the two are coupled by the <code>url()</code>
 references, and splitting them means doing every rewrite twice.</p>
@@ -1766,18 +1851,18 @@ looks inside it, and in production only digested filenames exist on disk. Those 
 
 <h4>3a — Sass build</h4>
 <ul class="check">
-  <li>✓ <code>bundle add dartsass-rails</code>; three entrypoints:
+  <li class="done"><code>bundle add dartsass-rails</code>; three entrypoints:
       <code>application.scss</code>, <code>print.scss</code>, <code>phone.scss</code> (only <code>phone.scss</code>
       already existed as real Sass — <code>application.css</code> and <code>print.css</code> were Sprockets manifests,
       replaced by <code>.scss</code> files with real <code>@import</code> chains).</li>
-  <li>✓ Vendored the gem-supplied CSS the manifest used to pull in. <strong>Corrected from the plan:</strong>
+  <li class="done">Vendored the gem-supplied CSS the manifest used to pull in. <strong>Corrected from the plan:</strong>
       <code>jquery-ui/base.css</code> was never actually <code>*= require</code>d by the manifest (only
       <code>datepicker</code> and <code>autocomplete</code> are), so it was not vendored — only those two, plus
       <code>jquery-ui/theme.css.erb</code> (see the blocker below), plus <code>selectize.scss</code> +
       <code>selectize.bootstrap3.scss</code> → <code>app/assets/stylesheets/vendor/</code>. The selectize BS3 theme
       has zero Sass variables of its own — confirmed no <code>!default</code> collision moving into a shared
       <code>@import</code> cascade.</li>
-  <li>✓ <strong>New blocker, absent from the plan:</strong> <code>jquery-ui-rails</code>'s <code>datepicker.css</code>
+  <li class="done"><strong>New blocker, absent from the plan:</strong> <code>jquery-ui-rails</code>'s <code>datepicker.css</code>
       and <code>autocomplete.css</code> both transitively <code>*= require jquery-ui/theme</code>, which resolves to
       the gem's own <code>theme.css.erb</code> — 6 <code>image_path()</code> calls, converted to plain
       <code>url("jquery-ui/…")</code>, plus the 6 PNGs they reference copied into
@@ -1786,20 +1871,20 @@ looks inside it, and in production only digested filenames exist on disk. Those 
       from both <code>datepicker.scss</code> and <code>autocomplete.scss</code> would double it, so it is imported
       exactly once in <code>application.scss</code>, at the position Sprockets used to inject it (before datepicker,
       the first thing that pulled it in).</li>
-  <li>✓ Rewrote all 25 real <code>asset-url()</code>/<code>image-url()</code>/<code>font-path()</code> sites → plain
+  <li class="done">Rewrote all 25 real <code>asset-url()</code>/<code>image-url()</code>/<code>font-path()</code> sites → plain
       <code>url()</code> — <strong>not ~35</strong>: 5 in <code>_icons.scss</code>, 6 in
       <code>vendor/glyphicons.scss</code>, 3 in <code>_worktimes.scss</code>, 11 in
       <code>jquery-ui-1.10.0.custom.scss</code> (the ~30 estimate there was 3× too high).</li>
-  <li>✓ <code>Procfile.dev</code>: <code>css: bin/rails dartsass:watch</code></li>
-  <li>✓ <strong>New blocker, absent from the plan:</strong> <code>puzzletime.scss:334</code>'s
+  <li class="done"><code>Procfile.dev</code>: <code>css: bin/rails dartsass:watch</code></li>
+  <li class="done"><strong>New blocker, absent from the plan:</strong> <code>puzzletime.scss:334</code>'s
       <code>@import "components/*";</code> — dart-sass has no glob-import support. Expanded into 10 explicit
       <code>@import</code>s, alphabetical order preserved to match what the glob used to expand to.</li>
-  <li>✓ dart-sass rejects the legacy <code>/</code> division: 20 real sites (compiler-confirmed, not an estimate)
+  <li class="done">dart-sass rejects the legacy <code>/</code> division: 20 real sites (compiler-confirmed, not an estimate)
       across <code>_bootstrap_variables.scss</code> (2), <code>_mixins.scss</code> (8, all inside 4 mixins:
       <code>bs-row</code>, <code>bs-col</code>, <code>bs-offset</code>, <code>bs-container-fluid</code>),
       <code>_header.scss</code> (3), <code>_worktimes.scss</code> (6) and <code>components/_plannings.scss</code>
       (1) — all converted to <code>math.div()</code>.</li>
-  <li>✓ Dev builds use <code>--style=expanded</code> with source maps (readable, debuggable); production keeps
+  <li class="done">Dev builds use <code>--style=expanded</code> with source maps (readable, debuggable); production keeps
       dartsass-rails' own default, <code>--style=compressed</code> with no source map.</li>
 </ul>
 <p><strong>Drop:</strong> <code>sass-rails</code>, <code>sassc-rails</code>, <code>autoprefixer-rails</code>,
@@ -1828,23 +1913,23 @@ formatting.</p>
 <p>By now nothing depends on Sprockets' <em>processing</em>, only on its serving and digesting — so this half is a small,
 boring diff.</p>
 <ul class="check">
-  <li>✓ <code>gem "propshaft"</code> replaces <code>sprockets-rails</code>.</li>
-  <li>✓ Deleted <code>app/assets/config/manifest.js</code>.</li>
-  <li>✓ <code>config/initializers/assets.rb</code> → only
+  <li class="done"><code>gem "propshaft"</code> replaces <code>sprockets-rails</code>.</li>
+  <li class="done">Deleted <code>app/assets/config/manifest.js</code>.</li>
+  <li class="done"><code>config/initializers/assets.rb</code> → only
       <code>config.assets.paths &lt;&lt; Rails.root.join("app/assets/fonts")</code> — <strong>now actually
       redundant</strong> (Propshaft auto-adds every <code>app/assets/*</code> subdirectory, fonts included), kept for
       clarity since it costs nothing (Propshaft dedupes load paths). Dropped <code>assets.version</code> and the
       <code>precompile</code> list — Propshaft precompiles everything on the load path, which is what
       <code>print.css</code>, <code>phone.css</code> and the images wanted anyway.</li>
-  <li>✓ <code>config.assets.excluded_paths &lt;&lt; Rails.root.join("app/assets/stylesheets")</code> so the raw
+  <li class="done"><code>config.assets.excluded_paths &lt;&lt; Rails.root.join("app/assets/stylesheets")</code> so the raw
       <code>.scss</code> sources are not published next to the built CSS.</li>
-  <li>✓ Removed <code>assets.debug</code> / <code>assets.quiet</code> from <code>development.rb</code> and
+  <li class="done">Removed <code>assets.debug</code> / <code>assets.quiet</code> from <code>development.rb</code> and
       <code>assets.compile</code> from <code>production.rb</code> (<code>assets.js_compressor</code> was already gone
       in phase 2).</li>
-  <li>✓ Confirmed Propshaft's <code>url()</code> rewriting resolves <code>puzzletime.woff</code>,
+  <li class="done">Confirmed Propshaft's <code>url()</code> rewriting resolves <code>puzzletime.woff</code>,
       <code>day-marker-*.svg</code>, the jQuery-UI theme PNGs and <code>glyphicons-halflings-regular.woff2</code> —
       every one returns 200 against a production-mode boot, none 404.</li>
-  <li>✓ Also found and deleted one dead file while clearing the directory of its neighbour:
+  <li class="done">Also found and deleted one dead file while clearing the directory of its neighbour:
       <code>vendor/assets/stylesheets/jquery.ui.1.10.0.ie.css</code>, unreferenced by any manifest or layout.</li>
 </ul>
 <div class="box bad">
@@ -1864,7 +1949,7 @@ directly — all 200, none 404; <code>docker build</code> end to end (after the 
 </div>
 
 <div class="phase">
-<h3 id="p4">Phase 4 — Tailwind in, layered, Preflight on <span class="tag low">complete</span></h3>
+<h3 id="p4">Phase 4 — Tailwind in, layered, Preflight on <span class="tag low">complete · 1 / 1</span> <span class="tag med">est 1 day · landed 14.08.2026</span></h3>
 <p class="goal">Goal: Tailwind is present and usable, and <em>nothing looks different</em>. This is the phase that makes
 the rest incremental.</p>
 <div class="box warn">
@@ -1879,30 +1964,30 @@ before that was noticed), it did exactly that and had to be partially reverted (
 entirely; <code>Procfile.dev</code>'s appended <code>css:</code> line, a duplicate key, renamed to <code>tailwind:</code>).</p>
 </div>
 <ul class="check">
-  <li>✓ <code>gem 'tailwindcss-rails', '~&gt; 4.6'</code>; <code>tailwind: bin/rails tailwindcss:watch</code> added to
+  <li class="done"><code>gem 'tailwindcss-rails', '~&gt; 4.6'</code>; <code>tailwind: bin/rails tailwindcss:watch</code> added to
       <code>Procfile.dev</code> alongside the existing <code>js:</code>/<code>css:</code> watchers.</li>
-  <li>✓ Moved <code>vendor/bootstrap-3.4.1.css</code> to <code>app/assets/tailwind/bootstrap-frozen.css</code>, imported
+  <li class="done">Moved <code>vendor/bootstrap-3.4.1.css</code> to <code>app/assets/tailwind/bootstrap-frozen.css</code>, imported
       into the layer stack from §4.1 (<code>theme, base, bootstrap, components, utilities</code>). Its leading
       <code>@charset "UTF-8"</code> was dropped — Lightning CSS warns on a <code>@charset</code> that isn't the very
       first rule of the final stylesheet, which it no longer is once nested inside a layered <code>@import</code>.</li>
-  <li>✓ <strong>Corrected from the plan:</strong> <code>print.scss</code> — a separate, Tailwind-less stylesheet for
+  <li class="done"><strong>Corrected from the plan:</strong> <code>print.scss</code> — a separate, Tailwind-less stylesheet for
       <code>layouts/print.html.haml</code> — had its <em>own</em> <code>@import "vendor/bootstrap-3.4.1"</code>, broken
       outright by the move (<code>dartsass:build</code> failed: <em>Can't find stylesheet to import</em>). Repointed
       at <code>../tailwind/bootstrap-frozen</code>; deliberately left as its own unlayered copy rather than pulled into
       the Tailwind entrypoint, since the print layout never loads Tailwind at all — there is no layering conflict to
       solve there. <code>phone.scss</code> was already checked and never imported Bootstrap in the first place.</li>
-  <li>✓ Removed the now-doubly-served <code>@import "vendor/bootstrap-3.4.1"</code> from <code>application.scss</code>
+  <li class="done">Removed the now-doubly-served <code>@import "vendor/bootstrap-3.4.1"</code> from <code>application.scss</code>
       — left in place, the unlayered copy would keep outranking every Tailwind utility, silently defeating §4.1's
       whole premise while every page still looked correct. <code>@import "vendor/glyphicons"</code> stays put per
       §6.10 (glyphicons are never shimmed).</li>
-  <li>✓ <code>@theme</code> block from §4.4 and the two Preflight residue rules from §4.2 (<code>list-style</code>,
+  <li class="done"><code>@theme</code> block from §4.4 and the two Preflight residue rules from §4.2 (<code>list-style</code>,
       <code>img</code>/<code>svg</code> <code>display</code>).</li>
-  <li>✓ <code>@source</code> pointed at <code>app/views</code>, <code>app/helpers</code>, <code>app/javascript</code>
+  <li class="done"><code>@source</code> pointed at <code>app/views</code>, <code>app/helpers</code>, <code>app/javascript</code>
       (paths resolve relative to the stylesheet; Tailwind scans as plain text regardless of extension, so
       <code>.haml</code>/<code>.rb</code> need no special-casing).</li>
-  <li>✓ Layout: <code>stylesheet_link_tag 'tailwind'</code> inserted before <code>'application'</code> in
+  <li class="done">Layout: <code>stylesheet_link_tag 'tailwind'</code> inserted before <code>'application'</code> in
       <code>layouts/application.html.haml</code>.</li>
-  <li>✓ <code>.collapse</code> — <code>expenses_reviews/show.html.haml</code> rewritten to a 3-line jQuery toggle
+  <li class="done"><code>.collapse</code> — <code>expenses_reviews/show.html.haml</code> rewritten to a 3-line jQuery toggle
       (<code>$('.inlineedit').toggleClass('hidden')</code>, which toggles each matched element independently by its
       own current state — the same per-element behaviour Bootstrap's collapse plugin had), dropped
       <code>bootstrap/js/collapse</code> from <code>application.js</code> entirely (nothing else used it).
@@ -1910,16 +1995,16 @@ entirely; <code>Procfile.dev</code>'s appended <code>css:</code> line, a duplica
       both) has no controller and no route; its own <code>_form.html.haml</code> calls the nonexistent
       <code>expense_review_path</code> helper. Confirmed dead via <code>git log</code> (real history, so not a stub)
       and deleted rather than rewritten — fixing a Bootstrap collision in unreachable code doesn't earn its keep.</li>
-  <li>✓ <code>.container</code> — <code>devise/sessions/new.html.haml</code> rewritten to
+  <li class="done"><code>.container</code> — <code>devise/sessions/new.html.haml</code> rewritten to
       <code>mx-auto max-w-5xl px-4</code>. Not pixel-matched to Bootstrap's fixed 750/970/1170px breakpoints — the plan
       itself calls this bucket "rewrite the view, don't shim it," accepting some difference; verified the page still
       renders correctly (fields, labels, submit) via curl (anonymous, bypassing the logged-in redirect) and
       side-by-side against <code>master</code>.</li>
-  <li>✓ <s>Delete <code>.text-center</code>/<code>.text-left</code>/<code>.pull-left</code>/<code>.sr-only</code> from
+  <li class="done"><s>Delete <code>.text-center</code>/<code>.text-left</code>/<code>.pull-left</code>/<code>.sr-only</code> from
       the WIP shim</s> — <strong>no-op, doc correction:</strong> phase 0 already reverted that WIP shim (see §2); no
       <code>app/assets/tailwind/</code> or shim file existed before this phase. Recorded here as a constraint on the
       phase-5 shim (don't reintroduce those classes) rather than an edit.</li>
-  <li>✓ Preflight border audit — every raw <code>*_field_tag</code>/<code>select_tag</code> in <code>app/views</code>
+  <li class="done">Preflight border audit — every raw <code>*_field_tag</code>/<code>select_tag</code> in <code>app/views</code>
       checked individually, not assumed. <code>dry_crud</code>'s <code>Form::Builder</code> (<code>text_field</code>,
       <code>email_field</code>, <code>text_area</code>, <code>enum_field</code>, <code>belongs_to_field</code>, and
       everything that delegates to them) already adds <code>.form-control</code> unconditionally. Every raw
@@ -1955,7 +2040,7 @@ assertions, 0 failures, matching phase 0's baseline count exactly (it did not, o
 </div>
 
 <div class="phase">
-<h3 id="p5">Phase 5 — Shim the components, one at a time <span class="tag low">complete — 8 / 8</span></h3>
+<h3 id="p5">Phase 5 — Shim the components, one at a time <span class="tag low">complete · 8 / 8</span> <span class="tag med">est 4–6 days · landed 18.09.2026</span></h3>
 <p class="goal">Goal: for each Bootstrap component — write the shim, delete that section from
 <code>bootstrap-frozen.css</code>, verify, commit. The frozen file shrinks monotonically; at no point is the app half-styled.</p>
 
@@ -2001,26 +2086,26 @@ assertions, 0 failures, matching phase 0's baseline count exactly (it did not, o
 
 <h4 style="margin-top:1.5rem">5.1 — Type &amp; utilities <span class="tag low">complete</span></h4>
 <ul class="check">
-  <li>✓ Shimmed into <code>@layer components</code>: <code>h3</code>/<code>.h3</code>, <code>h4</code>/<code>.h4</code>
+  <li class="done">Shimmed into <code>@layer components</code>: <code>h3</code>/<code>.h3</code>, <code>h4</code>/<code>.h4</code>
       (plus their <code>small</code>/<code>.small</code> variants), the global <code>small</code>/<code>.small</code>,
       <code>.lead</code>, <code>.img-responsive</code>, <code>.dl-horizontal</code> (<code>dt</code>/<code>dd</code>,
       the clearfix pseudo-elements, and the 768px layout switch), <code>.pull-right</code>, <code>.visible-xs</code>,
       and <code>.hidden-xs</code>/<code>-sm</code>/<code>-md</code>/<code>-lg</code>.</li>
-  <li>✓ <strong>The heading rules are combined selectors</strong> (e.g. <code>h1, h2, h3, h4, h5, h6, .h1, …</code> in
+  <li class="done"><strong>The heading rules are combined selectors</strong> (e.g. <code>h1, h2, h3, h4, h5, h6, .h1, …</code> in
       one block) — h1/h2/h5/h6 are not in §6.2, so those blocks were edited to drop just the h3/h4 (and
       <code>.h3</code>/<code>.h4</code>) terms rather than deleted outright, leaving the untouched heading levels
       styled by the frozen file until their own turn.</li>
-  <li>✓ Same rule the other way for <code>.visible-xs</code>'s media query, which Bootstrap bundles with
+  <li class="done">Same rule the other way for <code>.visible-xs</code>'s media query, which Bootstrap bundles with
       <code>table.visible-xs</code>/<code>tr.visible-xs</code>/<code>th/td.visible-xs</code> — none of those three are
       used (confirmed by grep), so only the <code>.visible-xs</code> sub-rule moved; the table variants stay in the
       frozen file, dead until phase 6.</li>
-  <li>✓ Left alone deliberately: bare <code>dl</code>/<code>dt</code>/<code>dd</code> (no bare <code>&lt;dl&gt;</code>
+  <li class="done">Left alone deliberately: bare <code>dl</code>/<code>dt</code>/<code>dd</code> (no bare <code>&lt;dl&gt;</code>
       outside <code>.dl-horizontal</code> and the mailer layout, which doesn't use this pipeline at all),
       <code>blockquote</code>/<code>abbr</code>/<code>address</code> (unused), <code>.pull-left</code> and
       <code>.visible-sm</code>/<code>-md</code>/<code>-lg</code> plus every <code>-block</code>/<code>-inline</code>/
       <code>-inline-block</code> variant (none in §6.2) — not this component's job, and <code>components</code> sits
       after <code>bootstrap</code> in the layer stack so a shimmed class always wins regardless of what's left behind.</li>
-  <li>✓ Checked the app's own SCSS for each class before shimming, not just the views: <code>puzzletime.scss</code>'s
+  <li class="done">Checked the app's own SCSS for each class before shimming, not just the views: <code>puzzletime.scss</code>'s
       <code>h1.h3 { margin-bottom: 20px }</code> and <code>phone.scss</code>'s standalone <code>h3</code> rule are both
       unlayered and win over the shim regardless (see §4.1), so neither needed special-casing.</li>
 </ul>
@@ -2057,24 +2142,24 @@ deleted. Re-verified: full suite green after the deletion, same 1515/6006/0 coun
 
 <h4 style="margin-top:1.5rem">5.2 — Grid <span class="tag low">complete</span></h4>
 <ul class="check">
-  <li>✓ 23 classes into <code>@layer components</code>, <strong>766 lines out of the frozen file</strong>
+  <li class="done">23 classes into <code>@layer components</code>, <strong>766 lines out of the frozen file</strong>
       (6434 → 5668). Bootstrap's own structure preserved rather than reinterpreted: one combined block sets
       <code>position</code>/<code>min-height</code>/<code>padding</code> for every shipped column, only
       <code>col-xs-*</code> floats unconditionally, and <code>sm</code>/<code>md</code>/<code>lg</code> get their float
       and width inside their own media query at Bootstrap's 768/992/1200px — not Tailwind's <code>md:</code>/
       <code>lg:</code>, which land on different numbers.</li>
-  <li>✓ <strong>The catalogue was wrong in both directions</strong> — <code>col-md-10</code> missing,
+  <li class="done"><strong>The catalogue was wrong in both directions</strong> — <code>col-md-10</code> missing,
       eight <code>col-xs</code> entries stale. Both corrected in <a href="#shims">§6.3</a>, and the interpolation sites
       added to <a href="#inventory">§3.3</a>. Every estimate in this plan has now been wrong at least once
       (<code>url()</code> 25 not ~35, <code>@extend</code> 26 not 20, grid 23 not ~30) — the pattern is that the
       catalogue is a starting point for a re-derivation, never a specification.</li>
-  <li>✓ Deleted as dead rather than merely unshimmed: <code>.container</code> (its one use was rewritten in phase 4,
+  <li class="done">Deleted as dead rather than merely unshimmed: <code>.container</code> (its one use was rewritten in phase 4,
       §4.3, and nothing carries the class now), <code>.row-no-gutters</code>, and all 96
       <code>col-*-push-*</code>/<code>col-*-pull-*</code> rules. The rules that only <em>mention</em> grid classes as
       ancestors stay with their own components — <code>table col[class*="col-"]</code> (5.3),
       <code>.input-group[class*="col-"]</code> (5.5), <code>.container-fluid &gt; .navbar-collapse</code> (5.6), and
       the jumbotron pair (no jumbotron exists in the app).</li>
-  <li>✓ <strong>No <code>MIXED</code> blocks</strong>, unlike 5.1's combined heading selectors: all 223 grid blocks in
+  <li class="done"><strong>No <code>MIXED</code> blocks</strong>, unlike 5.1's combined heading selectors: all 223 grid blocks in
       the frozen file were pure grid, contiguous at lines 802–1566, so this was a wholesale cut rather than surgical
       selector edits.</li>
 </ul>
@@ -2096,23 +2181,23 @@ before 5.2 and is inert — nothing in the app carries the class — but it is s
 
 <h4 style="margin-top:1.5rem">5.3 — Tables <span class="tag low">complete</span></h4>
 <ul class="check">
-  <li>✓ 231 lines out of the frozen file (5668 → 5437). <strong>A different shape from the grid:</strong>
+  <li class="done">231 lines out of the frozen file (5668 → 5437). <strong>A different shape from the grid:</strong>
       <code>components/_table.scss</code> is unlayered app SCSS and already outranks both the frozen file and the shim,
       so the shim supplies only Bootstrap's un-overridden contribution. Confirmed live rather than reasoned about —
       <code>thead th</code> resolves to the app's <code>10px 15px 10px 30px</code> and
       <code>border-bottom: 0</code>, not Bootstrap's <code>15px</code> and <code>2px</code>.</li>
-  <li>✓ <strong><code>th { text-align: left }</code> nearly went missing</strong> — see the box in
+  <li class="done"><strong><code>th { text-align: left }</code> nearly went missing</strong> — see the box in
       <a href="#shims">§6.4</a>. A catalogue of classes cannot warn you about a rule that is not on a class.</li>
-  <li>✓ <code>.table &gt; colgroup + thead &gt; tr:first-child</code> is live (the <code>%colgroup</code> at
+  <li class="done"><code>.table &gt; colgroup + thead &gt; tr:first-child</code> is live (the <code>%colgroup</code> at
       <code>worktimes/_existing.html.haml:13</code>) while the <code>caption + thead</code> half of the same Bootstrap
       block is dead — the app has no <code>&lt;caption&gt;</code>. The block reads as one rule and is two.</li>
-  <li>✓ Verified unused before deleting, not assumed: <code>.table-responsive</code> and its whole
+  <li class="done">Verified unused before deleting, not assumed: <code>.table-responsive</code> and its whole
       <code>max-width: 767px</code> block (zero occurrences), and all 112 rule-keys for the contextual
       <code>.active</code>/<code>.success</code>/<code>.info</code>/<code>.warning</code>/<code>.danger</code> row and
       cell states. The only <code>active</code> toggles in the JS are on
       <code>.planning-definitive</code>/<code>.planning-provisional</code> and <code>.weeknav .day</code>, which is an
       <code>&lt;li&gt;</code>.</li>
-  <li>✓ Two rules kept <em>without</em> proving them live — <code>.table &gt; tbody + tbody</code> and
+  <li class="done">Two rules kept <em>without</em> proving them live — <code>.table &gt; tbody + tbody</code> and
       <code>.table .table</code>. Disproving them means reading 37 views for a second <code>tbody</code> or a nested
       table, which costs more than the three lines each do. Recorded rather than quietly included.</li>
 </ul>
@@ -2129,23 +2214,23 @@ rather than Bootstrap ones, so <code>test/</code> needed no changes.</p>
 
 <h4 style="margin-top:1.5rem">5.4 — Buttons <span class="tag low">complete</span></h4>
 <ul class="check">
-  <li>✓ <strong>582 lines out</strong> (5437 → 4855), the largest cut so far, from two contiguous regions:
+  <li class="done"><strong>582 lines out</strong> (5437 → 4855), the largest cut so far, from two contiguous regions:
       <code>.btn</code> plus its colour variants, and the button-group/toolbar block.</li>
-  <li>✓ <strong>The whole section was deletable wholesale</strong> because <code>badge</code>, <code>caret</code> and
+  <li class="done"><strong>The whole section was deletable wholesale</strong> because <code>badge</code>, <code>caret</code> and
       every <code>dropdown*</code> class have zero occurrences in the app. Those are what the interleaved
       <code>.btn-default .badge</code> and <code>.btn .caret</code> rules exist for, so checking three unrelated class
       names is what turned a surgical edit into a clean cut.</li>
-  <li>✓ <strong><code>.btn.active</code> is load-bearing and the suite cannot see it.</strong>
+  <li class="done"><strong><code>.btn.active</code> is load-bearing and the suite cannot see it.</strong>
       <code>plannings/base/_panel</code> renders <code>.planning-provisional</code>/<code>.planning-definitive</code> as
       <code>.btn.btn-default</code> and <code>plannings_panel.js</code> toggles <code>.active</code>;
       <code>plannings_orders_test</code> asserts <code>.planning-definitive.active</code> — but only that the
       <em>class</em> is present. A shim that dropped the active state would leave the toggle with no visual feedback and
       the gate would stay green. Confirmed live instead: active renders <code>#dddddd</code> with an inset shadow
       against <code>#f6f6f6</code> inactive.</li>
-  <li>✓ <a href="#shims">§6.5</a>'s <code>disabled</code> (9) and <code>active</code> (7) each turned out to be one
+  <li class="done"><a href="#shims">§6.5</a>'s <code>disabled</code> (9) and <code>active</code> (7) each turned out to be one
       number covering three unrelated things — an HTML attribute, a class on non-buttons, and a class on buttons. Only
       the third is this component's. Split out in §6.5.</li>
-  <li>✓ <strong>Two deliberate deviations from a byte copy</strong>, enumerated rather than left to be found: dropped
+  <li class="done"><strong>Two deliberate deviations from a byte copy</strong>, enumerated rather than left to be found: dropped
       <code>-webkit-box-shadow</code> (keeping the unprefixed <code>box-shadow</code>) and
       <code>filter: alpha(opacity=65)</code> from the six rules carrying them — the inert-prefix class
       <a href="#p3">phase 3</a> already audited — and dropped <code>:not(.dropdown-toggle)</code> from two
@@ -2169,12 +2254,12 @@ at all, and the one <code>.btn</code> on <code>/worktimes</code> is deliberately
 
 <h4 style="margin-top:1.5rem">5.5 — Forms <span class="tag low">complete</span></h4>
 <ul class="check">
-  <li>✓ 748 lines out of the frozen file (4854 → 4106). The forms surface is two non-contiguous frozen regions —
+  <li class="done">748 lines out of the frozen file (4854 → 4106). The forms surface is two non-contiguous frozen regions —
       <code>fieldset</code>…<code>form-horizontal</code> and the <code>input-group</code> block — with the size and
       state variants interleaved through both. Moved the live rules verbatim into <code>@layer components</code>; the
       one <code>@media screen</code> block that mixed <code>.form-control[type=date]</code> (live) with
       <code>input-sm</code>/<code>-lg</code> (dead) was split, keeping only the <code>.form-control</code> half.</li>
-  <li>✓ <strong>Dropped as confirmed-dead</strong> (zero app markup, re-derived by grep across
+  <li class="done"><strong>Dropped as confirmed-dead</strong> (zero app markup, re-derived by grep across
       <code>views</code>/<code>helpers</code>/<code>javascript</code>/SCSS, not trusted from §6.6):
       <code>input-sm</code>/<code>-lg</code>, <code>form-group-sm</code>/<code>-lg</code>, <code>has-success</code>,
       <code>has-warning</code>, <code>input-group-sm</code>/<code>-lg</code>, <code>checkbox-inline</code> — 33 rule-keys.
@@ -2186,7 +2271,7 @@ all confirmed-dead selectors; <strong>0 changed, 0 added</strong> among kept cla
 
 <h4 style="margin-top:1.5rem">5.6 — Nav, navbar, breadcrumb, pagination <span class="tag low">complete</span></h4>
 <ul class="check">
-  <li>✓ 952 lines out (4106 → 3154) — the largest cut, because the navbar surface is mostly dead in this app: it uses a
+  <li class="done">952 lines out (4106 → 3154) — the largest cut, because the navbar surface is mostly dead in this app: it uses a
       simple always-expanded navbar, so <code>navbar-collapse</code>, <code>-toggle</code>, <code>-form</code>,
       <code>-fixed-*</code>, <code>-static-*</code>, <code>-btn</code>, <code>-text</code>, <code>-link</code>, the
       dropdown descendants, <code>nav-pills</code>/<code>-stacked</code>/<code>-justified</code>,
@@ -2194,7 +2279,7 @@ all confirmed-dead selectors; <strong>0 changed, 0 added</strong> among kept cla
       are all dead (107 removed rule-keys, each confirmed). Moved the live patchwork —
       <code>nav</code>/<code>nav-tabs</code>, the used <code>navbar-default</code>/<code>-inverse</code>/<code>-brand</code>/
       <code>-nav</code>/<code>-right</code>/<code>-header</code> rules, <code>breadcrumb</code>, <code>pagination</code>.</li>
-  <li>✓ <strong>Correction to §2/§6.7:</strong> the plan assumed <code>kaminari-bootstrap</code> was removed and pagination
+  <li class="done"><strong>Correction to §2/§6.7:</strong> the plan assumed <code>kaminari-bootstrap</code> was removed and pagination
       rendered Kaminari's default <code>nav.pagination</code> markup — but <a href="#p0">phase 0</a> restored the gem, so
       pagination still renders Bootstrap's <code>ul.pagination &gt; li</code> and <code>.pagination</code> is live. Moved
       it verbatim; pagination is pixel-unchanged. <strong>Retargeting Kaminari's own theme and dropping
@@ -2207,11 +2292,11 @@ all confirmed-dead selectors; <strong>0 changed, 0 added</strong> among kept cla
 
 <h4 style="margin-top:1.5rem">5.7 — Alerts, labels, panels, wells, progress, list-group, close <span class="tag low">complete</span></h4>
 <ul class="check">
-  <li>✓ 1185 lines out (3154 → 1969). Kept: <code>label</code> + all six <code>label-*</code> (interpolated from
+  <li class="done">1185 lines out (3154 → 1969). Kept: <code>label</code> + all six <code>label-*</code> (interpolated from
       <code>order.status.style</code>), <code>alert</code> + its four used contexts, <code>progress</code>/
       <code>progress-bar</code> + <code>-success</code>/<code>-danger</code> (the only two the helpers emit), the full
       <code>panel</code> block, <code>well</code>, <code>close</code>, and <code>list-group</code>/<code>list-group-item</code>.</li>
-  <li>✓ <code>.panel &gt; .table</code> (155 lines) turned out <strong>live</strong>, not dead: both
+  <li class="done"><code>.panel &gt; .table</code> (155 lines) turned out <strong>live</strong>, not dead: both
       <code>worktimes/_existing</code> and <code>ordertimes/split</code> put a <code>%table.table</code> as a
       <em>direct</em> child of <code>.panel</code>. <code>.panel &gt; .list-group</code> is live too
       (<code>configurations/_group</code>). Dropped: <code>badge</code>, <code>jumbotron</code>, <code>thumbnail</code>,
@@ -2225,12 +2310,12 @@ all confirmed-dead selectors; <strong>0 changed, 0 added</strong> among kept cla
 
 <h4 style="margin-top:1.5rem">5.8 — Modal, tooltip, fade <span class="tag low">complete</span></h4>
 <ul class="check">
-  <li>✓ The JS-coupled set, copied <strong>verbatim</strong> (not reinterpreted with <code>@apply</code>, per §7's risk
+  <li class="done">The JS-coupled set, copied <strong>verbatim</strong> (not reinterpreted with <code>@apply</code>, per §7's risk
       row): <code>fade</code>/<code>fade.in</code>, the whole <code>modal</code>/<code>modal-*</code> block, and
       <code>tooltip</code>/<code>tooltip-inner</code>/<code>tooltip-arrow</code>. All three are live —
       <code>application.js</code> imports <code>bootstrap/js/{modal,tooltip}</code>, <code>shared/_modal.html.haml</code>
       uses the modal set, and <code>data-toggle="tooltip"</code> is everywhere.</li>
-  <li>✓ Left for phase 6's sweep, confirmed dead (not imported, no markup): <code>collapse</code>/<code>collapsing</code>,
+  <li class="done">Left for phase 6's sweep, confirmed dead (not imported, no markup): <code>collapse</code>/<code>collapsing</code>,
       <code>caret</code>/<code>dropup</code>/<code>dropdown*</code>, <code>popover*</code>, <code>carousel*</code>.</li>
 </ul>
 <p><strong>Verify:</strong> rule-set diff <strong>IDENTICAL</strong> — a pure relocation, zero removals, so modal and
@@ -2238,19 +2323,19 @@ tooltip behaviour cannot have changed. Confirmed live against the running app in
 computed-style-identical to the baseline.</p>
 
 <div class="phase">
-<h3 id="p6">Phase 6 — Delete the frozen file <span class="tag low">complete</span></h3>
+<h3 id="p6">Phase 6 — Delete the frozen file <span class="tag low">complete · 1 / 1</span> <span class="tag med">est ½ day · landed 18.09.2026</span></h3>
 <p class="goal">Goal: <code>bootstrap-frozen.css</code> is empty and gets deleted, along with the <code>bootstrap</code>
 layer.</p>
 <ul class="check">
-  <li>✓ Frozen file deleted and the <code>bootstrap</code> layer dropped from <code>application.css</code>'s
+  <li class="done">Frozen file deleted and the <code>bootstrap</code> layer dropped from <code>application.css</code>'s
       <code>@layer</code> declaration and its <code>@import</code>. Preflight is now unopposed.</li>
-  <li>✓ <strong>Reboot residues preserved in the shim</strong> — the ones Preflight does not restore, found by a
+  <li class="done"><strong>Reboot residues preserved in the shim</strong> — the ones Preflight does not restore, found by a
       before/after computed-style diff on the running app rather than reasoned from §4.2: <code>html { font-size: 10px }</code>
       (Tailwind's rem base), <code>body</code> font-family/size (14px)/line-height (1.428…)/color (<code>#4A4A4A</code>)/
       background (<code>#fff</code>), and the link colours — <code>a { color: #238BCA }</code>, <code>a:hover,a:focus
       { color: #69B978; text-decoration: underline }</code>. Without these, removing the layer turned body text black,
       16px, and links to inherit — exactly what §4.2's <code>a { color: inherit }</code> row warned about.</li>
-  <li>✓ Everything else left in the frozen file was dead and went with it: <code>normalize.css</code>, the h5bp print
+  <li class="done">Everything else left in the frozen file was dead and went with it: <code>normalize.css</code>, the h5bp print
       block, dead components (<code>dropdown</code>/<code>caret</code>/<code>popover</code>/<code>carousel</code>/
       <code>collapse</code>) and dead utilities (<code>center-block</code>, <code>show</code>, <code>invisible</code>,
       <code>affix</code>, print-visibility). Live utilities Tailwind already provides (<code>hidden</code>,
@@ -2271,7 +2356,7 @@ variables (byte-identical CSS); the changelog before/after screenshots remain a 
 </div>
 
 <div class="phase">
-<h3 id="p7">Phase 7 — Out of scope, but write it down <span class="tag low">later</span></h3>
+<h3 id="p7">Phase 7 — Out of scope, but write it down <span class="tag med">deferred · 0 / 6</span> <span class="tag med">est 3–4 weeks · not scheduled</span></h3>
 <p class="goal">Explicitly <em>not</em> part of this migration. Listed so nobody smuggles them in mid-phase.</p>
 <ul>
   <li>Bootstrap JS plugins → native <code>&lt;dialog&gt;</code> / Stimulus. Only 4 plugins remain after phase 4.</li>
@@ -2536,9 +2621,9 @@ earns its keep once Tailwind utilities are being added to markup that our own SC
 in <code>@layer components</code> and the app SCSS keeps winning over them, which <a href="#risks">§7</a> already calls
 expected and mostly desirable during the migration. It stays the fix-it-when-it-bites item §7 describes.</p>
 
-<h2 id="a11y">9. Accessibility and lint cleanup <span class="tag low">2026-09-25</span></h2>
+<h2 id="a11y">9. Accessibility, lint and release-check cleanup <span class="tag low">2026-09-25 – 28</span></h2>
 
-<p>Neither is part of the upgrade proper; both are fallout the upgrade made visible. Recorded here because the
+<p>None of this is part of the upgrade proper; all of it is fallout the upgrade made visible. Recorded here because the
 before/after screenshot pass (§1) ended on "the 15-page diff is clean" and that is not the same statement as
 "the pages are usable".</p>
 
@@ -2678,11 +2763,72 @@ Reproducing it outside the suite needed a throwaway <code>ActiveSupport::TestCas
 resolve it.</p>
 <p class="small">Also noted while pushing: the <code>Brakeman</code> pre-push hook reported FAILED, but its output was
 interleaved with <code>Connection to github.com closed by remote host</code> — the SSH connection timing out during
-the ~8-minute Minitest hook. Run on its own, <code>brakeman -q --no-pager</code> exits 0 with no warnings. The only
-real pre-push blocker was the test above.</p>
+the ~8-minute Minitest hook. Run on its own, <code>brakeman -q --no-pager</code> exits 0 — which,
+as <a href="#checks">§9.5</a> establishes, proves nothing at all: <code>config/brakeman.yml</code> sets
+<code>exit_on_warn: false</code>. The only real pre-push blocker was the test above.</p>
 <p class="small">Two environment gaps surfaced by the same runs, both pre-existing and neither branch-related:
 <code>rails_best_practices</code> and <code>reek</code> are in no Gemfile, so their hooks fail until each developer
 installs them by hand. With both installed the pre-commit chain is green on this branch's files.</p>
+
+
+<h3 id="checks">9.5 The release checks that were never actually failing <span class="tag low">2026-09-28</span></h3>
+
+<p>Same shape as <a href="#a11y">§9.2</a>'s JS linters: a gate that has been reporting success without looking. The
+branch's own <code>Brakeman</code> hook is configured by <code>config/brakeman.yml</code> with
+<code>:exit_on_warn: false</code>, <code>:quiet: true</code> and <code>:output_files: [brakeman-output.tabs]</code> —
+and that file is in <code>.gitignore</code>. <strong>The hook exits 0 whatever it finds</strong>; it can only fail by
+crashing. §9.4's "exits 0 with no warnings" read the exit code and drew the wrong conclusion from it. Reading the
+report instead turned up two real findings:</p>
+<ul>
+  <li><strong>SQL injection, <code>orders_controller.rb</code>.</strong>
+      <code>employees_for_select</code> interpolated <code>current_user.id.to_fs(:db)</code> straight into a
+      <code>select</code> fragment. The value is an integer off the session, so it is not exploitable today — but it is
+      one refactor away from being, and the fix is a bind:
+      <code>Employee.sanitize_sql_array(['… WHEN employees.id = ? …', current_user.id])</code>.</li>
+  <li><strong>Dynamic regex built from params, <code>dry_crud/nestable.rb</code>.</strong>
+      <code>request.path =~ %r{/#{key.pluralize}/#{id}/}</code> compiles a user-supplied
+      <code>params["…_id"]</code> into a pattern on every request — regex metacharacters and ReDoS input both land in
+      it. It was a substring test wearing a regex, so it is now
+      <code>request.path.include?("/#{key.pluralize}/#{id}/")</code>. Cheaper and it cannot be fed a pattern.</li>
+</ul>
+<p>The remaining <strong>14 warnings are verified false positives</strong> and are now recorded in
+<code>config/brakeman.ignore</code> with a note each rather than left to be re-triaged every run: 7 Dangerous Send
+(<code>send</code> against allowlisted sort/attribute names), 4 Cross-Site Scripting and 3 SQL Injection (column and
+table literals the app itself builds, no request data on the path). <code>brakeman --no-pager</code> now writes an
+empty report. That the exit code did not change is the point — the evidence is the report, not the status.</p>
+<p class="small">Not changed: <code>exit_on_warn</code>. Flipping it makes the pre-push hook block on any new warning,
+which is the right end state — but it wants the ignore file reviewed by someone other than its author first, and this
+branch is not the place to add a new release gate.</p>
+
+<h4>CI and configuration, from the same pass</h4>
+<ul>
+  <li><strong>The Docker buildcache had never been readable.</strong> <code>reusable-build.yaml</code> passed
+      <code>cache-from/-to: type=registry,ref=ptime/rails:buildcache</code> — an unqualified ref, so buildx resolved it
+      against Docker Hub, where the credentials are for the project registry. Every build failed to pull or push a
+      cache layer and silently rebuilt from scratch. Now <code>${{ env.BUILD_REGISTRY_URL }}:buildcache</code>, the
+      same repository the image tags already use.</li>
+  <li><strong><code>max_connections</code> vs. <code>bleib</code>.</strong> Rails 8.1 aborts on a database
+      configuration that carries both <code>pool</code> and <code>max_connections</code> with different values, and
+      <code>bleib</code> (the boot-wait gem, bumped to 0.0.17 here) hardcodes <code>pool: 1</code> for its own probe
+      connection. <code>config/database.yml</code> used <code>max_connections</code> in <code>default</code> and in
+      <code>test</code> (15); both renamed to <code>pool</code>, with the reason in a comment so the next person does
+      not rename them back.</li>
+  <li><strong>Manual build workflow made selectable.</strong> <code>build-manual.yaml</code> is now "Manual build" and
+      takes <code>lint</code>/<code>test</code>/<code>build</code>/<code>push</code>/<code>sbom</code> booleans, with
+      lint and test defaulting to <em>false</em> — the workflow exists to produce an image from a chosen environment,
+      and the pull-request workflow already runs both.</li>
+</ul>
+
+<h4>RuboCop, after six weeks of new cops</h4>
+<p>The dependency refresh (§1, 2026-09-25) brought new Rails 8.1 and RuboCop cops with it. Safe and unsafe
+autocorrections applied across 54 files, <code>.rubocop_todo.yml</code> regenerated: <strong>1141 → 1129</strong>
+offenses in 55 entries. No behaviour change is intended in that commit, which is why it is a separate one from the
+security fixes above.</p>
+<p>One of the new cops, <code>Lint/ScriptPermission</code>, wants the <code>+x</code> bit on
+<code>script/department_export.rb</code> while overcommit's <code>ExecutePermissions</code> hook forbids it — the
+first pass resolved that by disabling the cop. Wrong way round: the script re-execs itself through
+<code>rails runner</code>, so it <em>is</em> meant to be run directly. It got the bit, and <code>script/**/*</code>
+joined <code>bin/**/*</code> in the hook's exclude list, which is where the exception belonged.</p>
 
 <hr>
 <p class="small">Generated from a scan of this working tree: 330 HAML views, 36 CoffeeScript files, 6020 lines of SCSS,
