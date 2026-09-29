@@ -13,9 +13,29 @@ permissions:
   checks: write
   pull-requests: write
 
+# The linters live in the optional :overcommit group (see .overcommit.yml). Set
+# here so every job shares one setup-ruby bundler cache (BUNDLE_WITH is part of
+# its cache key).
+env:
+  BUNDLE_WITH: 'overcommit'
+
 jobs:
+  # Warms the bundler cache once; the linter jobs below only restore it.
+  prepare:
+    runs-on: 'ubuntu-latest'
+
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.ref }}
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
   rubocop:
     runs-on: 'ubuntu-latest'
+    needs: prepare
 
     steps:
       - uses: actions/checkout@v7
@@ -35,6 +55,7 @@ jobs:
 
   brakeman:
     runs-on: 'ubuntu-latest'
+    needs: prepare
 
     steps:
       - uses: actions/checkout@v7
@@ -64,6 +85,7 @@ jobs:
 
   ruby-lint:
     runs-on: 'ubuntu-latest'
+    needs: prepare
 
     strategy:
       fail-fast: false
@@ -85,10 +107,6 @@ jobs:
           - name: 'Fasterer'
             command: 'bundle exec fasterer'
             format: '-efm=%f:%l %m'
-
-    # The linters live in the optional :overcommit group (see .overcommit.yml)
-    env:
-      BUNDLE_WITH: 'overcommit'
 
     steps:
       - uses: actions/checkout@v7
