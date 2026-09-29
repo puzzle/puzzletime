@@ -2558,6 +2558,14 @@
     text-decoration: underline;
   }
 
+  /* A link inside a run of text cannot be told apart by colour alone here:
+     it is 1.25:1 against body text, and with body text at #4A4A4A no link
+     colour clears both that 3:1 and 4.5:1 on white. Standalone links (nav,
+     tables, actions) are unaffected — they are not in a text block. */
+  p a, label a {
+    text-decoration: underline;
+  }
+
   p {
     margin: 0 0 10px;
   }
