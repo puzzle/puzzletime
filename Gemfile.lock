@@ -356,6 +356,30 @@ GEM
       image_size (>= 1.5, < 4)
       in_threads (~> 1.3)
       progress (~> 3.0, >= 3.0.1)
+    image_optim_pack (0.13.1.20260816)
+      fspath (>= 2.1, < 4)
+      image_optim (~> 0.19)
+    image_optim_pack (0.13.1.20260816-aarch64-linux)
+      fspath (>= 2.1, < 4)
+      image_optim (~> 0.19)
+    image_optim_pack (0.13.1.20260816-aarch64-linux-gnu)
+      fspath (>= 2.1, < 4)
+      image_optim (~> 0.19)
+    image_optim_pack (0.13.1.20260816-aarch64-linux-musl)
+      fspath (>= 2.1, < 4)
+      image_optim (~> 0.19)
+    image_optim_pack (0.13.1.20260816-arm64-darwin)
+      fspath (>= 2.1, < 4)
+      image_optim (~> 0.19)
+    image_optim_pack (0.13.1.20260816-x86_64-darwin)
+      fspath (>= 2.1, < 4)
+      image_optim (~> 0.19)
+    image_optim_pack (0.13.1.20260816-x86_64-linux-gnu)
+      fspath (>= 2.1, < 4)
+      image_optim (~> 0.19)
+    image_optim_pack (0.13.1.20260816-x86_64-linux-musl)
+      fspath (>= 2.1, < 4)
+      image_optim (~> 0.19)
     image_processing (2.1.0)
     image_size (3.6.0)
     in_threads (1.6.0)
@@ -895,6 +919,7 @@ DEPENDENCIES
   haml-lint
   highrise
   image_optim
+  image_optim_pack
   image_processing
   jbuilder
   jsbundling-rails
@@ -1099,6 +1124,14 @@ CHECKSUMS
   highrise (3.2.3) sha256=13b1e011cd2509bb6a11adfbefd22a8bad933c8cbb78bea2329e7cf679fc683f
   i18n (1.15.2) sha256=00f9eb62412fe593b2a65a97daa75300d37abb8f7202ec748e94b6d46a9dd1b5
   image_optim (0.32.0) sha256=457d5ea28ee93244c2aabc7134e06455587fb670f210e88e1be40aea882c2ba3
+  image_optim_pack (0.13.1.20260816) sha256=5e37513014fb90900b032467f83abc36b5c8b87bd715cf1d6c85e3c8642d7438
+  image_optim_pack (0.13.1.20260816-aarch64-linux) sha256=fd0525ecf79a7d4db58e328b892c1604796451d8aa273f1a816b8d85c1b15a0f
+  image_optim_pack (0.13.1.20260816-aarch64-linux-gnu) sha256=a4ad086a83f040dff9bab568d178cce858c49cef7599e2dd0ca98f9488063d9a
+  image_optim_pack (0.13.1.20260816-aarch64-linux-musl) sha256=70359dd3ecfa6d3870c6b0760adcb0d13ff7479ff8c2394089d23f29add37d4b
+  image_optim_pack (0.13.1.20260816-arm64-darwin) sha256=14429a57b302e3574290efb10405efe84ba264782755eb73d8781d878ba114e4
+  image_optim_pack (0.13.1.20260816-x86_64-darwin) sha256=5591c9bac5d0a062a6e2c3964071f853ad1f5ee61aeac3f00bd877159c9b39f6
+  image_optim_pack (0.13.1.20260816-x86_64-linux-gnu) sha256=ff3f4813f76229f6b7c6641cbefa2d289e61c9227e0277789f80e97f98ce63f0
+  image_optim_pack (0.13.1.20260816-x86_64-linux-musl) sha256=50aa4d521bb9a6d880d9040c1ef3f19d4ab12dbdbaa1b2ec77d584e37ac5f163
   image_processing (2.1.0) sha256=ca3814b1b909fc5fab68b261c50eaffef11e29a6907143e9cf1efc14b6dc6f47
   image_size (3.6.0) sha256=1b9c4196cb658bf503a887920543a3991e927a4b767a5c770fb9665bce0dcb28
   in_threads (1.6.0) sha256=91a7e6138d279dc632f59b8a9a409e47148948e297c0f69c92f9a2479a182149

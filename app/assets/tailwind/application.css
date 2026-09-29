@@ -755,7 +755,7 @@
   [data-toggle="buttons"] > .btn input[type="radio"],
   [data-toggle="buttons"] > .btn input[type="checkbox"] {
     position: absolute;
-    clip: rect(0, 0, 0, 0);
+    clip-path: inset(50%);
     pointer-events: none;
   }
 }
@@ -2206,7 +2206,6 @@
     line-height: 1;
     color: #000;
     text-shadow: 0 1px 0 #fff;
-    filter: alpha(opacity=20);
     opacity: 0.2;
   }
 
@@ -2214,7 +2213,6 @@
     color: #000;
     text-decoration: none;
     cursor: pointer;
-    filter: alpha(opacity=50);
     opacity: 0.5;
   }
 
@@ -2311,12 +2309,10 @@
   }
 
   .modal-backdrop.fade {
-    filter: alpha(opacity=0);
     opacity: 0;
   }
 
   .modal-backdrop.in {
-    filter: alpha(opacity=50);
     opacity: 0.5;
   }
 
@@ -2421,15 +2417,13 @@
     letter-spacing: normal;
     word-break: normal;
     word-spacing: normal;
-    word-wrap: normal;
+    overflow-wrap: normal;
     white-space: normal;
     font-size: 12px;
-    filter: alpha(opacity=0);
     opacity: 0;
   }
 
   .tooltip.in {
-    filter: alpha(opacity=90);
     opacity: 0.9;
   }
 

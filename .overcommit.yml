@@ -93,10 +93,8 @@ PreCommit:
     enabled: true
   ChamberSecurity:
     enabled: true
-  CssLint:
-    enabled: true
-    exclude:
-      - vendor/assets/stylesheets/jquery*
+  CssLint:  # abandoned (2018), cannot parse @layer/custom properties; Stylelint covers CSS
+    enabled: false
   ErbLint:
     enabled: true
   ExecutePermissions:
@@ -125,11 +123,14 @@ PreCommit:
 
   HardTabs:
     enabled: true
+    exclude:
+      - app/assets/stylesheets/vendor/**/*
+      - app/javascript/vendor/**/*
   HtmlHint:
     enabled: true
   HtmlTidy:
     enabled: true
-  ImageOptim:
+  ImageOptim:  # binaries come from image_optim_pack, svgo from bin/setup_overcommit
     enabled: true
   JsHint:  # ES5-only, cannot parse the ES6 sources; Standard covers JS
     enabled: false
@@ -214,8 +215,10 @@ PreCommit:
     exclude:
       - app/javascript/vendor/**/*
       - app/javascript/modernizr.js
-  Stylelint:  # errors
-    enabled: false
+  Stylelint:
+    enabled: true
+    # SCSS stays with ScssLint; Stylelint owns plain CSS (incl. the Tailwind v4 source).
+    include: '**/*.css'
   TrailingWhitespace:
     enabled: true
   YamlLint:
