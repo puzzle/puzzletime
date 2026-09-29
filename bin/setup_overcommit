@@ -7,7 +7,7 @@ require 'fileutils'
 APP_ROOT = File.expand_path('..', __dir__)
 
 # Hooks that shell out to a non-Ruby binary we cannot install from the Gemfile.
-NPM_PACKAGES = %w[htmlhint csslint standard].freeze
+NPM_PACKAGES = %w[htmlhint standard stylelint stylelint-config-recommended svgo].freeze
 SYSTEM_BINARIES = {
   'tidy' => 'HtmlTidy',
   'shellcheck' => 'ShellCheck',

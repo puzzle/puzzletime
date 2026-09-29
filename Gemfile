@@ -131,6 +131,7 @@ group :overcommit, optional: true do
   gem 'fasterer'
   gem 'haml-lint'
   gem 'image_optim'
+  gem 'image_optim_pack'
   gem 'overcommit'
   gem 'rails_best_practices'
   gem 'reek'
