@@ -9,8 +9,8 @@ class AddExpenses < ActiveRecord::Migration[5.2]
       t.decimal    :amount, precision: 12, scale: 2, null: false
       t.date       :payment_date, null: false
 
-      t.text       :description
-      t.text       :rejection
+      t.text :description
+      t.text :rejection
 
       t.belongs_to :reviewer, index: true
       t.datetime   :reviewed_at
