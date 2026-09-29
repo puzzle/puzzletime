@@ -22,7 +22,7 @@ ARG PRE_BUILD_SCRIPT
 ARG BUILD_SCRIPT=" \
      npm ci \
   && SECRET_KEY_BASE=1 SKIP_YARN_INSTALL=1 bundle exec rails assets:precompile \
-  && rm -rf tmp/cache tmp/sockets tmp/pids \
+  && rm -rf tmp/cache/* tmp/sockets/* tmp/pids/* \
 "
 ARG POST_BUILD_SCRIPT="echo \"(built at: $(date '+%Y-%m-%d %H:%M:%S'))\" > /app-src/BUILD_INFO"
 
@@ -193,7 +193,9 @@ RUN --mount=type=cache,target=/root/.bundle/cache \
     gem install bundler:${BUNDLER_VERSION} --no-document \
  && bundle config set --local deployment 'true' \
  && bundle config set --local without ${BUNDLE_WITHOUT} \
- && bundle install
+ && bundle install \
+ && chgrp -R 0 /app-src \
+ && chmod -R u+w,g=u /app-src
 
 EXPOSE 3000
 
