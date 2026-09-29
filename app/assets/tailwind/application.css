@@ -2560,10 +2560,11 @@
 
   /* A link inside a run of text cannot be told apart by colour alone here:
      it is 1.25:1 against body text, and with body text at #4A4A4A no link
-     colour clears both that 3:1 and 4.5:1 on white. Standalone links (nav,
-     tables, actions) are unaffected — they are not in a text block. */
+     colour clears both that 3:1 and 4.5:1 on white. Bold is the non-colour
+     distinction; the underline still appears on hover/focus. Standalone links
+     (nav, tables, actions) are unaffected — they are not in a text block. */
   p a, label a {
-    text-decoration: underline;
+    font-weight: 700;
   }
 
   p {
