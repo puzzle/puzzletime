@@ -68,10 +68,18 @@ app.SelectionWatcher = class SelectionWatcher {
 
   _runActionsWithSerializedClass () {
     const query = this._serializeClassMatches()
-    return this.actions.reduce((promise, action) => promise.then(() => new Promise((resolve, reject) => $.getScript(`${action.url}?${query}`)
-      .done(resolve)
-      .fail(reject)))
-    , Promise.resolve())
+
+    // jqXHR is thenable, so the chain sequences the actions on its own. The
+    // catch is required: an uncaught rejection is reported to the browser as
+    // an uncaught error, and the rejection value is the jqXHR, which is why
+    // it surfaces in tests as the useless "Ferrum::JavaScriptError: Object".
+    // A request aborted by navigation is the normal case, not a fault.
+    return this.actions
+      .reduce((promise, action) => promise.then(() => $.getScript(`${action.url}?${query}`)),
+        Promise.resolve())
+      .catch(xhr => {
+        if (xhr && xhr.statusText !== 'abort') { console.warn('selection update failed', xhr && xhr.status) }
+      })
   }
 
   _serializeClassMatches () {

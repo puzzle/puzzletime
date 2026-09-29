@@ -33,12 +33,18 @@ app.FormUpdater = class FormUpdater {
     // run into problems with turbolinks caching
     $(document).off(this.trigger.event, this.trigger.watchedElements)
 
-    // use a promise chain to sequentially execute actions
+    // use a promise chain to sequentially execute actions. jqXHR is thenable,
+    // so it sequences them on its own; the catch is required because an
+    // uncaught rejection reaches the browser as an uncaught error whose value
+    // is the jqXHR — "Ferrum::JavaScriptError: Object" in tests. A request
+    // aborted by navigation is the normal case, not a fault.
     return $(document).on(this.trigger.event, this.trigger.watchedElements, event => {
-      return this.actions.reduce((promise, action) => promise.then(() => new Promise((resolve, reject) => $.getScript(`${action.url}?${action.form.serialize()}`)
-        .done(resolve)
-        .fail(reject)))
-      , Promise.resolve())
-    }) // Start with a resolved promise to begin the chain
+      return this.actions
+        .reduce((promise, action) => promise.then(() => $.getScript(`${action.url}?${action.form.serialize()}`)),
+          Promise.resolve())
+        .catch(xhr => {
+          if (xhr && xhr.statusText !== 'abort') { console.warn('form update failed', xhr && xhr.status) }
+        })
+    })
   }
 }
