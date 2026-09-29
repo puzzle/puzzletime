@@ -8,6 +8,11 @@ name: 'Code Style Review'
         description: "Ref to checkout"
         type: string
 
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
+
 jobs:
   lint:
     runs-on: 'ubuntu-latest'
@@ -28,19 +33,27 @@ jobs:
           # reporter: github-pr-review
           level: error
 
-      - run: 'gem install haml-lint'
+      - uses: reviewdog/action-brakeman@v2
+        if: '!cancelled()'
+        with:
+          brakeman_version: gemfile
+          level: error
+
+      - uses: reviewdog/action-actionlint@v1
+        if: '!cancelled()'
+        with:
+          level: error
 
       - uses: reviewdog/action-setup@v1
 
       - name: 'Run Reviewdog HAML-Lint'
+        if: '!cancelled()'
         env:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ github.token }}
         run: |
-          haml-lint |
+          bundle exec haml-lint --reporter checkstyle |
           reviewdog \
-          -efm="%f:%l %m" \
+          -f=checkstyle \
           -name="HAML-Lint" \
-          -reporter=github-pr-review \
-          -level=error \
-          -diff="git diff $DIFF_BRANCH"
+          -reporter=github-pr-review
 ...
