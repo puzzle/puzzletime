@@ -11,3 +11,12 @@ Rails.application.config.assets.paths << Rails.root.join('app/assets/fonts')
 # Keep the raw .scss sources out of the published asset set -- only the
 # dartsass-rails build output (app/assets/builds/*.css) should be served.
 Rails.application.config.assets.excluded_paths << Rails.root.join('app/assets/stylesheets')
+
+# Phase 2 replaced these gems' asset payloads with npm packages that esbuild
+# bundles into application.js; their load paths now only publish the originals
+# as dead weight -- nested_form_fields even ships raw CoffeeScript, which
+# nothing can compile since coffee-rails left the pipeline.
+%w[nested_form_fields turbolinks-source].each do |gem_name|
+  spec = Gem.loaded_specs[gem_name] or next
+  Rails.application.config.assets.excluded_paths << File.join(spec.gem_dir, 'lib/assets/javascripts')
+end
