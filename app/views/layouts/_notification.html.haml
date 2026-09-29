@@ -9,4 +9,7 @@
     %a.close{:'data-dismiss' => 'alert', :href => '#'} &times;
     %ul
       - @notifications.each do |notification|
-        %li= h(notification.message).gsub("\n", "<br/>")
+        %li
+          = safe_join(notification.message.split("\n"), tag.br)
+          - if notification.cta_url.present?
+            = link_to notification.cta_text.presence || t('user_notifications.cta_default'), notification.cta_url, class: 'btn btn-primary btn-xs'

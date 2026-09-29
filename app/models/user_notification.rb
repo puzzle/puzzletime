@@ -13,6 +13,8 @@
 #  date_from :date             not null
 #  date_to   :date
 #  message   :text             not null
+#  cta_url   :string
+#  cta_text  :string
 #
 
 class UserNotification < ApplicationRecord
@@ -22,6 +24,8 @@ class UserNotification < ApplicationRecord
   validates_by_schema
   validates :date_from, :date_to, timeliness: { date: true, allow_blank: true }
   validate :validate_period
+  # prevent javascript: & co. in the rendered link
+  validates :cta_url, format: { with: %r{\A(https?://|/)}, allow_blank: true }
 
   scope :list, -> { order(date_from: :desc, date_to: :desc) }
 

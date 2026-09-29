@@ -411,6 +411,8 @@ de-CH:
         date_from: Startdatum
         date_to: Enddatum
         message: Nachricht
+        cta_url: Link-URL
+        cta_text: Link-Text
       work_item:
         name: Name
         shortname: Kürzel
