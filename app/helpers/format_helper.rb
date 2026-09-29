@@ -49,7 +49,7 @@ module FormatHelper
 
   def format_hour(hour, precision = 2)
     number = format_number(hour, precision)
-    number && safe_join([number, ' h'])
+    number && safe_join([number, '&nbsp;h'.html_safe])
   end
 
   def format_time(time)
