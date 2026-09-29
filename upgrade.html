@@ -553,6 +553,17 @@ reasoning behind each decision and the phase sections for full verification deta
       <code>plannings_orders_test_failure.txt</code>.</div>
   </div>
 
+
+  <div class="timeline-entry bad">
+    <div class="timeline-date repeat">Di, 29.09.2026</div>
+    <div class="timeline-spine bad"><button type="button" class="timeline-dot" data-sha="2453fcf5"><span class="vh">2453fcf5</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-content">The error the retry fix uncovered turned out to be a real one:
+      <code>SelectionWatcher</code> and <code>FormUpdater</code> wrapped <code>$.getScript</code> in a hand-rolled
+      promise and never caught it, so every request <strong>aborted by navigation</strong> became an uncaught page
+      error blamed on whatever step ran next. <code>Ferrum::JavaScriptError: Object</code> was never a mangled
+      message — "Object" is Chrome's description of the rejected <code>jqXHR</code>. Fixed, regression-tested, and
+      the suite is clean over three consecutive 16-worker runs.</div>
+  </div>
 </div>
 
 <p class="timeline-legend">
@@ -824,11 +835,14 @@ copied-out assets and the <code>COMMIT</code> file need to survive, and now they
       exception classes</strong> — <code>Array#first</code> takes no block, so the filter never ran. Fixed; every
       flaky rate quoted in this document was therefore a rate of <em>three consecutive</em> failures and is
       understated. See <code>plannings_orders_test_failure.txt</code>.</li>
-  <li class="todo"><strong>The first thing the retry fix exposed:</strong>
-      <code>PlanningsOrdersTest#test_close_panel_on_escape</code> fails under
-      <code>parallel:test[16]</code> with <code>Ferrum::JavaScriptError</code> — an uncaught JS error that three
-      silent retries had been hiding. Clean 6/6 serially, so it is load-only. Root cause not found; the fix is
-      <em>not</em> to add the class to the retry list.</li>
+  <li class="done"><strong>What the retry fix exposed, found and fixed:</strong> the uncaught error behind
+      <code>Ferrum::JavaScriptError: Object</code> is an <em>unhandled jqXHR rejection</em>.
+      <code>SelectionWatcher</code> and <code>FormUpdater</code> wrapped <code>$.getScript</code> in a hand-rolled
+      promise and never caught it, so a request aborted by navigation — routinely the planning board's
+      <code>preview_total_selected.js</code> — reached the browser as an uncaught page error and blew up whatever
+      step ran next. Both now let the thenable jqXHR sequence the chain and catch the rejection. Three consecutive
+      <code>parallel:test[16]</code> runs clean afterwards; regression test asserts the chain settles
+      <em>handled</em>. See <code>plannings_orders_test_failure.txt</code>.</li>
 </ul>
 </div>
 
@@ -1346,6 +1360,25 @@ report on the first attempt. <strong>It cost one test immediately:</strong>
 under <code>parallel:test[16]</code> (4.96s, where the masked runs took 50–90s doing the same work three times).
 That class was never on the retry list; three silent retries had been hiding a real uncaught JS error. Full
 write-up in <code>plannings_orders_test_failure.txt</code>.</p>
+<p class="box bad"><strong>And that uncaught JS error was real.</strong>
+<code>Ferrum::JavaScriptError: Object</code> is not a mangled message: Chrome reports unhandled promise rejections
+through <code>Runtime.exceptionThrown</code>, and what you get is the description of the <em>rejection value</em> —
+for a jQuery <code>jqXHR</code>, the word "Object". Two modules built a promise by hand and never caught it:
+<code>modules/selection_watcher.js:71</code> (planning board) and <code>modules/form_updater.js:38</code> (invoice
+form) wrapped <code>$.getScript(url).done(resolve).fail(reject)</code> in a <code>new Promise</code> and chained it
+with no <code>catch</code>. The ordinary way that request fails is not a server fault — <em>navigation aborts
+it</em> — so every aborted <code>preview_total_selected.js</code> became an uncaught page error that surfaced in
+whichever step ran next. That is why the backtraces always pointed at an innocent line.</p>
+<p>The fix drops the hand-rolled promise (a jqXHR is already thenable, so it sequences the chain itself) and adds
+the missing <code>catch</code>, silent for an abort because an abort is normal. Proven by driving the real object
+with an unreachable action URL — <code>message="Object"</code> before, nothing after — and pinned by
+<code>PlanningsOrdersTest#test_a_failing_selection_update_settles_instead_of_leaking_a_rejection</code>, which
+asserts the chain settles <em>handled</em> rather than asserting that nothing blew up, so it fails on the leak
+itself. Its failing URL is <code>127.0.0.1:1</code> and not an unrouted app path on purpose: the first version
+raised <code>ActionController::RoutingError</code> server-side and re-surfaced through
+<code>raise_server_errors</code> in a different test three files later — fixing one cross-test leak by planting
+another. <code>parallel:test[16]</code>: <strong>1566 tests, 6145 assertions, 0 failures, 0 errors, three runs in
+a row.</strong></p>
 
 <p class="box warn"><strong>The lesson for phases 1–6, not just this one:</strong> a scoped run proves the code you
 touched, not the code you broke. Two of these three were caused by a <em>deliberate, plausible-looking</em> fix to a
