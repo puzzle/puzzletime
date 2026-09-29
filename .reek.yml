@@ -553,6 +553,7 @@ detectors:
       - IntegrationHelper#open_selectize
       - ActiveSupport::TestCase#login_as
       - ActiveSupport::TestCase#logout
+      - ActionDispatch::IntegrationTest#drain_pending_requests
   FeatureEnvy:
     exclude:
       - Api::ApidocsController#controller_classes
