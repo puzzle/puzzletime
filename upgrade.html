@@ -3004,6 +3004,13 @@ branch is not the place to add a new release gate.</p>
       takes <code>lint</code>/<code>test</code>/<code>build</code>/<code>push</code>/<code>sbom</code> booleans, with
       lint and test defaulting to <em>false</em> — the workflow exists to produce an image from a chosen environment,
       and the pull-request workflow already runs both.</li>
+  <li><strong>actionlint: 15 errors from one missing block.</strong> A reusable workflow's own
+      <code>permissions:</code> is ignored when it is called — the calling job's grant is what applies, and the three
+      callers of <code>reusable-lint.yaml</code> granted nothing, so all five of its jobs (each needing
+      <code>checks: write</code> and <code>pull-requests: write</code> for reviewdog) were reported once per caller.
+      The block now sits on the <code>lint:</code> job in <code>build-manual.yaml</code>,
+      <code>build-on-push.yaml</code> and <code>test-on-pr.yaml</code>. Same pass, <code>reusable-sbom.yaml</code>:
+      <code>-v $(pwd):/data</code> quoted (SC2046).</li>
 </ul>
 
 <h4>RuboCop, after six weeks of new cops</h4>
