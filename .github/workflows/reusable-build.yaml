@@ -70,6 +70,7 @@ jobs:
           username: ${{ secrets.PUZZLE_REGISTRY_USERNAME }}
           password: ${{ secrets.PUZZLE_REGISTRY_TOKEN }}
       - uses: docker/build-push-action@v7
+        id: build
         with:
           file: Dockerfile
           build-args: |
@@ -84,3 +85,16 @@ jobs:
           push: ${{ inputs.push }}
           cache-from: type=registry,ref=${{ env.BUILD_REGISTRY_URL }}:buildcache
           cache-to: type=registry,ref=${{ env.BUILD_REGISTRY_URL }}:buildcache,mode=max
+
+      - name: 'Report image tags'
+        if: inputs.push
+        run: |
+          echo "::notice title=Image pushed::${BUILD_REGISTRY_URL}:latest, ${BUILD_REGISTRY_URL}:git-${{ github.sha }} (digest ${{ steps.build.outputs.digest }})"
+          {
+            echo '### Image pushed'
+            echo
+            echo '| Tag | Digest |'
+            echo '| --- | --- |'
+            echo "| \`${BUILD_REGISTRY_URL}:latest\` | \`${{ steps.build.outputs.digest }}\` |"
+            echo "| \`${BUILD_REGISTRY_URL}:git-${{ github.sha }}\` | \`${{ steps.build.outputs.digest }}\` |"
+          } >> "$GITHUB_STEP_SUMMARY"
