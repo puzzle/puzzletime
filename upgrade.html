@@ -474,7 +474,7 @@ reasoning behind each decision and the phase sections for full verification deta
 
   <div class="timeline-entry bad">
     <div class="timeline-date repeat">Di, 29.09.2026</div>
-    <div class="timeline-spine bad"><button type="button" class="timeline-dot" data-sha="5975aec1"><span class="vh">5975aec1</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine bad"><button type="button" class="timeline-dot" data-sha="b21b4ebf"><span class="vh">b21b4ebf</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content"><strong>The production image published its JavaScript source map.</strong>
       <code>--sourcemap</code> sat in <code>package.json</code>'s <code>build</code> script, which is what the
       Dockerfile runs, so <code>/assets/application-*.js.map</code> served 2.2 MB of unminified source to anyone
@@ -484,7 +484,7 @@ reasoning behind each decision and the phase sections for full verification deta
 
   <div class="timeline-entry bad">
     <div class="timeline-date repeat">Di, 29.09.2026</div>
-    <div class="timeline-spine bad"><button type="button" class="timeline-dot" data-sha="5d3ec74c"><span class="vh">5d3ec74c</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine bad"><button type="button" class="timeline-dot" data-sha="a10b2e76"><span class="vh">a10b2e76</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content">A one-line deprecation warning in INT's boot log
       (<code>include_local_variables</code>) turned out to cover <strong>two</strong> bugs: the new option name, and a
       typo — <code>run.full_versio<em>o</em>n</code> — that had silently sent <code>release = nil</code> to Sentry for
@@ -510,6 +510,35 @@ reasoning behind each decision and the phase sections for full verification deta
       <code>Settings.meal_compensation.active</code> on, one because the page was not in the ten. One of them is ours:
       the darkened link colour dropped link-vs-body-text contrast from 2.37:1 to <strong>1.25:1</strong>.
       <em>A local a11y sweep measures the seed data's markup, not the app's.</em> See <a href="#int">§10.5</a>.</div>
+  </div>
+
+  <div class="timeline-entry ok">
+    <div class="timeline-date repeat">Di, 29.09.2026</div>
+    <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="ee53e323"><span class="vh">ee53e323</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-content">The contrast finding has <strong>no colour-only fix</strong>: with body text at
+      <code>#4A4A4A</code>, a link reaching 3:1 against it is 2.95:1 against white. Measured which non-colour
+      distinctions axe accepts (underline yes, bold/italic yes, background tint no, hover-only no) and took
+      underline — scoped to <code>p a, label a</code>, which is <strong>two links in the whole app</strong>.
+      See <a href="#int">§10.5</a>.</div>
+  </div>
+
+  <div class="timeline-entry bad">
+    <div class="timeline-date repeat">Di, 29.09.2026</div>
+    <div class="timeline-spine bad"><button type="button" class="timeline-dot" data-sha="05fa881b"><span class="vh">05fa881b</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-content">Pulling the image found two more published assets nothing can use:
+      <code>nested_form_fields.js.coffee</code> — <em>raw CoffeeScript</em>, three phases after the compiler left —
+      and <code>turbolinks.js</code>, both from gem load paths whose payload esbuild replaced. Excluded. Also proved
+      the deployment reproducible: 69 files byte-identical, source tree identical, only Propshaft's own manifest
+      differing (key order). See <a href="#int">§10.1</a> and <a href="#int">§10.3</a>.</div>
+  </div>
+
+  <div class="timeline-entry accent">
+    <div class="timeline-date repeat">Di, 29.09.2026</div>
+    <div class="timeline-spine accent"><button type="button" class="timeline-dot" data-sha="39093e18"><span class="vh">39093e18</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-content">A <strong>third</strong> subject rewrite: one 73-character subject written after
+      the 26.09 sweep, committed with <code>--no-verify</code> and waved through by CI, which still has no width
+      check. Eight SHAs changed — including the one INT was built from, so
+      <code>git-cedece0d…</code> now resolves in Harbor but not on the branch. See §9.3.</div>
   </div>
 
 </div>
@@ -764,16 +793,20 @@ copied-out assets and the <code>COMMIT</code> file need to survive, and now they
   <li class="done"><strong>Deployed to INT and compared against this plan</strong> (<a href="#int">§10</a>): assets
       byte-identical to a local precompile of the deployed SHA, eleven pages plus modal/datepicker/selectize/planning
       add-row exercised, no JS errors. Two deviations found and fixed — the published JS source map
-      (<code>5975aec1</code>) and the Sentry deprecation that hid a dead <code>release</code> tag
-      (<code>5d3ec74c</code>).</li>
-  <li class="todo"><strong>Sync the deployment repository</strong> so nginx starts sending
+      (<code>b21b4ebf</code>) and the Sentry deprecation that hid a dead <code>release</code> tag
+      (<code>a10b2e76</code>).</li>
+  <li class="todo"><strong>Sync the deployment repository</strong> — two nginx changes, all five environments:
       <code>Cache-Control: public, max-age=31536000, immutable</code> for <code>/assets/</code>
-      (<code>49d558e</code>, all five environments). Independent of this branch — master's Sprockets digests are
-      content-addressed too. See <a href="#int">§10.3</a>.</li>
-  <li class="todo"><strong>Decide on the four a11y findings INT surfaced</strong> (<a href="#int">§10.5</a>). Three are
-      pre-existing markup (74 unlabelled graph bars, two unlabelled filter selects); the fourth is ours — links inside
-      body text are now 1.25:1 against their surrounding text, and the fix is a visible one (underline them, or
-      undo part of the darkening).</li>
+      (<code>49d558e</code>) and a 404 for <code>/assets/.manifest.json</code> (<code>44dd265</code>). Independent
+      of this branch — master's Sprockets digests are content-addressed too. See <a href="#int">§10.3</a>.</li>
+  <li class="done">The link-contrast finding is fixed rather than deferred: no link colour can satisfy both rules
+      at once (<a href="#int">§10.5</a>), so <code>p a, label a</code> are underlined — two links app-wide.</li>
+  <li class="todo"><strong>Two pre-existing a11y findings left</strong>, both master's and both one-line
+      (<a href="#int">§10.5</a>): <code>alt: ''</code> on the weekly graph's 74 spacer <code>img</code>s, and an
+      <code>aria-label</code> fallback in <code>direct_filter</code> for the two unlabelled filter selects.</li>
+  <li class="todo"><strong>Teach CI the 72-character subject cap</strong>, or the next
+      <code>--no-verify</code> plants another over-long subject that <code>commit-lint</code> waves through —
+      which is what forced the third history rewrite (§9.3).</li>
 </ul>
 </div>
 
@@ -2796,6 +2829,16 @@ elsewhere in this document are the pre-rewrite ones.</p>
 <p class="small">Also fixed, because it failed the <code>HtmlHint</code> hook on every commit that touched this
 file: an unescaped <code>&gt;</code> inside a <code>&lt;code&gt;</code> block in the phase-4 section
 (<code>'~&gt; 4.6'</code>).</p>
+<p class="box warn"><strong>A third pass was needed on 29.09, and the reason is the same gap.</strong> One subject
+written <em>after</em> the sweep —
+<code>ci(lint): run linters as parallel jobs, add reek, rbp, erb_lint, fasterer</code> — is 73 characters. CI's
+<code>commit-lint</code> passed it (no width check) and it was committed with <code>--no-verify</code>, so nothing
+caught it until the subjects were measured by hand again. Now
+<code>ci(lint): parallelise linters, add reek, rbp, erb_lint, fasterer</code> (64), rewritten over
+<code>adeef56d~1..HEAD</code> and force-pushed; tree diff against
+<code>backup/pre-msg-rewrite-20260929</code> empty, eight SHAs changed.
+<strong>The durable fix is to teach CI the width rule</strong> so the two gates agree — until then every
+<code>--no-verify</code> can plant another one.</p>
 
 <h3 id="membertest">9.4 The one red test <span class="tag low">fixed</span></h3>
 <p><code>MemberTest#test_members_absences_sorted_by_vacations_left</code> was the only failing test on the branch. It
@@ -2923,6 +2966,13 @@ things were wrong, and none of them could have been found locally.</p>
       <em>key order</em> is not — Propshaft writes it in directory-traversal order, so the file is not reproducible
       even though everything it describes is.</li>
 </ul>
+<p class="box warn"><strong><code>cedece0d</code> is no longer on the branch.</strong> A second subject rewrite
+(§9.3, 29.09) moved every commit from <code>adeef56d</code> onwards; the tree INT was built from is now
+<code>37e7368b</code>, byte-identical content, different hash. The image tag
+<code>git-cedece0d8497b1698edc2516566ee8492b838d24</code> still resolves in Harbor and is still what this section
+verified, so the SHAs above are left as they were measured — but <code>git show cedece0d</code> only works from the
+backup ref. <strong>Rewriting history invalidates the provenance of anything already built from it</strong>, which
+is an argument for doing the message sweep once, before the first image.</p>
 <p class="small">Remember to <code>rm -rf public/assets tmp/cache/assets</code> afterwards — the phase-0 trap
 (stale digested assets shadowing your edits) applies to a verification precompile exactly as much as to a baseline one.</p>
 
@@ -2966,7 +3016,7 @@ and the weekly graph's <code>img</code> bars all render.</p>
 
 <h3>10.3 Deviations found in the deployment, not the code</h3>
 
-<h4>The production image published its source map <span class="tag low">fixed · 5975aec1</span></h4>
+<h4>The production image published its source map <span class="tag low">fixed · b21b4ebf</span></h4>
 <p><code>/assets/application-c5588db3.js.map</code> answered <strong>200 with 2.2 MB</strong> of unminified
 application and vendor source, to an unauthenticated request. <code>package.json</code>'s <code>build</code> script
 carried <code>--sourcemap</code>, and that script is what <code>assets:precompile</code> runs inside the Dockerfile,
@@ -3005,15 +3055,35 @@ content-addressed in exactly the same way. The <code>private</code> is HAProxy's
 cookie; it does not stop browser caching, and since sessions live in memcached the affinity cookie buys nothing
 anyway (<code>haproxy.router.openshift.io/disable_cookies</code> if someone wants it gone).</p>
 
-<h4>Two things that are fine as they are</h4>
+<h4>Propshaft's manifest, and the 404 page <span class="tag low">manifest closed · 44dd265</span></h4>
 <ul>
-  <li><code>/assets/.manifest.json</code> (6 kB) is readable. It is Propshaft's logical-name → digest map, and every
-      value in it is already in the HTML. Worth knowing it enumerates assets no page links, so it is a discovery aid
-      and nothing more; a <code>location = /assets/.manifest.json { return 404; }</code> is available if that ever
-      matters. Propshaft reads it from disk at boot, not over HTTP.</li>
+  <li><code>/assets/.manifest.json</code> (6 kB) was readable. Every value in it is already in the HTML, and
+      Propshaft reads it off disk at boot rather than over HTTP, so nothing depends on serving it — but it
+      enumerates assets no page links to, which is a free inventory for anyone looking. Closed in the same nginx
+      files as the caching rule: <code>location = /assets/.manifest.json { return 404; }</code>. Verified against
+      <code>nginx:stable</code> alongside the caching block: manifest 404, a digested asset still 200 with its
+      year-long <code>Cache-Control</code>, <code>/robots.txt</code> untouched.</li>
   <li>A 404 returns the full Rails exception page, stack frames and gem paths included. That is
-      <code>RAILS_ALL_REQUESTS_LOCAL</code>, the same env switch master honours, deliberately on for INT only.</li>
+      <code>RAILS_ALL_REQUESTS_LOCAL</code>, the same env switch master honours, deliberately on for INT only —
+      left alone.</li>
 </ul>
+
+<h4>Two dead gem assets, published because Propshaft publishes everything
+    <span class="tag low">fixed · 05fa881b</span></h4>
+<p>The image also fingerprints <code>nested_form_fields.js-48bb8b86.coffee</code> — <em>raw CoffeeScript</em>, which
+nothing in the pipeline can compile since <a href="#p2">phase 2</a> — and <code>turbolinks-0dc72e4a.js</code>. Both
+are gem asset load paths (<code>nested_form_fields</code>, <code>turbolinks-source</code>) whose payloads phase 2
+replaced with npm packages that esbuild bundles. The gems stay for their Ruby half; only their asset directories are
+dead, which is <a href="#p2">phase 2</a>'s recurring lesson one more time — a gem's asset payload and its Ruby
+payload retire on different phases, and Propshaft has no precompile list to forget them from.</p>
+<p>Fixed the way the <code>.scss</code> sources already were, in the same initializer:</p>
+<pre><code>%w[nested_form_fields turbolinks-source].each do |gem_name|
+  spec = Gem.loaded_specs[gem_name] or next
+  Rails.application.config.assets.excluded_paths &lt;&lt; File.join(spec.gem_dir, 'lib/assets/javascripts')
+end</code></pre>
+<p class="small">Rails' own engine assets (<code>trix</code>, <code>actiontext</code>, <code>actioncable</code>,
+<code>activestorage</code>, <code>rails-ujs</code>) are published too and are equally unused, but they are Rails
+defaults rather than something this migration introduced — left for a follow-up rather than widened into here.</p>
 
 <h3>10.4 One deprecation warning, two bugs</h3>
 <p>INT's boot log carried <code>WARN -- sentry: `include_local_variables` is deprecated; use
@@ -3057,14 +3127,35 @@ was invisible locally</em>.</p>
 <p><strong>Three of the four are pre-existing markup</strong> — untouched by this branch, red on master too. The
 fourth is ours and is the price of the palette: the same link was <code>#238BCA</code> on <code>#4A4A4A</code> before,
 which is 2.37:1 and <em>also</em> fails the 3:1 rule, but darkening the link to clear AA against the white background
-(7.10:1) pushed it to 1.25:1 against the text it sits in. The two requirements pull in opposite directions; satisfying
-both means not relying on colour at all, i.e. underlining links inside text blocks. That is a visible design change, so
-it is listed as open rather than slipped in here.</p>
-<p class="small">Fix sketch, if it is wanted: <code>alt: ''</code> on the two graph <code>image_tag</code>s (decorative
-by construction — the tooltip already carries the text), an <code>aria-label</code> fallback in
-<code>direct_filter</code> when <code>label</code> is <code>nil</code>, and
-<code>text-decoration: underline</code> for <code>a</code> inside <code>p</code>/<code>label</code>/<code>.detail</code>.
-Three small diffs, one design decision.</p>
+(7.10:1) pushed it to 1.25:1 against the text it sits in.</p>
+
+<h4>Colour cannot fix it — the arithmetic says so <span class="tag low">fixed · ee53e323</span></h4>
+<p>The obvious move is to keep hunting for a link colour that satisfies both rules. There isn't one. With body text
+at <code>#4A4A4A</code> (relative luminance 0.0685), a link needs luminance ≥ 0.3055 to reach 3:1 against it — and
+that colour is only <strong>2.95:1 against white</strong>, so it fails AA. Push the body text to pure black and the
+current link is still 2.96:1. <strong>Any pair that clears 4.5:1 on white has at most 4.67:1 between the two, and
+only if one of them is nearly black</strong> — the room the two rules leave each other is that thin.</p>
+<p>So the distinction has to be non-colour. Which ones axe actually accepts is not obvious either, so they were
+measured rather than assumed — the rule injected into the live page, axe re-run after each:</p>
+<table>
+  <tr><th>Candidate</th><th>axe <code>link-in-text-block</code></th><th>Note</th></tr>
+  <tr><td><code>text-decoration: underline</code></td><td>passes</td><td>the web's default meaning of "link"</td></tr>
+  <tr><td><code>underline dotted</code></td><td>passes</td><td>lighter visually, same semantics</td></tr>
+  <tr><td><code>font-weight: 700</code></td><td>passes</td><td>reads as emphasis, not as a link</td></tr>
+  <tr><td><code>font-style: italic</code></td><td>passes</td><td>same objection, worse legibility</td></tr>
+  <tr><td><code>border-bottom</code> / <code>outline</code></td><td>passes</td><td>an underline with extra steps</td></tr>
+  <tr><td><code>background-color</code> tint</td><td><strong>fails</strong></td><td>axe compares text colour, not the box</td></tr>
+  <tr><td>underline on <code>:hover</code> only</td><td><strong>fails</strong></td><td>the resting state is what is judged</td></tr>
+</table>
+<p><strong>Taken: underline, scoped to <code>p a, label a</code>.</strong> The scope is what makes this small rather
+than a redesign — a census of every <code>a</code> with sibling text across twelve INT pages found
+<strong>two</strong>, this one and the flash message's <code>×</code>. Nav, table, action and breadcrumb links are
+not in a text block and are untouched; re-running axe with the rule in place clears
+<code>/ordertimes/new</code> and changes nothing else.</p>
+<p class="small">Still open, both pre-existing: <code>alt: ''</code> on the two graph <code>image_tag</code>s
+(decorative by construction — the tooltip already carries the text) and an <code>aria-label</code> fallback in
+<code>filter_helper.rb#direct_filter</code> when <code>label</code> is <code>nil</code>. Two small diffs, no design
+decision in either — they are follow-ups only because they are master's bugs, not this branch's.</p>
 
 <hr>
 <p class="small">Generated from a scan of this working tree: 330 HAML views, 36 CoffeeScript files, 6020 lines of SCSS,
