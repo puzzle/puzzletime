@@ -19,8 +19,6 @@ FileUtils.chdir APP_ROOT do
 
   puts "\n== Configuring git =="
   system! "git config commit.template .gitmessage"
-  # Install the overcommit hooks that enforce the Conventional Commit format.
-  system("bundle exec overcommit --install")
 
   # puts "\n== Copying sample files =="
   # unless File.exist?("config/database.yml")
@@ -36,3 +34,7 @@ FileUtils.chdir APP_ROOT do
   puts "\n== Restarting application server =="
   system! "bin/rails restart"
 end
+
+# The hooks are not installed here: their linters live in the optional :overcommit
+# gem group, which bundler skips by default. Run bin/setup_overcommit if you want them.
+puts "note: run bin/setup_overcommit to install the git hooks and their linters"

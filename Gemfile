@@ -27,7 +27,6 @@ gem 'delayed_job_active_record'
 gem 'devise'
 gem 'email_address'
 gem 'haml'
-gem 'haml-lint'
 gem 'highrise'
 gem 'image_processing'
 gem 'jbuilder'
@@ -123,4 +122,18 @@ group :test do
   gem 'mocha', require: false
   gem 'rails-controller-testing'
   gem 'webmock'
+end
+
+# Linters run only by overcommit's hooks (.overcommit.yml); install with bin/setup_overcommit.
+group :overcommit, optional: true do
+  gem 'chamber'
+  gem 'erb_lint'
+  gem 'fasterer'
+  gem 'haml-lint'
+  gem 'image_optim'
+  gem 'overcommit'
+  gem 'rails_best_practices'
+  gem 'reek'
+  gem 'scss_lint'
+  gem 'sqlint'
 end

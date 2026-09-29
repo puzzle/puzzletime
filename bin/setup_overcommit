@@ -1,0 +1,39 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# Installs everything .overcommit.yml's enabled hooks need, then the hooks themselves.
+require 'fileutils'
+
+APP_ROOT = File.expand_path('..', __dir__)
+
+# Hooks that shell out to a non-Ruby binary we cannot install from the Gemfile.
+NPM_PACKAGES = %w[htmlhint csslint standard].freeze
+SYSTEM_BINARIES = {
+  'tidy' => 'HtmlTidy',
+  'shellcheck' => 'ShellCheck',
+  'yamllint' => 'YamlLint'
+}.freeze
+
+def system!(*)
+  system(*, exception: true)
+end
+
+FileUtils.chdir APP_ROOT do
+  puts '== Installing the :overcommit gem group =='
+  system! 'bundle config set --local with overcommit'
+  system! 'bundle install'
+
+  puts "\n== Installing the npm-based linters =="
+  system! "npm install --global #{NPM_PACKAGES.join(' ')}"
+
+  puts "\n== Checking the system binaries =="
+  missing = SYSTEM_BINARIES.reject { |bin, _| system("command -v #{bin} > /dev/null 2>&1") }
+  missing.each { |bin, hook| puts "missing: #{bin} (hook #{hook}) — install it with your package manager" }
+  puts 'all present' if missing.empty?
+
+  puts "\n== Installing the hooks =="
+  system! 'bundle exec overcommit --install'
+  system! 'bundle exec overcommit --sign'
+
+  abort "\n#{missing.size} binary/binaries missing, those hooks will fail until installed." if missing.any?
+end

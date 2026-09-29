@@ -12,6 +12,7 @@ To get going, after you got a copy of PuzzleTime, issue the following commands i
 directory:
 
     bin/setup            # install gem dependencies and setup database (PostgreSQL)
+    bin/setup_overcommit # optional: install the git hooks and their linters
     rake                 # run all the tests
     rails db:setup       # prepare database
     rails server         # start the rails server
