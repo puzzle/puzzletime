@@ -148,8 +148,7 @@ module ActionDispatch
     # exit. Ferrum knows which connections are outstanding, so wait them out
     # before DatabaseCleaner runs. See upgrade.html #p2.
     def drain_pending_requests
-      return unless Capybara.current_driver == :chrome
-      return unless page.driver.respond_to?(:browser)
+      return unless page.driver.is_a?(Capybara::Cuprite::Driver)
 
       page.driver.browser.network.wait_for_idle(timeout: 5)
     rescue StandardError
