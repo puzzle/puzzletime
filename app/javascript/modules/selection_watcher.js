@@ -59,10 +59,8 @@ app.SelectionWatcher = class SelectionWatcher {
       $(document).off(this.trigger.event, this.trigger.watchedElements)
 
       // use a promise chain to sequentially execute actions
-      return $(document).on(this.trigger.event, this.trigger.watchedElements, event => {
-        console.log('fire action')
-        return this._runActionsWithSerializedClass()
-      })
+      return $(document).on(this.trigger.event, this.trigger.watchedElements,
+        event => this._runActionsWithSerializedClass())
     }
   }
 
