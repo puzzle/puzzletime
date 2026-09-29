@@ -18,7 +18,7 @@ if ErrorTracker.sentry_like?
     config.send_modules = false
 
     # Whether to capture local variables from the raised exceptions frame.
-    config.include_local_variables = true
+    config.data_collection.stack_frame_variables = true
 
     config.breadcrumbs_logger = %i[active_support_logger http_logger]
 
@@ -27,7 +27,8 @@ if ErrorTracker.sentry_like?
     # defaults to development
     # config.environment = Rails.env
 
-    config.release = Settings.puzzletime.run.full_versioon
+    # to_s: without BUILD_COMMIT the YAML value is the bare Float 2.18, which Sentry rejects
+    config.release = Settings.puzzletime.run.full_version.to_s
 
     filter = ActiveSupport::ParameterFilter.new(Rails.application.config.filter_parameters)
 
