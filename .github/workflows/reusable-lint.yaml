@@ -14,7 +14,7 @@ permissions:
   pull-requests: write
 
 jobs:
-  lint:
+  rubocop:
     runs-on: 'ubuntu-latest'
 
     steps:
@@ -33,27 +33,82 @@ jobs:
           # reporter: github-pr-review
           level: error
 
+  brakeman:
+    runs-on: 'ubuntu-latest'
+
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.ref }}
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
       - uses: reviewdog/action-brakeman@v2
-        if: '!cancelled()'
         with:
           brakeman_version: gemfile
           level: error
 
+  actionlint:
+    runs-on: 'ubuntu-latest'
+
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.ref }}
+
       - uses: reviewdog/action-actionlint@v1
-        if: '!cancelled()'
         with:
           level: error
 
+  ruby-lint:
+    runs-on: 'ubuntu-latest'
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: 'HAML-Lint'
+            command: 'bundle exec haml-lint --reporter checkstyle'
+            format: '-f=checkstyle'
+          - name: 'Reek'
+            command: 'bundle exec reek --single-line --no-progress app lib'
+            # reek indents every smell by two spaces under its file heading
+            format: '-efm=  %f:%l: %m'
+          - name: 'Rails-Best-Practices'
+            command: 'bundle exec rails_best_practices --without-color'
+            format: '-efm=%f:%l - %m'
+          - name: 'ERB-Lint'
+            command: 'bundle exec erb_lint --lint-all --format compact'
+            format: '-efm=%f:%l:%c: %m'
+          - name: 'Fasterer'
+            command: 'bundle exec fasterer'
+            format: '-efm=%f:%l %m'
+
+    # The linters live in the optional :overcommit group (see .overcommit.yml)
+    env:
+      BUNDLE_WITH: 'overcommit'
+
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.ref }}
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
       - uses: reviewdog/action-setup@v1
 
-      - name: 'Run Reviewdog HAML-Lint'
-        if: '!cancelled()'
+      - name: ${{ matrix.name }}
         env:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ github.token }}
         run: |
-          bundle exec haml-lint --reporter checkstyle |
+          ${{ matrix.command }} |
+          sed -E 's/\x1B\[[0-9;]*m//g' |
           reviewdog \
-          -f=checkstyle \
-          -name="HAML-Lint" \
+          "${{ matrix.format }}" \
+          -name="${{ matrix.name }}" \
           -reporter=github-pr-review
 ...
