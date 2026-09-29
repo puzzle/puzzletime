@@ -19,7 +19,9 @@ jobs:
         image: "postgres:11"
         env:
           POSTGRES_PASSWORD: "postgres"
-        ports: ["5432:5432"]
+        # Host ports off the defaults so a local postgres/memcached does not
+        # collide when running this workflow with act
+        ports: ["55432:5432"]
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -27,7 +29,7 @@ jobs:
           --health-retries 10
       memcached:
         image: "memcached"
-        ports: ["11211:11211"]
+        ports: ["51121:11211"]
 
     steps:
       - uses: actions/checkout@v7
@@ -46,9 +48,16 @@ jobs:
 
       - run: npm ci
 
+      # Ferrum/cuprite needs a Chrome binary: hosted runners ship one, act images do not
+      - uses: browser-actions/setup-chrome@v2
+        with:
+          install-dependencies: true
+
       - name: 'Build and test with Rake'
         env:
           RAILS_TEST_DB_NAME: 'postgres'
+          RAILS_TEST_DB_PORT: '55432'
+          RAILS_MEMCACHED_PORT: '51121'
           RAILS_TEST_DB_USERNAME: 'postgres'
           RAILS_TEST_DB_PASSWORD: 'postgres'
           RAILS_ENV: 'test'
@@ -57,8 +66,6 @@ jobs:
         run: |
           sudo apt-get -yqq update
           sudo apt-get -yqq install libpq-dev libvips-dev
-          gem install bundler --version '~> 2'
-          bundle install --jobs 4 --retry 3
           bundle exec rails db:create
           bundle exec rails db:migrate
           SKIP_YARN_INSTALL=1 bundle exec rails assets:precompile

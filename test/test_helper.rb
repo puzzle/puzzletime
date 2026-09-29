@@ -49,7 +49,9 @@ Capybara.register_driver :chrome do |app|
       # coordinates, so clicks land on stale positions. This makes the browser
       # report the OS "reduce motion" preference, which our stylesheet honours
       # by collapsing all durations. Asserted by ReducedMotionTest.
-      'force-prefers-reduced-motion' => true
+      'force-prefers-reduced-motion' => true,
+      # Chrome's sandbox needs an unprivileged user, but act runs jobs as root
+      **(Process.uid.zero? ? { 'no-sandbox' => nil } : {})
     },
     # Fail a test on an uncaught JS exception rather than letting Capybara wait
     # out its timeout looking for an element the exception prevented. Safe now
