@@ -383,17 +383,26 @@ class CreatorTest < ActiveSupport::TestCase
     end
   end
 
-  test '#form_valid? for new items with percent/definitive or repeat only returns true' do
+  test '#form_valid? for new items with percent/definitive returns true' do
     [{ percent: 50, definitive: true, repeat_until: '2016 42' },
-     { percent: 50, definitive: false, repeat_until: '2016 42' },
-     { repeat_until: '2016 42' }].each do |p|
+     { percent: 50, definitive: false, repeat_until: '2016 42' }].each do |p|
       c = Plannings::Creator.new({ planning: p, items: items_to_create })
 
       assert_predicate c, :form_valid?, "Expected to be valid for #{p}"
-      assert_not c.errors.include?('Prozent müssen angegeben werden, um neue Planungen zu erstellen'),
-                 "Expected to not contain error for #{p}"
-      assert_not c.errors.include?('Status muss angegeben werden, um neue Planungen zu erstellen'),
-                 "Expected to not contain error for #{p}"
+    end
+  end
+
+  test '#create_or_update with repeat_until and nothing to repeat returns false and sets errors' do
+    [{ planning: { repeat_until: '2016 42' } },
+     { planning: { percent: 50, definitive: true, repeat_until: '2016 42' } },
+     { planning: { repeat_until: '2016 42' }, items: items_to_create }].each do |params|
+      c = Plannings::Creator.new(params)
+
+      assert_no_difference('Planning.count') do
+        assert_not c.create_or_update, "Expected to fail for #{params}"
+      end
+      assert_includes c.errors, 'Die Auswahl enthält keine Planung, die wiederholt werden kann',
+                      "Expected to contain error for #{params}"
     end
   end
 
@@ -434,12 +443,11 @@ class CreatorTest < ActiveSupport::TestCase
   end
 
   test '#form_valid? with valid repeat_until returns true' do
+    Planning.create!(items_to_create.first.merge(percent: 50, definitive: true))
     ['201642', '2016 42'].each do |repeat_until|
-      c = Plannings::Creator.new({ planning: { repeat_until: } })
+      c = Plannings::Creator.new({ planning: { repeat_until: }, items: items_to_create })
 
       assert_predicate c, :form_valid?, "Expected to be valid for #{repeat_until}"
-      assert_not c.errors.include?('Wiederholungsdatum ist ungültig'),
-                 "Expected to not contain error for #{p}"
     end
   end
 
