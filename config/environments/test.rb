@@ -28,7 +28,12 @@ Rails.application.configure do
   # )
 
   config.cache_store = :memory_store
-  config.session_store(:mem_cache_store)
+  # Sessions live in memcached, so the store has to follow RAILS_MEMCACHED_*
+  # like config/application.rb does — CI runs memcached off the default port.
+  config.session_store(
+    :mem_cache_store,
+    memcache_server: "#{ENV['RAILS_MEMCACHED_HOST'] || 'localhost'}:#{ENV['RAILS_MEMCACHED_PORT'] || '11211'}"
+  )
 
   # config.action_dispatch.cookies_serializer = :marshal
 
