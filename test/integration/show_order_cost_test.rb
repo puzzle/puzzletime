@@ -12,7 +12,7 @@ class ShowOrderCost < ActionDispatch::IntegrationTest
   attr_reader :ordertime
 
   test 'selecting cost type shows respective table' do
-    activate_meal_compensations
+    Settings.meal_compensation.active = true
     visit order_order_cost_path(order_id: order.id)
 
     assert_selector(:css, '#cost_type')
@@ -31,7 +31,7 @@ class ShowOrderCost < ActionDispatch::IntegrationTest
   end
 
   test 'with meal_compensations deacivated, expenses are shown and no select field is present' do
-    deactivate_meal_compensations
+    Settings.meal_compensation.active = false
     visit order_order_cost_path(order_id: order.id)
 
     assert_no_selector(:css, '#cost_type')
@@ -40,12 +40,12 @@ class ShowOrderCost < ActionDispatch::IntegrationTest
   end
 
   test 'all meal compensation days are visible' do
-    activate_meal_compensations
+    Settings.meal_compensation.active = true
 
-    create_ordertime(employees(:mark), 5, 1.week.ago, true)
-    create_ordertime(employees(:mark), 2, 2.days.ago, true)
-    create_ordertime(employees(:mark), 2, 2.days.ago, true)
-    create_ordertime(employees(:pascal), 2, 2.days.ago, true)
+    create_ordertime(employees(:mark), 5, 1.week.ago)
+    create_ordertime(employees(:mark), 2, 2.days.ago)
+    create_ordertime(employees(:mark), 2, 2.days.ago)
+    create_ordertime(employees(:pascal), 2, 2.days.ago)
 
     visit order_order_cost_path(order_id: order.id, cost_type: 'meal_compensation')
 
@@ -60,7 +60,7 @@ class ShowOrderCost < ActionDispatch::IntegrationTest
 
   private
 
-  def create_ordertime(employee, hours, work_date, meal_compensation)
+  def create_ordertime(employee, hours, work_date)
     @ordertime = Ordertime.create!(
       employee:,
       work_date:,
@@ -68,7 +68,7 @@ class ShowOrderCost < ActionDispatch::IntegrationTest
       hours:,
       description: 'inventing the next big thing (with eyes closed in the chill-room)',
       work_item:,
-      meal_compensation:
+      meal_compensation: true
     )
   end
 
@@ -82,13 +82,5 @@ class ShowOrderCost < ActionDispatch::IntegrationTest
 
   def login
     login_as(:mark)
-  end
-
-  def activate_meal_compensations
-    Settings.meal_compensation.active = true
-  end
-
-  def deactivate_meal_compensations
-    Settings.meal_compensation.active = false
   end
 end
