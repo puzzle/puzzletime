@@ -116,15 +116,16 @@ class CreateOrdertimeTest < ActionDispatch::IntegrationTest
     offered_hours = accounting_post.offered_hours
     worked_hours = Worktime.where(work_item_id: accounting_post.work_item_id).sum(:hours)
 
-    offered_hours.nil? ? 0 : [(worked_hours * 100) / offered_hours, 100].min
+    return 0 unless offered_hours
+
+    [(worked_hours * 100) / offered_hours, 100].min
   end
 
   def expected_color(percentage)
-    if percentage < 80
-      'green'
-    else
-      percentage < 100 ? 'orange' : 'red'
-    end
+    return 'green' if percentage < 80
+    return 'orange' if percentage < 100
+
+    'red'
   end
 
   # returns the width of the progressbar in percent as float
