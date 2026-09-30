@@ -495,7 +495,7 @@ reasoning behind each decision and the phase sections for full verification deta
 
   <div class="timeline-entry warn">
     <div class="timeline-date repeat">Di, 29.09.2026</div>
-    <div class="timeline-spine warn"><button type="button" class="timeline-dot" data-sha="49d558e"><span class="vh">49d558e</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine warn"><button type="button" class="timeline-dot" data-sha="f640bc8543a34cfcab6eacb47892f01946385d12"><span class="vh">f640bc85</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content"><strong>Digested assets were served with no <code>max-age</code> at all.</strong>
       Not the app's doing and not new — an nginx sidecar serves <code>public/</code> from an emptyDir and never set a
       caching header, so every page view revalidated ~600 kB of content-addressed CSS/JS. Fixed in the
@@ -544,7 +544,7 @@ reasoning behind each decision and the phase sections for full verification deta
 
   <div class="timeline-entry bad">
     <div class="timeline-date repeat">Di, 29.09.2026</div>
-    <div class="timeline-spine bad"><button type="button" class="timeline-dot" data-sha="8704d12f"><span class="vh">8704d12f</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine bad"><button type="button" class="timeline-dot" data-sha="ecaac7c1d9aef0bf56114ee802375d9aef46162e"><span class="vh">ecaac7c1</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content"><strong><code>RetryOnFlakyTests</code> was retrying every failing test</strong>,
       assertion failures included — <code>Array#first</code> takes no block, so the class filter never ran and the
       predicate always returned truthy. Fixed, which means every flaky rate in this document was a rate of
@@ -556,13 +556,31 @@ reasoning behind each decision and the phase sections for full verification deta
 
   <div class="timeline-entry bad">
     <div class="timeline-date repeat">Di, 29.09.2026</div>
-    <div class="timeline-spine bad"><button type="button" class="timeline-dot" data-sha="2453fcf5"><span class="vh">2453fcf5</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine bad"><button type="button" class="timeline-dot" data-sha="a64a40ebc8c8e8a8eb7e94b3a0d591e5f9bbafbc"><span class="vh">a64a40eb</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content">The error the retry fix uncovered turned out to be a real one:
       <code>SelectionWatcher</code> and <code>FormUpdater</code> wrapped <code>$.getScript</code> in a hand-rolled
       promise and never caught it, so every request <strong>aborted by navigation</strong> became an uncaught page
       error blamed on whatever step ran next. <code>Ferrum::JavaScriptError: Object</code> was never a mangled
       message — "Object" is Chrome's description of the rejected <code>jqXHR</code>. Fixed, regression-tested, and
       the suite is clean over three consecutive 16-worker runs.</div>
+  </div>
+
+  <div class="timeline-entry bad">
+    <div class="timeline-date">Mi, 30.09.2026</div>
+    <div class="timeline-spine bad"><button type="button" class="timeline-dot" data-sha="674101343e7810fa5f8bb9441f6d975bb9ee4380"><span class="vh">67410134</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-content"><strong>The planning-board intermittents were the test's own setup.</strong>
+      <code>list_plannings</code> re-selected the default period, which submits the remote filter form, so every
+      test in <code>plannings_orders_test</code> began with a board reload in flight that replaced the rows it was
+      dragging on. A 0.5 s server-side delay turned it from intermittent into 4 failures + 3 errors per run; with
+      the select gone, 0. See <a href="#planflake">§11.5</a>.</div>
+  </div>
+
+  <div class="timeline-entry ok">
+    <div class="timeline-date repeat">Mi, 30.09.2026</div>
+    <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="46424dfd8b0c0663de02e1d7538dbdc6e07a18da"><span class="vh">46424dfd</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-content">§10.5's last two a11y findings fixed on the branch rather than on master. One of
+      them was misdiagnosed: <code>/employee_master_data</code>'s unnamed <code>#department_id</code> is the vCard
+      export's bare <code>select_tag</code>, not a <code>direct_filter</code> caller. See <a href="#int">§10.5</a>.</div>
   </div>
 </div>
 
@@ -818,15 +836,19 @@ copied-out assets and the <code>COMMIT</code> file need to survive, and now they
       add-row exercised, no JS errors. Two deviations found and fixed — the published JS source map
       (<code>b21b4ebf</code>) and the Sentry deprecation that hid a dead <code>release</code> tag
       (<code>a10b2e76</code>).</li>
-  <li class="todo"><strong>Sync the deployment repository</strong> — two nginx changes, all five environments:
+  <li class="done"><strong>Deployment repository synced</strong> — both nginx changes are on its <code>main</code> in
+      all five <code>nginx.conf</code> files (<code>base</code> plus the four environments):
       <code>Cache-Control: public, max-age=31536000, immutable</code> for <code>/assets/</code>
-      (<code>49d558e</code>) and a 404 for <code>/assets/.manifest.json</code> (<code>44dd265</code>). Independent
-      of this branch — master's Sprockets digests are content-addressed too. See <a href="#int">§10.3</a>.</li>
+      (<code>f640bc85</code>) and a 404 for <code>/assets/.manifest.json</code> (<code>e775c9d7</code>). The
+      <code>49d558e</code>/<code>44dd265</code> this list used to cite were the pre-push SHAs. Rollout to the
+      clusters not re-checked from here: INT does not resolve off the internal network. Independent of this
+      branch — master's Sprockets digests are content-addressed too. See <a href="#int">§10.3</a>.</li>
   <li class="done">The link-contrast finding is fixed rather than deferred: no link colour can satisfy both rules
       at once (<a href="#int">§10.5</a>), so <code>p a, label a</code> are bold — two links app-wide.</li>
-  <li class="todo"><strong>Two pre-existing a11y findings left</strong>, both master's and both one-line
-      (<a href="#int">§10.5</a>): <code>alt: ''</code> on the weekly graph's 74 spacer <code>img</code>s, and an
-      <code>aria-label</code> fallback in <code>direct_filter</code> for the two unlabelled filter selects.</li>
+  <li class="done"><strong>The two pre-existing a11y findings are fixed</strong> (<a href="#int">§10.5</a>):
+      <code>alt: ''</code> on the <code>space.gif</code> spacers (weekly graph bars and empty evaluator cells), and
+      <code>aria-label</code>s on the seven unlabelled <code>period_shortcut</code> filters and the vCard export's
+      department select.</li>
   <li class="done"><strong>CI now checks the 72-character cap.</strong> <code>bin/commit-lint</code> reads
       <code>CommitMsg/TextWidth/max_subject_width</code> out of <code>.overcommit.yml</code> alongside the
       Conventional Commits pattern, so the two gates cannot drift again — which is what let a
@@ -856,8 +878,10 @@ copied-out assets and the <code>COMMIT</code> file need to survive, and now they
   <li class="done"><strong><code>timeout_safe</code> deleted, all call sites unwrapped.</strong> Its skip branch was
       unreachable — <code>raise unless ENV['CI'] == true</code> compares a String to <code>true</code> — so the
       wrapper only added a block frame around 12 test files, and <code>RetryOnFlakyTests</code> already handles the
-      genuinely racy classes. The same pass unskips <code>plannings_orders_test</code>'s 'create repetition'; that
-      file's remaining intermittent failures are pre-existing at baseline and undiagnosed.</li>
+      genuinely racy classes. The same pass unskips <code>plannings_orders_test</code>'s 'create repetition'.</li>
+  <li class="done"><strong><code>plannings_orders_test</code>'s intermittents diagnosed and fixed:</strong> its
+      <code>setup</code> re-selected the default period and so started a remote board reload under every test.
+      See <a href="#planflake">§11.5</a>.</li>
   <li class="done"><strong>actionlint's 15 errors were one missing block</strong> (see the CI list in
       <a href="#checks">§9.5</a>), and <code>reusable-sbom.yaml</code> lost its unquoted <code>$(pwd)</code>.
       <code>actionlint</code> is clean, exit 0.</li>
@@ -3139,7 +3163,7 @@ is safe because it builds from a clean checkout, but a CI job that ran a dev wat
 <code>assets:precompile</code> would ship them. Two more reasons to keep the phase-0 habit:
 <code>rm -rf public/assets tmp/cache/assets</code>, and never precompile on a tree you have been developing in.</p>
 
-<h4>Digested assets had no caching header at all <span class="tag low">fixed · 49d558e, deployment repo</span></h4>
+<h4>Digested assets had no caching header at all <span class="tag low">fixed · f640bc85, deployment repo</span></h4>
 <p>Assets came back <code>cache-control: private</code> with no <code>max-age</code>, so a browser revalidated every
 one of them on every page view. The path matters for the diagnosis: the responses carry no
 <code>x-request-id</code>, no <code>x-frame-options</code> and an mtime-size <code>etag</code>, so they never reach
@@ -3158,7 +3182,7 @@ content-addressed in exactly the same way. The <code>private</code> is HAProxy's
 cookie; it does not stop browser caching, and since sessions live in memcached the affinity cookie buys nothing
 anyway (<code>haproxy.router.openshift.io/disable_cookies</code> if someone wants it gone).</p>
 
-<h4>Propshaft's manifest, and the 404 page <span class="tag low">manifest closed · 44dd265</span></h4>
+<h4>Propshaft's manifest, and the 404 page <span class="tag low">manifest closed · e775c9d7</span></h4>
 <ul>
   <li><code>/assets/.manifest.json</code> (6 kB) was readable. Every value in it is already in the HTML, and
       Propshaft reads it off disk at boot rather than over HTTP, so nothing depends on serving it — but it
@@ -3260,10 +3284,16 @@ else.</p>
 weaker signal than an underline for anyone who has to guess what is clickable, and it competes with
 <code>&lt;strong&gt;</code> for meaning. Switching to <code>text-decoration: underline</code> is a one-word change
 in the same rule if that trade turns out wrong.</p>
-<p class="small">Still open, both pre-existing: <code>alt: ''</code> on the two graph <code>image_tag</code>s
-(decorative by construction — the tooltip already carries the text) and an <code>aria-label</code> fallback in
-<code>filter_helper.rb#direct_filter</code> when <code>label</code> is <code>nil</code>. Two small diffs, no design
-decision in either — they are follow-ups only because they are master's bugs, not this branch's.</p>
+<p class="small"><strong>Fixed 2026-09-30</strong> (<code>46424dfd</code>), on the branch rather than master since
+both are one-liners: <code>alt: ''</code> on <code>graph_helper.rb#timebox_div</code>'s spacer and on the same
+<code>space.gif</code> in <code>evaluator/_timecell</code>, and <code>aria: { label: 'Zeitraum' }</code> on the seven
+<code>direct_filter_select(:period_shortcut, nil, …)</code> callers. The table's diagnosis of
+<code>#department_id</code> was wrong: that select is the vCard export's bare <code>select_tag</code> in
+<code>employee_master_data/_vcard_export</code>, which never went through <code>direct_filter</code>; it now carries
+<code>aria-label="Organisationseinheit"</code>. The callers name their selects rather than
+<code>direct_filter</code> guessing a fallback — the helper cannot know what an unlabelled select is for. Verified by
+rendering the helpers (<code>alt=""</code>, both <code>aria-label</code>s present) and 182 controller tests over the
+touched views; axe was not re-run against INT, which does not resolve from off the internal network.</p>
 
 <h2 id="ci">11. CI: the first run that actually executed the test suite <span class="tag low">2026-09-30</span></h2>
 
@@ -3316,10 +3346,52 @@ green.</p>
   <li>The temporary capture is gone again: <code>test/support/zz_ci_capture.rb</code>, the
       <code>upload-artifact</code> step and the <code>which -a google-chrome</code> lines are removed.</li>
   <li>The local pre-push Minitest hook runs the full suite (~4 min) on every push and is itself occasionally flaky;
-      <code>SKIP=All git push</code> skips it, with one hook-enabled push at the end.</li>
-  <li>Still undiagnosed and pre-existing at baseline: the intermittent <code>plannings_orders_test</code> failures
-      (<code>test_update_planning_entries</code> finding a leftover <code>div.-definitive</code>, and errors out of
-      <code>create_plannings</code>/<code>list_plannings</code>).</li>
+      <code>SKIP=ALL git push</code> skips it (exactly <code>ALL</code> — <code>All</code> is ignored), with one
+      hook-enabled push at the end.</li>
+  <li>The intermittent <code>plannings_orders_test</code> failures were still undiagnosed at this point; see
+      <a href="#planflake">§11.5</a>.</li>
+</ul>
+
+<h3 id="planflake">11.5 The planning-board intermittents: the setup reloaded the board under every test</h3>
+<p><code>list_plannings</code>, the file's <code>setup</code>, ended with <code>select 'Nächste 3 Monate', from:
+'period_shortcut'</code>. That is already the default — <code>Plannings::BaseController#default_period</code> is
+<code>Period.next_n_months(3)</code>, shortcut <code>3M</code>, and each test starts with a fresh session — so the
+select changed nothing but still fired: Cuprite dispatches <code>change</code> even for the selected option,
+<code>[data-submit]</code> submits the filter form, and that form is <code>remote: true</code>. Every test therefore
+began with a <code>show.js</code> in flight that replaces the whole <code>.planning-board</code> and re-initialises
+the selectable and the panel (<code>App.plannings.reloadAll()</code>) — underneath whatever the test was already
+dragging, clicking or asserting.</p>
+<p>Proven by widening the window rather than waiting for the flake: a throwaway prepend sleeping 0.5 s in
+<code>Plannings::OrdersController#show</code> for XHRs only.</p>
+<table>
+  <tr><th></th><th>0.5 s delay on the board reload</th><th>no delay</th></tr>
+  <tr><td>before</td>
+      <td><strong>4 failures, 3 errors</strong>: <code>Ferrum::NodeNotFoundError</code> on replaced rows, lost
+          selections (<code>.day.-selected</code> expected 2, none found), 'create repetition' finding 2
+          <code>div.-definitive</code> of 4, and the row-sum test reading the old period</td>
+      <td>green locally on 4 seeds — intermittent only under load</td></tr>
+  <tr><td>after</td>
+      <td>0 failures, 0 errors on 3 runs</td>
+      <td>14 seeds green in a row</td></tr>
+</table>
+<p>The named symptom, <code>test_update_planning_entries</code> finding a leftover <code>div.-definitive</code>, is
+the same interleaving: the reload lands between the drag and OK, the panel submits an empty selection, and both
+plannings stay definitive. That one was not reproduced by name — <em>[inference]</em>. Neither were the errors out
+of <code>create_plannings</code>/<code>list_plannings</code>; <code>list_plannings</code> now does nothing in the
+browser but <code>visit</code>.</p>
+<ul>
+  <li>The setup <code>select</code> is deleted; nothing depended on it.</li>
+  <li>'total time and visible time are shown per row' switched period, slept 0.5 s and then read the sums with a
+      non-waiting <code>assert_equal</code>. It failed under the delay; now waiting <code>assert_selector …
+      exact_text:</code> assertions.</li>
+  <li><code>row_mark</code>/<code>row_pascal</code> carried a <code>sleep 0.1</code> and a TODO asking why they
+      found stale nodes without it. This was the why; both removed.</li>
+  <li>Found on the way, app-side and master's too: a repetition request with an empty selection is a 500
+      (<code>Plannings::Creator#repeat</code>, <code>at_beginning_of_week</code> for nil) rather than a
+      validation error. Only reachable when a selection is lost under a pending submit; left alone.</li>
+  <li>Local trap: <code>bin/rails test</code> does not rebuild <code>app/assets/builds</code>. A bundle left over from
+      18.09 failed the jqXHR regression test ('a failing selection update settles instead of leaking a rejection')
+      with <code>"unhandled"</code> until <code>npm run build</code>.</li>
 </ul>
 
 <hr>
