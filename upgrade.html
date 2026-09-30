@@ -129,6 +129,7 @@
     <li><a href="#decisions">Decisions</a></li>
     <li><a href="#a11y">Accessibility, lint and release-check cleanup</a></li>
     <li><a href="#int">INT deployment — what the running system says</a></li>
+    <li><a href="#ci">CI: the first run that actually executed the test suite</a></li>
   </ol>
 </nav>
 
@@ -857,6 +858,12 @@ copied-out assets and the <code>COMMIT</code> file need to survive, and now they
       wrapper only added a block frame around 12 test files, and <code>RetryOnFlakyTests</code> already handles the
       genuinely racy classes. The same pass unskips <code>plannings_orders_test</code>'s 'create repetition'; that
       file's remaining intermittent failures are pre-existing at baseline and undiagnosed.</li>
+  <li class="done"><strong>actionlint's 15 errors were one missing block</strong> (see the CI list in
+      <a href="#checks">§9.5</a>), and <code>reusable-sbom.yaml</code> lost its unquoted <code>$(pwd)</code>.
+      <code>actionlint</code> is clean, exit 0.</li>
+  <li class="done"><strong>The test job had never actually run on this branch</strong> — every dispatch was "Manual
+      build without tests". Turning it on exposed two CI-only faults, both fixed; the suite is green on a hosted
+      runner. Full account in <a href="#ci">§11</a>.</li>
 </ul>
 </div>
 
@@ -3257,6 +3264,63 @@ in the same rule if that trade turns out wrong.</p>
 (decorative by construction — the tooltip already carries the text) and an <code>aria-label</code> fallback in
 <code>filter_helper.rb#direct_filter</code> when <code>label</code> is <code>nil</code>. Two small diffs, no design
 decision in either — they are follow-ups only because they are master's bugs, not this branch's.</p>
+
+<h2 id="ci">11. CI: the first run that actually executed the test suite <span class="tag low">2026-09-30</span></h2>
+
+<p>Every dispatch on this branch had been "Manual build without tests" (<code>build-manual.yaml</code> defaults lint
+and test to <em>false</em>, §9.5), and the last green <code>test-on-pr</code> runs are all master-based branches. So
+the branch's suite had never run on a hosted runner. Turning it on found three separate things.</p>
+
+<h3>11.1 actionlint: 15 errors, one missing block</h3>
+<p>A reusable workflow's own <code>permissions:</code> is ignored when it is called — the calling job's grant
+applies. The three callers of <code>reusable-lint.yaml</code> granted nothing, so all five of its jobs, each needing
+<code>checks: write</code> and <code>pull-requests: write</code> for reviewdog, were reported once per caller. The
+block now sits on the <code>lint:</code> job in <code>build-manual.yaml</code>, <code>build-on-push.yaml</code> and
+<code>test-on-pr.yaml</code>. Same pass: <code>-v "$(pwd):/data"</code> quoted in <code>reusable-sbom.yaml</code>
+(SC2046). <code>actionlint</code> exits 0; run 36674833049 shows <code>lint / actionlint</code> green.</p>
+
+<h3>11.2 Chrome never started</h3>
+<p>Run 36674833049 hit the 15-minute <code>timeout-minutes</code> cap with an unbroken wall of
+<code>Ferrum::ProcessTimeoutError: Browser did not produce websocket url within 10 seconds</code>, every one of them
+in <code>setup</code> at <code>integration_helper.rb#clear_cookies</code>, each retried three times by
+<code>RetryOnFlakyTests</code>. <code>browser-actions/setup-chrome@v2</code> itself succeeded (Chrome for Testing
+154.0.8037.92) — but its build lacks the shared libraries, and it won on <code>PATH</code> over the hosted runner's
+fully provisioned <code>google-chrome</code>. Note the step's echoed inputs are only <code>chrome-version</code> and
+<code>install-chromedriver</code>: our <code>install-dependencies: true</code> does not exist on v2 and was silently
+ignored. The step is now <code>if: ${{ env.ACT }}</code> — act images have no browser at all, hosted runners do.
+Verified in run 36680240770: the step shows skipped and the suite ran to completion in 506s.</p>
+
+<h3>11.3 The session store pointed at the wrong memcached</h3>
+<p>With Chrome working, run 36680240770 reported <strong>1567 tests, 57 failures, 30 errors</strong> — green locally,
+including under <code>CI=true</code> with precompiled assets. The failures looked unrelated to each other: missing
+<code>order_crm_key</code> fields, <code>a.add_nested_fields_link</code> not visible, <code>302 Found</code> redirects
+to <code>/employees/sign_in</code>.</p>
+<p>A temporary capture (<code>test/support/zz_ci_capture.rb</code> plus an <code>upload-artifact</code> step) dumped
+the page behind each failure. 85 files, and the URL comments settle it: pages sit on
+<code>/employees/sign_in</code>, i.e. the tests ran <em>logged out</em>, and the elements they hunt for only exist for
+a signed-in user. <code>config/environments/test.rb</code> set
+<code>config.session_store(:mem_cache_store)</code> with no server, so Dalli defaulted to
+<code>localhost:11211</code> — while <code>reusable-test.yaml</code> deliberately maps the memcached service to
+<strong>51121</strong> so a local instance does not collide when running the workflow under act.
+<code>config/application.rb</code> honours <code>RAILS_MEMCACHED_HOST/PORT</code> for the cache store; the session
+store did not. It does now.</p>
+<p>Local proof, no CI needed: <code>CI=true RAILS_MEMCACHED_PORT=9999 bin/rails test
+test/integration/show_order_cost_test.rb</code> fails 1 of 3, the same way; on the default port the same command is
+green.</p>
+
+<h3>11.4 Green, and the state at handover</h3>
+<ul>
+  <li><strong>Run 36684280996 is green:</strong> <code>test / minitest</code> succeeded,
+      <code>1567 tests, 6525 assertions, 0 failures, 0 errors, 1 skips</code> in 274s — against the runner's own
+      <code>Google Chrome 153.0.8010.52</code>, half the wall time of the broken run.</li>
+  <li>The temporary capture is gone again: <code>test/support/zz_ci_capture.rb</code>, the
+      <code>upload-artifact</code> step and the <code>which -a google-chrome</code> lines are removed.</li>
+  <li>The local pre-push Minitest hook runs the full suite (~4 min) on every push and is itself occasionally flaky;
+      <code>SKIP=All git push</code> skips it, with one hook-enabled push at the end.</li>
+  <li>Still undiagnosed and pre-existing at baseline: the intermittent <code>plannings_orders_test</code> failures
+      (<code>test_update_planning_entries</code> finding a leftover <code>div.-definitive</code>, and errors out of
+      <code>create_plannings</code>/<code>list_plannings</code>).</li>
+</ul>
 
 <hr>
 <p class="small">Generated from a scan of this working tree: 330 HAML views, 36 CoffeeScript files, 6020 lines of SCSS,
