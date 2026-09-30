@@ -48,10 +48,11 @@ jobs:
 
       - run: npm ci
 
-      # Ferrum/cuprite needs a Chrome binary: hosted runners ship one, act images do not
+      # Ferrum/cuprite needs a Chrome binary. Hosted runners ship one with its
+      # dependencies; the action's build lacks them and would win on PATH, so
+      # install it only for act, whose images have no browser at all.
       - uses: browser-actions/setup-chrome@v2
-        with:
-          install-dependencies: true
+        if: ${{ env.ACT }}
 
       - name: 'Build and test with Rake'
         env:
