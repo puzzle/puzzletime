@@ -205,12 +205,11 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
   end
 
   test 'create repetition' do
-    skip
     today = Time.zone.today
     today += 1.day if today.saturday?
     today += 1.day if today.sunday?
 
-    page.driver.browser.manage.window.resize_to(1024, 756)
+    page.driver.resize(1024, 756)
     drag(row_mark.all('.day')[0], row_mark.all('.day')[4])
 
     assert_selector('.-selected', count: 5)
@@ -224,9 +223,9 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
 
       fill_in(
         'repeat_until',
-        with: (today + 2.weeks).at_beginning_of_week.strftime('%Y %U')
+        with: (today + 2.weeks).at_beginning_of_week.strftime('%G %V')
       )
-      # find('#percent').click # required to close calendar popover
+      find('#percent').click # close calendar popover, it overlaps the OK button
       click_button 'OK'
     end
 
@@ -253,8 +252,8 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
 
       assert_selector('#repeat_until', visible: true)
 
-      fill_in 'repeat_until', with: (today + 1.week).strftime('%Y %U')
-      # find('#percent').click # required to close calendar popover
+      fill_in 'repeat_until', with: (today + 1.week).strftime('%G %V')
+      find('#percent').click # close calendar popover, it overlaps the OK button
       click_button 'OK'
     end
 
@@ -299,24 +298,22 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
   end
 
   test 'Moving planning over exiting planning overwrites the planning' do
-    timeout_safe do
+    drag(row_mark.all('.day')[5], row_pascal.all('.day')[9])
+
+    within '.planning-panel' do
+      fill_in 'percent', with: '100'
+      click_button 'fix'
+      click_button 'OK'
+    end
+
+    within('.planning-calendar') do
+      assert_selector('div.-definitive', count: 12)
       drag(row_mark.all('.day')[5], row_pascal.all('.day')[9])
 
-      within '.planning-panel' do
-        fill_in 'percent', with: '100'
-        click_button 'fix'
-        click_button 'OK'
-      end
+      assert_selector('.day.-selected', count: 10)
+      drag(row_pascal.all('.day.-selected')[2], row_mark.all('.day')[0])
 
-      within('.planning-calendar') do
-        assert_selector('div.-definitive', count: 12)
-        drag(row_mark.all('.day')[5], row_pascal.all('.day')[9])
-
-        assert_selector('.day.-selected', count: 10)
-        drag(row_pascal.all('.day.-selected')[2], row_mark.all('.day')[0])
-
-        assert_selector('.day.-definitive', count: 10)
-      end
+      assert_selector('.day.-definitive', count: 10)
     end
   end
 

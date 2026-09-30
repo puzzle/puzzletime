@@ -21,8 +21,6 @@ module CrudControllerTestHelper
   end
 
   def test_index_json # :nodoc:
-    skip 'these tests are currently broken'
-
     get :index, params: test_params(format: 'json')
 
     assert_response :success
@@ -43,8 +41,6 @@ module CrudControllerTestHelper
   end
 
   def test_index_sort_asc # :nodoc:
-    skip 'these tests are currently broken'
-
     col = model_class.column_names.first
     get :index, params: test_params(sort: col, sort_dir: 'asc')
 
@@ -56,8 +52,6 @@ module CrudControllerTestHelper
   end
 
   def test_index_sort_desc # :nodoc:
-    skip 'these tests are currently broken'
-
     col = model_class.column_names.first
     get :index, params: test_params(sort: col, sort_dir: 'desc')
 
