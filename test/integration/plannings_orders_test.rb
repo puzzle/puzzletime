@@ -550,14 +550,17 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
 
     visit plannings_order_path(orders(:puzzletime))
 
-    assert_equal '8 h', row_mark.find('.inperiod-sum').text
-    assert_equal '12 h', row_mark.find('.total-sum').text
+    within(row_mark) do
+      assert_selector('.inperiod-sum', exact_text: '8 h')
+      assert_selector('.total-sum', exact_text: '12 h')
+    end
 
     select 'Nächste 12 Monate', from: 'period_shortcut'
-    sleep 0.5 # give time to update values
 
-    assert_equal '12 h', row_mark.find('.inperiod-sum').text
-    assert_equal '12 h', row_mark.find('.total-sum').text
+    within(row_mark) do
+      assert_selector('.inperiod-sum', exact_text: '12 h')
+      assert_selector('.total-sum', exact_text: '12 h')
+    end
   end
 
   test 'total overall time for selected period is shown' do
@@ -654,13 +657,11 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
   end
 
   def row_mark
-    # TODO: without `sleep` I get "Node is either not visible or not an HTMLElement". Why??
-    @row_mark ||= find("#planning_row_employee_#{employees(:mark).id}_work_item_#{work_item_id}").tap { sleep 0.1 }
+    @row_mark ||= find("#planning_row_employee_#{employees(:mark).id}_work_item_#{work_item_id}")
   end
 
   def row_pascal
-    # TODO: without `sleep` I get "Node is either not visible or not an HTMLElement". Why??
-    @row_pascal ||= find("#planning_row_employee_#{employees(:pascal).id}_work_item_#{work_item_id}").tap { sleep 0.1 }
+    @row_pascal ||= find("#planning_row_employee_#{employees(:pascal).id}_work_item_#{work_item_id}")
   end
 
   def work_item_id
@@ -685,6 +686,5 @@ class PlanningsOrdersTest < ActionDispatch::IntegrationTest
     create_plannings(work_item_id)
     login_as :mark
     visit plannings_order_path(orders(:puzzletime))
-    select 'Nächste 3 Monate', from: 'period_shortcut'
   end
 end
