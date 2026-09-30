@@ -3392,6 +3392,9 @@ browser but <code>visit</code>.</p>
   <li>Local trap: <code>bin/rails test</code> does not rebuild <code>app/assets/builds</code>. A bundle left over from
       18.09 failed the jqXHR regression test ('a failing selection update settles instead of leaking a rejection')
       with <code>"unhandled"</code> until <code>npm run build</code>.</li>
+  <li><strong>CI, run 36688951486 on <code>badd85d3</code>:</strong> <code>test / minitest</code> and all lint jobs
+      green. <code>lint / brakeman</code> failed on the first attempt without a finding — reviewdog's
+      <code>PATCH …/check-runs/…</code> answered 404 — and passed on a rerun of the failed job.</li>
 </ul>
 
 <hr>
