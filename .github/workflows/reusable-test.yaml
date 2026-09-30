@@ -67,8 +67,18 @@ jobs:
         run: |
           sudo apt-get -yqq update
           sudo apt-get -yqq install libpq-dev libvips-dev
+          which -a google-chrome chrome chromium || true
+          google-chrome --version || true
           bundle exec rails db:create
           bundle exec rails db:migrate
           SKIP_YARN_INSTALL=1 bundle exec rails assets:precompile
           bundle exec rails test
+
+      # TEMPORARY: pages behind the CI-only failures, remove with zz_ci_capture.rb
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: failure-pages
+          path: tmp/capybara
+          if-no-files-found: warn
 ...
