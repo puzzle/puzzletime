@@ -12,56 +12,50 @@ class ShowOrderCost < ActionDispatch::IntegrationTest
   attr_reader :ordertime
 
   test 'selecting cost type shows respective table' do
-    timeout_safe do
-      activate_meal_compensations
-      visit order_order_cost_path(order_id: order.id)
+    activate_meal_compensations
+    visit order_order_cost_path(order_id: order.id)
 
-      assert_selector(:css, '#cost_type')
-      assert has_css?('#expenses-list')
-      assert has_css?('#meal-compensations-list')
+    assert_selector(:css, '#cost_type')
+    assert has_css?('#expenses-list')
+    assert has_css?('#meal-compensations-list')
 
-      select('Spesen', from: 'cost_type')
+    select('Spesen', from: 'cost_type')
 
-      assert has_css?('#expenses-list')
-      assert has_no_css?('#meal-compensations-list')
+    assert has_css?('#expenses-list')
+    assert has_no_css?('#meal-compensations-list')
 
-      select('Verpflegungsentschädigung', from: 'cost_type')
+    select('Verpflegungsentschädigung', from: 'cost_type')
 
-      assert has_no_css?('#expenses-list')
-      assert has_css?('#meal-compensations-list')
-    end
+    assert has_no_css?('#expenses-list')
+    assert has_css?('#meal-compensations-list')
   end
 
   test 'with meal_compensations deacivated, expenses are shown and no select field is present' do
-    timeout_safe do
-      deactivate_meal_compensations
-      visit order_order_cost_path(order_id: order.id)
+    deactivate_meal_compensations
+    visit order_order_cost_path(order_id: order.id)
 
-      assert_no_selector(:css, '#cost_type')
-      assert has_css?('#expenses-list')
-      assert has_no_css?('#meal-compensations-list')
-    end
+    assert_no_selector(:css, '#cost_type')
+    assert has_css?('#expenses-list')
+    assert has_no_css?('#meal-compensations-list')
   end
 
   test 'all meal compensation days are visible' do
-    timeout_safe do
-      activate_meal_compensations
+    activate_meal_compensations
 
-      create_ordertime(employees(:mark), 5, 1.week.ago, true)
-      create_ordertime(employees(:mark), 2, 2.days.ago, true)
-      create_ordertime(employees(:mark), 2, 2.days.ago, true)
-      create_ordertime(employees(:pascal), 2, 2.days.ago, true)
+    create_ordertime(employees(:mark), 5, 1.week.ago, true)
+    create_ordertime(employees(:mark), 2, 2.days.ago, true)
+    create_ordertime(employees(:mark), 2, 2.days.ago, true)
+    create_ordertime(employees(:pascal), 2, 2.days.ago, true)
 
-      visit order_order_cost_path(order_id: order.id, cost_type: 'meal_compensation')
+    visit order_order_cost_path(order_id: order.id, cost_type: 'meal_compensation')
 
-      mark_meal_compensation_days = page.find("#employee_#{employees(:mark).id}").all('td').last.text
+    mark_meal_compensation_days = page.find("#employee_#{employees(:mark).id}").all('td').last.text
 
-      assert_equal '2', mark_meal_compensation_days
+    assert_equal '2', mark_meal_compensation_days
 
-      pascal_meal_compensation_days = page.find("#employee_#{employees(:pascal).id}").all('td').last.text
+    pascal_meal_compensation_days = page.find("#employee_#{employees(:pascal).id}").all('td').last.text
 
-      assert_equal '0', pascal_meal_compensation_days
-    end
+    assert_equal '0', pascal_meal_compensation_days
   end
 
   private

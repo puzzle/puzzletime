@@ -20,18 +20,6 @@ module IntegrationHelper
     find('input[name=commit]').click
   end
 
-  # catch some errors occuring now and then in capybara tests
-  def timeout_safe
-    yield
-  rescue Errno::ECONNREFUSED,
-         Timeout::Error,
-         Capybara::FrozenInTime,
-         Capybara::ElementNotFound => e
-    raise unless ENV['CI'] == true
-
-    skip e.message || e.class.name
-  end
-
   def open_selectize(id, options = {})
     element = find("##{id} + .selectize-control")
     element.find('.selectize-input').trigger('click') unless options[:no_click]

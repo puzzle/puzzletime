@@ -11,85 +11,73 @@ class ShowOrderServices < ActionDispatch::IntegrationTest
   attr_reader :ordertime
 
   test 'click on worktime row as employee does not open edit view' do
-    timeout_safe do
-      create_ordertime_show_order_services_as employee_without_responsibilities
-      click_worktime_row
+    create_ordertime_show_order_services_as employee_without_responsibilities
+    click_worktime_row
 
-      assert has_no_text?('Zeit bearbeiten')
-      assert_equal order_order_services_path(order_id: order), current_path
-    end
+    assert has_no_text?('Zeit bearbeiten')
+    assert_equal order_order_services_path(order_id: order), current_path
   end
 
   test 'click on worktime row as order responsible opens edit view' do
-    timeout_safe do
-      create_ordertime_show_order_services_as employee_responsible_for_order
-      click_worktime_row
+    create_ordertime_show_order_services_as employee_responsible_for_order
+    click_worktime_row
 
-      assert has_text?('Zeit bearbeiten')
-      assert_equal edit_ordertime_path(id: ordertime.id), current_path
-    end
+    assert has_text?('Zeit bearbeiten')
+    assert_equal edit_ordertime_path(id: ordertime.id), current_path
   end
 
   test 'click on worktime row as order responsible for different order does not open edit view' do
-    timeout_safe do
-      create_ordertime_show_order_services_as employee_responsible_for_different_order
-      click_worktime_row
+    create_ordertime_show_order_services_as employee_responsible_for_different_order
+    click_worktime_row
 
-      assert has_no_text?('Zeit bearbeiten')
-      assert_equal order_order_services_path(order_id: order), current_path
-    end
+    assert has_no_text?('Zeit bearbeiten')
+    assert_equal order_order_services_path(order_id: order), current_path
   end
 
   test 'click on worktime row as management opens edit view' do
-    timeout_safe do
-      create_ordertime_show_order_services_as manager_not_responsible_for_any_order
-      click_worktime_row
+    create_ordertime_show_order_services_as manager_not_responsible_for_any_order
+    click_worktime_row
 
-      assert has_text?('Zeit bearbeiten')
-      assert_equal edit_ordertime_path(id: ordertime.id), current_path
-    end
+    assert has_text?('Zeit bearbeiten')
+    assert_equal edit_ordertime_path(id: ordertime.id), current_path
   end
 
   test 'timespan start_date and and_date are cleared and disabled when period shortcut selected' do
-    timeout_safe do
-      create_ordertime_show_order_services_as employee_without_responsibilities
+    create_ordertime_show_order_services_as employee_without_responsibilities
 
-      fill_in('start_date', with: '1.11.2006')
+    fill_in('start_date', with: '1.11.2006')
 
-      # jQuery UI rewrites the value into its own dd.mm.yy format at a
-      # nondeterministic moment, so read it with a waiting matcher.
-      assert_selector(:field, 'start_date', with: '01.11.2006')
+    # jQuery UI rewrites the value into its own dd.mm.yy format at a
+    # nondeterministic moment, so read it with a waiting matcher.
+    assert_selector(:field, 'start_date', with: '01.11.2006')
 
-      select('Dieser Monat', from: 'period_shortcut')
+    select('Dieser Monat', from: 'period_shortcut')
 
-      sleep 0.2 # give time to JS to disable the fields and clear the previous input
+    sleep 0.2 # give time to JS to disable the fields and clear the previous input
 
-      assert page.find('#start_date')[:disabled]
-      assert page.find('#end_date')[:disabled]
+    assert page.find('#start_date')[:disabled]
+    assert page.find('#end_date')[:disabled]
 
-      assert_predicate page.find('#start_date')[:value], :blank?
+    assert_predicate page.find('#start_date')[:value], :blank?
 
-      select('benutzerdefiniert', from: 'period_shortcut')
+    select('benutzerdefiniert', from: 'period_shortcut')
 
-      sleep 0.2
+    sleep 0.2
 
-      assert_not page.find('#start_date')[:disabled]
-      assert_not page.find('#end_date')[:disabled]
-    end
+    assert_not page.find('#start_date')[:disabled]
+    assert_not page.find('#end_date')[:disabled]
   end
 
   test 'click on unmodifiable worktime row as management does not open edit view' do
-    timeout_safe do
-      user = manager_not_responsible_for_any_order
-      create_ordertime user
-      accounting_posts(:hitobito_demo_app).update!(closed: true)
-      login_as user
-      visit order_order_services_path(order_id: order)
-      click_worktime_row
+    user = manager_not_responsible_for_any_order
+    create_ordertime user
+    accounting_posts(:hitobito_demo_app).update!(closed: true)
+    login_as user
+    visit order_order_services_path(order_id: order)
+    click_worktime_row
 
-      assert has_no_text?('Zeit bearbeiten')
-      assert_equal order_order_services_path(order_id: order), current_path
-    end
+    assert has_no_text?('Zeit bearbeiten')
+    assert_equal order_order_services_path(order_id: order), current_path
   end
 
   private
