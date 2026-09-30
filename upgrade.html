@@ -549,8 +549,7 @@ reasoning behind each decision and the phase sections for full verification deta
       predicate always returned truthy. Fixed, which means every flaky rate in this document was a rate of
       <em>three consecutive</em> failures. It immediately exposed one real uncaught JS error that the retries had
       been hiding. Chasing the flakiness also showed my own earlier rates were contaminated by two suites sharing
-      <code>puzzletime_test</code> — §5's documented hazard, self-inflicted. See
-      <code>plannings_orders_test_failure.txt</code>.</div>
+      <code>puzzletime_test</code> — §5's documented hazard, self-inflicted.</div>
   </div>
 
 
@@ -834,7 +833,7 @@ copied-out assets and the <code>COMMIT</code> file need to survive, and now they
   <li class="done"><strong><code>RetryOnFlakyTests</code> retried every failing test, not the three named
       exception classes</strong> — <code>Array#first</code> takes no block, so the filter never ran. Fixed; every
       flaky rate quoted in this document was therefore a rate of <em>three consecutive</em> failures and is
-      understated. See <code>plannings_orders_test_failure.txt</code>.</li>
+      understated.</li>
   <li class="done"><strong>What the retry fix exposed, found and fixed:</strong> the uncaught error behind
       <code>Ferrum::JavaScriptError: Object</code> is an <em>unhandled jqXHR rejection</em>.
       <code>SelectionWatcher</code> and <code>FormUpdater</code> wrapped <code>$.getScript</code> in a hand-rolled
@@ -842,7 +841,7 @@ copied-out assets and the <code>COMMIT</code> file need to survive, and now they
       <code>preview_total_selected.js</code> — reached the browser as an uncaught page error and blew up whatever
       step ran next. Both now let the thenable jqXHR sequence the chain and catch the rejection. Three consecutive
       <code>parallel:test[16]</code> runs clean afterwards; regression test asserts the chain settles
-      <em>handled</em>. See <code>plannings_orders_test_failure.txt</code>.</li>
+      <em>handled</em>.</li>
   <li class="done"><strong>A third flake, and it was not a timing one:</strong>
       <code>CreateOrderTest</code> failing with "Unable to find visible link
       <code>client_work_item_id_create_link</code>" is global state, not a race. <code>Crm.init</code> returned early
@@ -857,8 +856,7 @@ copied-out assets and the <code>COMMIT</code> file need to survive, and now they
       unreachable — <code>raise unless ENV['CI'] == true</code> compares a String to <code>true</code> — so the
       wrapper only added a block frame around 12 test files, and <code>RetryOnFlakyTests</code> already handles the
       genuinely racy classes. The same pass unskips <code>plannings_orders_test</code>'s 'create repetition'; that
-      file's remaining intermittent failures are pre-existing at baseline and undiagnosed, recorded in
-      <code>plannings_orders_test_failure2.txt</code>.</li>
+      file's remaining intermittent failures are pre-existing at baseline and undiagnosed.</li>
 </ul>
 </div>
 
@@ -1374,8 +1372,7 @@ the errors the list exists for. A <code>Minitest::Assertion</code> matches neith
 report on the first attempt. <strong>It cost one test immediately:</strong>
 <code>PlanningsOrdersTest#test_close_panel_on_escape</code> now reports a <code>Ferrum::JavaScriptError</code>
 under <code>parallel:test[16]</code> (4.96s, where the masked runs took 50–90s doing the same work three times).
-That class was never on the retry list; three silent retries had been hiding a real uncaught JS error. Full
-write-up in <code>plannings_orders_test_failure.txt</code>.</p>
+That class was never on the retry list; three silent retries had been hiding a real uncaught JS error.</p>
 <p class="box bad"><strong>And that uncaught JS error was real.</strong>
 <code>Ferrum::JavaScriptError: Object</code> is not a mangled message: Chrome reports unhandled promise rejections
 through <code>Runtime.exceptionThrown</code>, and what you get is the description of the <em>rejection value</em> —
