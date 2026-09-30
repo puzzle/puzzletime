@@ -142,14 +142,14 @@ reasoning behind each decision and the phase sections for full verification deta
 
   <div class="timeline-entry ok">
     <div class="timeline-date">Mo, 27.07.2026</div>
-    <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="d3575ad819329959dbcf6347f102136d9155686d"><span class="vh">d3575ad8</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="fee62b4d4d0e9fd9b0178217a4bd38fe516b235e"><span class="vh">fee62b4d</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content"><a href="#p0"><strong>Phase 0 complete</strong></a> — baseline captured,
       scoped runs green.</div>
   </div>
 
   <div class="timeline-entry warn">
     <div class="timeline-date repeat">Mo, 27.07.2026</div>
-    <div class="timeline-spine warn"><button type="button" class="timeline-dot" data-sha="84ef0bdf649c6211b789d282e0adedc283e28b9c"><span class="vh">84ef0bdf</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine warn"><button type="button" class="timeline-dot" data-sha="0ea482073773eb58ecf274d922e67b540192ecc7"><span class="vh">0ea48207</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content">The <em>full</em> suite (not the scoped runs) finds 15 further failures in 3
       causes — a dead callback guard, the Rails 8.1 schema dumper reordering columns, and the jsonapi-serializer
       swap changing an exception class. All Rails-upgrade fallout, none asset-related — but this is why every
@@ -158,14 +158,14 @@ reasoning behind each decision and the phase sections for full verification deta
 
   <div class="timeline-entry ok">
     <div class="timeline-date">Mo, 03.08.2026</div>
-    <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="643e0fc33eed7edf993f68a98507b555a4afe458"><span class="vh">643e0fc3</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="46a45e55fdaad42aa47f82b2e4b852d1b1f84aed"><span class="vh">46a45e55</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content"><a href="#p1"><strong>Phase 1 complete</strong></a> — Bootstrap 3 frozen into
       a static CSS file.</div>
   </div>
 
   <div class="timeline-entry bad">
     <div class="timeline-date repeat">Mo, 03.08.2026</div>
-    <div class="timeline-spine bad"><button type="button" class="timeline-dot" data-sha="643e0fc33eed7edf993f68a98507b555a4afe458"><span class="vh">643e0fc3</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine bad"><button type="button" class="timeline-dot" data-sha="46a45e55fdaad42aa47f82b2e4b852d1b1f84aed"><span class="vh">46a45e55</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content">The phase-0 baseline turns out to be gone (<code>/tmp</code> was cleared).
       Re-deriving it just in time catches a <strong>119 kB → 471 byte regression in <code>print.css</code></strong>
       that "it compiles" had already let through. See <a href="#p1">Phase 1</a>.</div>
@@ -173,7 +173,7 @@ reasoning behind each decision and the phase sections for full verification deta
 
   <div class="timeline-entry accent">
     <div class="timeline-date">Mo, 10.08.2026</div>
-    <div class="timeline-spine"><button type="button" class="timeline-dot" data-sha="56a02f529e9b1f602bebba400f4d5fb8ac3380b7"><span class="vh">56a02f52</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine"><button type="button" class="timeline-dot" data-sha="dd3b753afebfab47b2e018bb08604d2ebaad6ea9"><span class="vh">dd3b753a</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content"><strong>This document is added to the repo</strong>, written up against what
       phases 0–1 had already found — including two corrections to phase 1 itself: its "byte-comparable"
       claim was wrong (a mixin can't be byte-identical to an <code>@extend</code>), and its
@@ -182,14 +182,14 @@ reasoning behind each decision and the phase sections for full verification deta
 
   <div class="timeline-entry ok">
     <div class="timeline-date repeat">Mo, 10.08.2026</div>
-    <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="67c44a65c0221e5c076b85527a1a7929294978f3"><span class="vh">67c44a65</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="2add289577c50d8c21d9daabd830c8f6e6c2ce55"><span class="vh">2add2895</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content"><a href="#p2"><strong>Phase 2 complete</strong></a> — CoffeeScript to
       jsbundling + esbuild.</div>
   </div>
 
   <div class="timeline-entry bad">
     <div class="timeline-date repeat">Mo, 10.08.2026</div>
-    <div class="timeline-spine bad"><button type="button" class="timeline-dot" data-sha="67c44a65c0221e5c076b85527a1a7929294978f3"><span class="vh">67c44a65</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine bad"><button type="button" class="timeline-dot" data-sha="2add289577c50d8c21d9daabd830c8f6e6c2ce55"><span class="vh">2add2895</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content">Four silent Sprockets → esbuild interop traps found, all real breakages: turbolinks
       never starting when bundled, jquery-ui's AMD-only dependency lists, dead <code>//= require</code> comments,
       and jquery-ujs no-oping without a global jQuery. See <a href="#p2">Phase 2</a>.</div>
@@ -197,7 +197,7 @@ reasoning behind each decision and the phase sections for full verification deta
 
   <div class="timeline-entry warn">
     <div class="timeline-date repeat">Mo, 10.08.2026</div>
-    <div class="timeline-spine warn"><button type="button" class="timeline-dot" data-sha="67c44a65c0221e5c076b85527a1a7929294978f3"><span class="vh">67c44a65</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine warn"><button type="button" class="timeline-dot" data-sha="2add289577c50d8c21d9daabd830c8f6e6c2ce55"><span class="vh">2add2895</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content">Phase 2's drop-list was wrong: <code>turbolinks</code>,
       <code>jquery-ui-rails</code> and <code>selectize-rails</code> all had to stay — a gem's asset payload and
       its Ruby payload can retire on different phases.</div>
@@ -205,7 +205,7 @@ reasoning behind each decision and the phase sections for full verification deta
 
   <div class="timeline-entry bad">
     <div class="timeline-date">Di, 11.08.2026</div>
-    <div class="timeline-spine bad"><button type="button" class="timeline-dot" data-sha="963874a3b916e6476f5569c14af6f11abf8c763a"><span class="vh">963874a3</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine bad"><button type="button" class="timeline-dot" data-sha="c79985ce2d5f8f3c87573dad7f329d2bacb55225"><span class="vh">c79985ce</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content">Pre-existing pg heap corruption found and fixed: planning-board AJAX could
       still be executing when <code>DatabaseCleaner</code> truncated the tables underneath it.
       <code>js_errors</code> made default rather than opt-in. See <a href="#p2">Phase 2</a>.</div>
@@ -213,7 +213,7 @@ reasoning behind each decision and the phase sections for full verification deta
 
   <div class="timeline-entry warn">
     <div class="timeline-date repeat">Di, 11.08.2026</div>
-    <div class="timeline-spine warn"><button type="button" class="timeline-dot" data-sha="3ee4082341eba0845b75aeaa1ac2e415cf5ed60b"><span class="vh">3ee40823</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine warn"><button type="button" class="timeline-dot" data-sha="58e96893706d7e1657580c29fa84b02fc8bfcf7a"><span class="vh">58e96893</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content">Orphaned-headless-Chrome hazard documented — and a wrong claim in this very
       document's pre-flight section corrected (a loose <code>chrome.*headless</code> pattern does not, in fact,
       risk matching a developer's own browser).</div>
@@ -221,7 +221,7 @@ reasoning behind each decision and the phase sections for full verification deta
 
   <div class="timeline-entry bad">
     <div class="timeline-date">Do, 13.08.2026</div>
-    <div class="timeline-spine bad"><button type="button" class="timeline-dot" data-sha="aa6c532c66f649baacc4cea8892694a5b5db54d2"><span class="vh">aa6c532c</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine bad"><button type="button" class="timeline-dot" data-sha="4b0ac4af89fb4c8555481f5af597c16eba619c68"><span class="vh">4b0ac4af</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content"><code>docker build</code> found broken since Phase 2 landed —
       <code>BUILD_PACKAGES</code> lost <code>libvips42</code>, and <code>assets:precompile</code> boots the full
       app. Fixed, unrelated to Phase 3 but caught by its verification step. See <a href="#p3">Phase 3</a>.</div>
@@ -229,14 +229,14 @@ reasoning behind each decision and the phase sections for full verification deta
 
   <div class="timeline-entry ok">
     <div class="timeline-date repeat">Do, 13.08.2026</div>
-    <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="741087b86b4598f83a2c0f9d1c159b7dd869def6"><span class="vh">741087b8</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="7d8967dbc28f6893f5860ae9cda6099bf2000cfa"><span class="vh">7d8967db</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content"><a href="#p3"><strong>Phase 3 complete</strong></a> — dartsass-rails and
       Sprockets to Propshaft, merged into one commit per <a href="#decisions">D3</a>.</div>
   </div>
 
   <div class="timeline-entry warn">
     <div class="timeline-date repeat">Do, 13.08.2026</div>
-    <div class="timeline-spine warn"><button type="button" class="timeline-dot" data-sha="741087b86b4598f83a2c0f9d1c159b7dd869def6"><span class="vh">741087b8</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine warn"><button type="button" class="timeline-dot" data-sha="7d8967dbc28f6893f5860ae9cda6099bf2000cfa"><span class="vh">7d8967db</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content">Two blockers the plan missed entirely: the <code>components/*</code> glob
       import (dart-sass has no glob support) and <code>jquery-ui-rails</code>'s transitively-required
       <code>.erb</code> theme file. Real <code>url()</code> count is 25, not the ~35 estimated. Gem drop-list
@@ -246,14 +246,14 @@ reasoning behind each decision and the phase sections for full verification deta
 
   <div class="timeline-entry accent">
     <div class="timeline-date repeat">Do, 13.08.2026</div>
-    <div class="timeline-spine"><button type="button" class="timeline-dot" data-sha="8d8121bcfbd6474153aeb7d04a6b566705b282f4"><span class="vh">8d8121bc</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine"><button type="button" class="timeline-dot" data-sha="eb00b9c4f6aec18e3a353456a9cc4c1f94dc0fcf"><span class="vh">eb00b9c4</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content">The CSS/JS baseline moves out of <code>/tmp</code> for good, to a persistent
       path inside the project tree — it had gone missing a third time, same root cause each time.</div>
   </div>
 
   <div class="timeline-entry bad">
     <div class="timeline-date">Fr, 14.08.2026</div>
-    <div class="timeline-spine bad"><button type="button" class="timeline-dot" data-sha="e203db71a6f888e110053747b7b115b4433eee8c"><span class="vh">e203db71</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine bad"><button type="button" class="timeline-dot" data-sha="db2b8873cda29c799b07417dfac479d324f48525"><span class="vh">db2b8873</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content">A collision §4.2's table missed entirely: Tailwind's <code>[hidden]</code>
       <code>!important</code> rule beats jQuery's inline-style <code>.show()</code>, permanently hiding the planning
       board's add-row selects. Caught by the full suite, not by eyeballing — confirmed a real regression by re-running
@@ -262,14 +262,14 @@ reasoning behind each decision and the phase sections for full verification deta
 
   <div class="timeline-entry ok">
     <div class="timeline-date repeat">Fr, 14.08.2026</div>
-    <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="e203db71a6f888e110053747b7b115b4433eee8c"><span class="vh">e203db71</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="db2b8873cda29c799b07417dfac479d324f48525"><span class="vh">db2b8873</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content"><a href="#p4"><strong>Phase 4 complete</strong></a> — Tailwind in, layered,
       Preflight on, the three known Bootstrap/Tailwind class collisions fixed.</div>
   </div>
 
   <div class="timeline-entry warn">
     <div class="timeline-date repeat">Fr, 14.08.2026</div>
-    <div class="timeline-spine warn"><button type="button" class="timeline-dot" data-sha="e203db71a6f888e110053747b7b115b4433eee8c"><span class="vh">e203db71</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine warn"><button type="button" class="timeline-dot" data-sha="db2b8873cda29c799b07417dfac479d324f48525"><span class="vh">db2b8873</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content">The plan never named an install step for Tailwind itself, and named a dead view
       (<code>expense_reviews/show.html.haml</code>, no route, deleted instead of fixed) alongside the live one. The
       Preflight border audit found one real hit outside the two known collisions. See <a href="#p4">Phase 4</a>.</div>
@@ -277,7 +277,7 @@ reasoning behind each decision and the phase sections for full verification deta
 
   <div class="timeline-entry ok">
     <div class="timeline-date repeat">Fr, 14.08.2026</div>
-    <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="de848d2d6d92202df69814f19c19c34f9fe6ba05"><span class="vh">de848d2d</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="e2809def4534768c94582a607c12d597fc12a11f"><span class="vh">e2809def</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content"><strong>Phase 5.1 complete</strong> — type &amp; utilities shimmed
       (<code>h3</code>/<code>h4</code>, <code>lead</code>, <code>dl-horizontal</code>, <code>pull-right</code>,
       <code>visible-xs</code>/<code>hidden-*</code>) and deleted from <code>bootstrap-frozen.css</code>. See
@@ -286,7 +286,7 @@ reasoning behind each decision and the phase sections for full verification deta
 
   <div class="timeline-entry accent">
     <div class="timeline-date repeat">Fr, 14.08.2026</div>
-    <div class="timeline-spine accent"><button type="button" class="timeline-dot" data-sha="de848d2d6d92202df69814f19c19c34f9fe6ba05"><span class="vh">de848d2d</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine accent"><button type="button" class="timeline-dot" data-sha="e2809def4534768c94582a607c12d597fc12a11f"><span class="vh">e2809def</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content">Phase 5's plan claimed the frozen file's Bootstrap source comments make component
       boundaries obvious — three comments survive in 6536 lines. Boundaries are found by selector grep instead. See
       <a href="#p5">Phase 5</a>.</div>
@@ -294,7 +294,7 @@ reasoning behind each decision and the phase sections for full verification deta
 
   <div class="timeline-entry bad">
     <div class="timeline-date repeat">Fr, 14.08.2026</div>
-    <div class="timeline-spine bad"><button type="button" class="timeline-dot" data-sha="70129fcc19904a21de85489f0cb2bf46982a8f67"><span class="vh">70129fcc</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine bad"><button type="button" class="timeline-dot" data-sha="61a38acdbdf4ff245d90a9d297247a25c624d600"><span class="vh">61a38acd</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content"><code>print.scss</code> imports <code>bootstrap-frozen.css</code> unlayered, so
       every class the shim deletes also vanishes from print output — except <code>layouts/print.html.haml</code>, its
       only caller, has been dead since a pre-branch commit replaced the web report with a PDF download. Deleted the
@@ -304,7 +304,7 @@ reasoning behind each decision and the phase sections for full verification deta
 
   <div class="timeline-entry accent">
     <div class="timeline-date repeat">Fr, 14.08.2026</div>
-    <div class="timeline-spine accent"><button type="button" class="timeline-dot" data-sha="dc843bccd5ccb056cd79e931636605d74725bccb"><span class="vh">dc843bcc</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine accent"><button type="button" class="timeline-dot" data-sha="840c2accfdd259c636675798d5b03d16afe6d0ca"><span class="vh">840c2acc</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content"><strong>daisyUI evaluated</strong> —
       <a href="upgrade-daisyui.html"><code>upgrade-daisyui.html</code></a>. A visual redesign rather than a
       compatibility layer, so design sign-off would have gated it. Raised a timing fork for phase 5 (then 1/8 done),
@@ -313,7 +313,7 @@ reasoning behind each decision and the phase sections for full verification deta
 
   <div class="timeline-entry accent">
     <div class="timeline-date">Fr, 21.08.2026</div>
-    <div class="timeline-spine accent"><button type="button" class="timeline-dot" data-sha="565e564ec8a110a3b33c88300acc97e1b4027ac7"><span class="vh">565e564e</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine accent"><button type="button" class="timeline-dot" data-sha="f670a56c7c3dac20a160d4b3a8d85f51d2e960fa"><span class="vh">f670a56c</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content"><strong>The daisyUI fork is taken — as (a), finish the shim by hand</strong>
       (<a href="#decisions">D5</a>). It decides on coupling rather than on line count: (b) would have left a Ruby/Rails
       upgrade unable to merge until design signed off on eight components. Two knock-on corrections — daisyUI's coverage
@@ -323,14 +323,14 @@ reasoning behind each decision and the phase sections for full verification deta
 
   <div class="timeline-entry ok">
     <div class="timeline-date">Mo, 24.08.2026</div>
-    <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="894a540e259fece7bd90d019bfa9d8e49e8f8e55"><span class="vh">894a540e</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="41fc59d76752b2020551b5cce2b078e6a29112a8"><span class="vh">41fc59d7</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content"><a href="#p5"><strong>Phase 5.2 complete</strong></a> — grid shimmed, 766 lines out
       of the frozen file.</div>
   </div>
 
   <div class="timeline-entry warn">
     <div class="timeline-date repeat">Mo, 24.08.2026</div>
-    <div class="timeline-spine warn"><button type="button" class="timeline-dot" data-sha="894a540e259fece7bd90d019bfa9d8e49e8f8e55"><span class="vh">894a540e</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine warn"><button type="button" class="timeline-dot" data-sha="148991bad937827a9557c494c5c867ad4421bec9"><span class="vh">148991ba</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content">§6.3's class list was wrong <em>in both directions</em>:
       <code>col-md-10</code> was missing — zero literal occurrences anywhere, reachable only through
       <code>col-md-#{span}</code> — and eight <code>col-xs</code> entries were stale, counted from
@@ -340,7 +340,7 @@ reasoning behind each decision and the phase sections for full verification deta
 
   <div class="timeline-entry ok">
     <div class="timeline-date repeat">Mo, 24.08.2026</div>
-    <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="c4b23f958559e7fad023eaec76e60360536cc0a7"><span class="vh">c4b23f95</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="422c337b326ab7916976a1c42c00f9812081ac1a"><span class="vh">422c337b</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content"><a href="#p5"><strong>Phase 5.3 complete</strong></a> — tables shimmed, 231 lines out.
       <code>th { text-align: left }</code> is Bootstrap's, not the browser's, and Preflight does not restore it: dropping
       it would have re-centred every table header in the app. A catalogue of <em>classes</em> cannot warn about a rule
@@ -350,7 +350,7 @@ reasoning behind each decision and the phase sections for full verification deta
 
   <div class="timeline-entry ok">
     <div class="timeline-date repeat">Mo, 24.08.2026</div>
-    <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="7ccd0735cfb28b1733445a20ad721e1cd1626f03"><span class="vh">7ccd0735</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="0bff3fc489e010f1a9d64964ba6d24a7dda05e8c"><span class="vh">0bff3fc4</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content"><a href="#p5"><strong>Phase 5.4 complete</strong></a> — buttons shimmed, 582 lines out,
       the largest cut yet. <code>.btn.active</code> drives the planning board's fix/provisorisch toggle and the
       integration test asserts only that the <em>class</em> is present — so a dropped active state would have shipped
@@ -360,7 +360,7 @@ reasoning behind each decision and the phase sections for full verification deta
 
   <div class="timeline-entry ok">
     <div class="timeline-date">Fr, 18.09.2026</div>
-    <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="62262d37df61ba68b45da27ef103eeb6d0d58385"><span class="vh">62262d37</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="69c28aa64fd966401840a990d2bf844de2a967a6"><span class="vh">69c28aa6</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content"><a href="#p5"><strong>Phases 5.5–5.8 complete</strong></a> — forms (748 lines out),
       nav/navbar/breadcrumb/pagination (952), the alerts/labels/panels/… component set (1185), and modal/tooltip/fade
       (verbatim, identical rule set). The frozen file fell 4854 → 1667. Each cut verified by a layer-transparent
@@ -370,7 +370,7 @@ reasoning behind each decision and the phase sections for full verification deta
 
   <div class="timeline-entry warn">
     <div class="timeline-date repeat">Fr, 18.09.2026</div>
-    <div class="timeline-spine warn"><button type="button" class="timeline-dot" data-sha="866ecac05d5ea1aa7f3932756d18390a0d0c2afb"><span class="vh">866ecac0</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine warn"><button type="button" class="timeline-dot" data-sha="d1764fca63192c1532c8283fd89478ccc49b5d0b"><span class="vh">d1764fca</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content">§2/§6.7's pagination premise was stale: <code>kaminari-bootstrap</code> is still installed
       (<a href="#p0">phase 0</a> restored it), so pagination still renders Bootstrap's <code>ul.pagination</code> and
       <code>.pagination</code> moved verbatim. Dropping the gem and retargeting Kaminari's own theme is a behaviour
@@ -380,10 +380,10 @@ reasoning behind each decision and the phase sections for full verification deta
 
   <div class="timeline-entry ok">
     <div class="timeline-date repeat">Fr, 18.09.2026</div>
-    <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="d42b86866e18c361fa703d238aed0d9374905dd8"><span class="vh">d42b8686</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="01eb8ea429587b2e2b4b7c7c6143f2eef949a9f9"><span class="vh">01eb8ea4</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content"><a href="#p6"><strong>Phase 6 complete</strong></a> — frozen file and
       <code>bootstrap</code> layer deleted, Preflight now unopposed, the §4.2 reboot residues (body type + link colours)
-      preserved in the shim. Verified with the §4.6 harness for real: baseline <code>d00ae213</code> on <code>:3001</code>
+      preserved in the shim. Verified with the §4.6 harness for real: baseline <code>46a45e55</code> on <code>:3001</code>
       vs the branch on <code>:3000</code>, each with its own cloned DB and memcached, computed styles diffed across six
       pages plus the modal — identical but for two inert <code>&lt;html&gt;</code> properties. The migration's CSS goal
       is met: no Bootstrap CSS remains except the vendored glyphicons font.</div>
@@ -393,7 +393,7 @@ reasoning behind each decision and the phase sections for full verification deta
     <div class="timeline-date">Fr, 25.09.2026</div>
     <div class="timeline-spine bad"><button type="button" class="timeline-dot" data-sha="96b3d233"><span class="vh">96b3d233</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content">The before/after screenshot pass found <strong>six regressions phase 6's harness
-      missed</strong> — it diffed six pages against <code>d00ae213</code>, this one diffed every element on fifteen
+      missed</strong> — it diffed six pages against <code>46a45e55</code>, this one diffed every element on fifteen
       against <code>master</code>: bare <code>h1</code>/<code>h2</code>/<code>h5</code>/<code>h6</code> unstyled,
       <code>p</code>'s bottom margin gone, <code>div.table</code> turned into <code>display: table</code>, Preflight
       stripping native <code>button</code>/<code>select</code> chrome and overriding <code>img</code> height
@@ -582,6 +582,15 @@ reasoning behind each decision and the phase sections for full verification deta
       them was misdiagnosed: <code>/employee_master_data</code>'s unnamed <code>#department_id</code> is the vCard
       export's bare <code>select_tag</code>, not a <code>direct_filter</code> caller. See <a href="#int">§10.5</a>.</div>
   </div>
+
+  <div class="timeline-entry bad">
+    <div class="timeline-date repeat">Mi, 30.09.2026</div>
+    <div class="timeline-spine bad"><button type="button" class="timeline-dot" data-sha="5d593678e88bf914c76f9f2a86e291f6d0ce59d2"><span class="vh">5d593678</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-content">The planning flake's by-product was a <strong>500 reachable by plain clicks</strong>:
+      empty cells, status toggled off, repetition ticked, OK. <code>Plannings::Creator</code> validated a repetition
+      with nothing to repeat and then crashed in <code>#repeat</code>; the panel showed nothing. Now a form error. Two
+      existing tests had pinned exactly those inputs as valid. See <a href="#planflake">§11.5</a>.</div>
+  </div>
 </div>
 
 <p class="timeline-legend">
@@ -591,7 +600,10 @@ reasoning behind each decision and the phase sections for full verification deta
   <span class="key accent">doc / process change</span>
 </p>
 <p class="small">Each dot's tooltip shows the short hash of the commit it evidences; click a dot to copy the full
-hash.</p>
+hash. Hashes, here and in the text, are the branch's as of the 30.09.2026 filter-branch — every rewrite so far
+invalidated the previous set, so the next one has to remap them too (match old to new by author date, confirm with
+<code>git patch-id</code>). Deliberately left as measured: rewrite ranges (<code>f3a6cbe0...7e6df3c3</code>,
+<code>adeef56d</code>) and the SHA INT's image was built from (<code>cedece0d</code>, §10.1).</p>
 
 <div class="box ok">
 <h3 style="margin-top: 0">Phase progress</h3>
@@ -604,7 +616,7 @@ hash.</p>
       — CSS re-captured at <code>HEAD</code> afterwards, the 12:44 copy predated the reduced-motion rule (below)</li>
   <li class="done">Fix the two suite failures found by the scoped runs — both real Rails-upgrade fallout, neither asset-related:
     <ul>
-      <li><strong>Required <code>belongs_to</code>.</strong> Commit <code>2ecdfcb0</code> commented out
+      <li><strong>Required <code>belongs_to</code>.</strong> Commit <code>6643015c</code> commented out
           <code>belongs_to_required_by_default = false</code>, making 31 unaudited associations required. Audited all 52
           against <code>schema.rb</code>, aligning each model with its FK column's nullability:
         <ul>
@@ -663,7 +675,7 @@ means anything order-dependent behaves differently in test than in production.</
 
 <p style="margin-top:1.5rem"><strong>Phase 1 — Freeze Bootstrap 3 into a static CSS file</strong>
 <span class="tag low">complete · 1 / 1</span> <span class="tag med">est 1–2 days · landed 03.08.2026</span>
-— commit <code>d00ae213</code></p>
+— commit <code>46a45e55</code></p>
 <ul style="margin: 0.5rem 0">
   <li class="done"><code>vendor/bootstrap-3.4.1.css</code> (6537 lines) compiled from the gem against our variables;
       <code>vendor/glyphicons.scss</code> split out verbatim; all 25 <code>@extend</code>s replaced by local mixins;
@@ -705,7 +717,7 @@ surfaced.</p>
 <p>Recapturing is cheap and should be the first move of every phase, not the last:
 <code>git worktree add ../phase0-baseline &lt;sha&gt;</code>, precompile there, copy the four assets out. Since
 <code>/tmp</code> does not survive a reboot, <strong>treat the baseline as derived, not stored</strong> — the commit
-sha in <code>COMMIT</code> is the part that matters, and it is now <code>d00ae213</code> (re-captured at the phase-1
+sha in <code>COMMIT</code> is the part that matters, and it is now <code>46a45e55</code> (re-captured at the phase-1
 HEAD, as the rule below requires).</p>
 <p class="small"><strong>Moved out of <code>/tmp</code> before phase 3</strong>, to
 <code>/home/kagemaru/code/pz/ptime/puzzletime/baseline/</code> (a sibling of the <code>upgrade</code> worktree, inside
@@ -786,7 +798,7 @@ copied-out assets and the <code>COMMIT</code> file need to survive, and now they
 <span class="tag low">complete · 1 / 1</span> <span class="tag med">est ½ day · landed 18.09.2026</span></p>
 <ul style="margin: 0.5rem 0">
   <li class="done"><code>bootstrap-frozen.css</code> and the <code>bootstrap</code> layer gone; computed styles identical to the
-      <code>d00ae213</code> baseline across six pages plus the modal. See <a href="#p6">phase 6</a>.</li>
+      <code>46a45e55</code> baseline across six pages plus the modal. See <a href="#p6">phase 6</a>.</li>
 </ul>
 
 <p style="margin-top:1.5rem"><strong>Open before merge</strong></p>
@@ -797,7 +809,7 @@ copied-out assets and the <code>COMMIT</code> file need to survive, and now they
       (transitively) kept; compiled <code>application.css</code> and <code>phone.css</code> byte-identical before/after.</li>
   <li class="done">Before/after screenshots in <code>doc/screenshots/upgrade/</code> — <code>master</code> on <code>:3002</code>
       vs the branch on <code>:3001</code>, six pages. <strong>Taking them found six regressions phase 6's harness
-      missed</strong> (it diffed against <code>d00ae213</code> on six pages; this pass diffed computed styles of every
+      missed</strong> (it diffed against <code>46a45e55</code> on six pages; this pass diffed computed styles of every
       element on fifteen): bare <code>h1</code>/<code>h2</code>/<code>h5</code>/<code>h6</code> unstyled (phase 5.1
       shimmed only <code>h3</code>/<code>h4</code>; <code>h2</code> is live on devise pages, <code>h5</code> on the
       planning legend), <code>p</code> lost its 10px bottom margin, Tailwind's <code>table</code> utility turned
@@ -822,9 +834,11 @@ copied-out assets and the <code>COMMIT</code> file need to survive, and now they
       branch fallout: master's own <code>b00f30f8</code> made remaining vacations count to the report period's end
       instead of the end of the year, and updated only the three unit suites it touched — this integration test was red
       on <code>master</code> and <code>stable</code> too. Fixed there (<code>73468ee8</code> / <code>b5eeed8b</code>). See <a href="#membertest">§9.4</a>.</li>
-  <li class="todo">Everyone holding the branch resets to it, then <code>backup/pre-msg-rewrite-20260926</code> is
-      deleted. The rewrite itself is done — all 90 subjects rewritten to Conventional Commits and force-pushed
-      (<code>f3a6cbe0...7e6df3c3</code>), so every SHA changed. See §9.3.</li>
+  <li class="todo">Everyone holding the branch resets to it — the 30.09 filter-branch (two scratch
+      <code>.txt</code> files stripped) changed SHAs again, on top of §9.3's rewrites. No
+      <code>backup/pre-msg-rewrite-*</code> branch exists on <code>origin</code>; the only leftovers are
+      local (<code>refs/original/…</code> from filter-branch, the <code>backup/pre-commit-rewrite-2026-08-13</code>
+      tag) and each holder drops their own. See §9.3.</li>
   <li class="todo">Add the 28.09 release-check work to the merge request's review scope:
       <code>config/brakeman.ignore</code>'s 14 entries want a second reader, and
       <code>exit_on_warn</code> stays <code>false</code> until they have one. See <a href="#checks">§9.5</a>.</li>
@@ -882,6 +896,14 @@ copied-out assets and the <code>COMMIT</code> file need to survive, and now they
   <li class="done"><strong><code>plannings_orders_test</code>'s intermittents diagnosed and fixed:</strong> its
       <code>setup</code> re-selected the default period and so started a remote board reload under every test.
       See <a href="#planflake">§11.5</a>.</li>
+  <li class="done"><strong>A 500 on the planning board, master's too:</strong> repeating a selection that has no
+      plannings (or no items at all) crashed <code>Plannings::Creator#repeat</code>. Now the panel shows
+      "Die Auswahl enthält keine Planung, die wiederholt werden kann". See <a href="#planflake">§11.5</a>.</li>
+  <li class="done"><strong>The pre-push suite rebuilds assets first.</strong> overcommit's <code>Minitest</code>
+      hook ran <code>ruby -r&lt;test files&gt;</code> and so tested whatever bundle sat in
+      <code>app/assets/builds</code>; <code>RakeTarget</code> now runs <code>bin/rails test</code>, whose
+      <code>test:prepare</code> builds JS, Sass and Tailwind. Holders of the hooks re-sign once:
+      <code>bundle exec overcommit --sign</code>. See <a href="#planflake">§11.5</a>.</li>
   <li class="done"><strong>actionlint's 15 errors were one missing block</strong> (see the CI list in
       <a href="#checks">§9.5</a>), and <code>reusable-sbom.yaml</code> lost its unquoted <code>$(pwd)</code>.
       <code>actionlint</code> is clean, exit 0.</li>
@@ -1280,7 +1302,7 @@ and must leave the rendered output byte-comparable; phases 4–6 change what the
 <div class="phase">
 <h3 id="p0">Phase 0 — Get back to a green baseline <span class="tag low">complete · 1 / 1</span> <span class="tag med">est ½ day · landed 27.07.2026</span></h3>
 <p class="goal">Goal: <code>bin/rails assets:precompile</code> succeeds and the test suite is green before anything else moves.</p>
-<h4>Done — the revert (2026-07-27, tree clean at <code>67d6369b</code>)</h4>
+<h4>Done — the revert (2026-07-27, tree clean at <code>5de121b1</code>)</h4>
 <ul>
   <li><code>Gemfile</code> / <code>Gemfile.lock</code> restored: <code>bootstrap-sass</code>,
       <code>kaminari-bootstrap</code>, <code>sprockets-rails</code>, <code>sass-rails</code>, <code>coffee-rails</code>
@@ -1353,7 +1375,7 @@ technically. It blocks them <em>procedurally</em>: phase 2 has no way to tell it
         <code>activerecord-8.1.3/lib/active_record/schema_dumper.rb:195</code> is
         <code>columns.sort_by(&amp;:name)</code>. Confirmed end to end: load master's <code>schema.rb</code> into a
         scratch database (Postgres keeps physical order), re-dump with 8.1, get alphabetical order. So
-        <code>ac6a28df</code> was a legitimate regeneration — 34 of 45 tables reordered, column <em>sets</em>
+        <code>0ea48207</code> was a legitimate regeneration — 34 of 45 tables reordered, column <em>sets</em>
         identical.</td>
     <td>1 × <code>Employees::LogControllerTest</code></td>
     <td>The test asserted the exact concatenated cell text of one log row. <code>LogPresenter#changes_for</code> walks
@@ -1362,7 +1384,7 @@ technically. It blocks them <em>procedurally</em>: phase 2 has no way to tell it
         order, which is what the test is named for, is still pinned by <code>nth-child</code>.</td>
   </tr>
   <tr>
-    <td><strong>The jsonapi gem swap changed the error, twice over.</strong> <code>4603b448</code> replaced
+    <td><strong>The jsonapi gem swap changed the error, twice over.</strong> <code>0991b424</code> replaced
         <code>fast_jsonapi</code> with <code>jsonapi-serializer</code> 2.2.0. (1) The old gem raised
         <code>ArgumentError</code>; the new one raises
         <code>JSONAPI::Serializer::UnsupportedIncludeError</code>, so the custom matcher — which required
@@ -1569,7 +1591,7 @@ tests already cover the functional half.</p>
 <p class="goal">Goal: Bootstrap stops being a Sass dependency and becomes an inert, deletable CSS artifact. Still on
 Sprockets. Rendered output unchanged.</p>
 
-<h4>Done — freezing it (2026-08-03, <code>d00ae213</code>)</h4>
+<h4>Done — freezing it (2026-08-03, <code>46a45e55</code>)</h4>
 <p>There is no <code>sass</code> CLI in this environment; the gem's own <code>sassc</code> is what compiles the app, so
 use that and the output matches the pipeline by construction:</p>
 <pre><code>$ bundle exec ruby -e '
@@ -2554,7 +2576,7 @@ layer.</p>
       <code>affix</code>, print-visibility). Live utilities Tailwind already provides (<code>hidden</code>,
       <code>sr-only</code>, <code>text-*</code> alignment/colours via <code>@theme</code>) need no shim.</li>
 </ul>
-<p><strong>Verify — the §4.6 side-by-side harness, run for real:</strong> baseline commit <code>d00ae213</code> on
+<p><strong>Verify — the §4.6 side-by-side harness, run for real:</strong> baseline commit <code>46a45e55</code> on
 <code>:3001</code> (its own cloned DB and its own memcached on 11212), the migration branch on <code>:3000</code>
 (11211). Logged in on both and diffed <em>computed styles</em> across <code>/</code>, <code>/orders</code>,
 <code>/employees</code>, <code>/ordertimes/new</code>, <code>/absencetimes/new</code>, <code>/employee_master_data</code>
@@ -2841,7 +2863,7 @@ before/after screenshot pass (§1) ended on "the 15-page diff is clean" and that
 "the pages are usable".</p>
 
 <h3>9.1 Contrast and names — measured, not eyeballed</h3>
-<p>First pass (commit <code>9e21d875</code>) was eyeballed: <code>$gray</code> → <code>$gray-dark</code> on the
+<p>First pass (commit <code>06c4828a</code>) was eyeballed: <code>$gray</code> → <code>$gray-dark</code> on the
 worktimes week header and date column, <code>$brand-blue-darker</code> on <code>#menu</code>,
 <code>aria-label</code>s on the icon-only links and the two landmarks, an <code>sr-only</code> label for
 <code>#week_date</code>, an <code>h1</code> for <code>/worktimes</code>. It also used
@@ -2918,7 +2940,7 @@ rather than line-by-line, and lean on the integration suite" — which was the r
 style debt standing. It is paid now, and it is a separate commit from the behaviour work for exactly that reason.</p>
 
 <h3>9.3 Rewriting the branch's own history to the rule it introduced</h3>
-<p><code>c85999d0</code> adopted Conventional Commits mid-branch, which left the branch in violation of its own
+<p><code>afca761b</code> adopted Conventional Commits mid-branch, which left the branch in violation of its own
 rule: <code>bin/commit-lint origin/master..HEAD</code> reported <strong>24 non-compliant subjects</strong>, every
 one of them from before that commit — the inherited Ruby/Rails upgrade work
 (<code>Upgrade ruby to 4.0 (65394)</code>, <code>Fix conenction_pool until compatible rails version</code>), the
@@ -3345,7 +3367,8 @@ green.</p>
       <code>Google Chrome 153.0.8010.52</code>, half the wall time of the broken run.</li>
   <li>The temporary capture is gone again: <code>test/support/zz_ci_capture.rb</code>, the
       <code>upload-artifact</code> step and the <code>which -a google-chrome</code> lines are removed.</li>
-  <li>The local pre-push Minitest hook runs the full suite (~4 min) on every push and is itself occasionally flaky;
+  <li>The local pre-push suite (then the <code>Minitest</code> hook, now <code>RakeTarget</code>, §11.5) runs the
+      full suite (~5 min) on every push and is itself occasionally flaky;
       <code>SKIP=ALL git push</code> skips it (exactly <code>ALL</code> — <code>All</code> is ignored), with one
       hook-enabled push at the end.</li>
   <li>The intermittent <code>plannings_orders_test</code> failures were still undiagnosed at this point; see
@@ -3386,12 +3409,26 @@ browser but <code>visit</code>.</p>
       exact_text:</code> assertions.</li>
   <li><code>row_mark</code>/<code>row_pascal</code> carried a <code>sleep 0.1</code> and a TODO asking why they
       found stale nodes without it. This was the why; both removed.</li>
-  <li>Found on the way, app-side and master's too: a repetition request with an empty selection is a 500
-      (<code>Plannings::Creator#repeat</code>, <code>at_beginning_of_week</code> for nil) rather than a
-      validation error. Only reachable when a selection is lost under a pending submit; left alone.</li>
-  <li>Local trap: <code>bin/rails test</code> does not rebuild <code>app/assets/builds</code>. A bundle left over from
-      18.09 failed the jqXHR regression test ('a failing selection update settles instead of leaking a rejection')
-      with <code>"unhandled"</code> until <code>npm run build</code>.</li>
+  <li><strong>Found on the way and fixed (<code>5d593678</code>), master's too:</strong> a repetition with nothing
+      to repeat was a 500 (<code>Plannings::Creator#repeat</code>, <code>at_beginning_of_week</code> for nil). Not
+      only under the race: empty cells, click the already-active <em>provisorisch</em> to clear the status, tick
+      <em>Wiederholen</em>, OK — <code>repeat_only?</code> then skips <code>validate_create</code> and there are no
+      existing plannings to copy. A request with no items, or with items only on other orders
+      (<code>params_with_restricted_items</code> drops them), fails the same way. <code>validate_repeat</code> now
+      rejects all three; <code>CreatorTest</code> and <code>Plannings::OrdersControllerTest</code> fail without it,
+      and in the browser the panel shows the error with a 200. Two <code>form_valid?</code> tests had asserted
+      exactly these inputs valid; they now select an existing planning.</li>
+  <li><strong>Stale assets:</strong> <code>bin/rails test &lt;path&gt;</code> skips <code>test:prepare</code>
+      (Rails' own <code>test_command.rb</code>: only a bare run prepares), so a bundle left over from 18.09 failed the
+      jqXHR regression test ('a failing selection update settles instead of leaking a rejection') with
+      <code>"unhandled"</code> until <code>npm run build</code>. The pre-push hook had the same gap for the whole
+      suite: overcommit's <code>Minitest</code> runs <code>ruby -r&lt;each test&gt;</code> and never prepares.
+      <code>e736c21d</code> swaps it for <code>RakeTarget</code> → <code>bin/rails test</code>; verified by a push
+      from a scratch clone with an empty <code>app/assets/builds</code>: the hook built all bundles and the suite
+      passed. CI was never affected (<code>assets:precompile</code>, then a bare <code>bin/rails test</code>).
+      Single-file runs stay as Rails designs them — keep <code>bin/dev</code> running. Also a trap:
+      a leftover <code>public/assets/.manifest.json</code> makes Propshaft serve the precompiled files over the
+      builds (<code>Propshaft::Assembly#resolver</code>).</li>
   <li><strong>CI, run 36688951486 on <code>badd85d3</code>:</strong> <code>test / minitest</code> and all lint jobs
       green. <code>lint / brakeman</code> failed on the first attempt without a finding — reviewdog's
       <code>PATCH …/check-runs/…</code> answered 404 — and passed on a rerun of the failed job.</li>
