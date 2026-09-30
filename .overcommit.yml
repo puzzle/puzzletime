@@ -231,8 +231,14 @@ PreCommit:
 PrePush:
   Brakeman:
     enabled: true
-  Minitest:
+  # Not the Minitest hook: it runs `ruby -r<each test file>`, which skips
+  # test:prepare and so tests whatever bundle sits in app/assets/builds.
+  # `bin/rails test` without paths rebuilds JS, Sass and Tailwind first.
+  RakeTarget:
     enabled: true
+    description: 'Build assets and run the test suite'
+    required_executable: 'bin/rails'
+    targets: ['test']
   ProtectedBranches:
     enabled: true
 
