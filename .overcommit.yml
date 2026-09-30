@@ -159,6 +159,9 @@ PreCommit:
     enabled: true
   Reek:
     enabled: true
+    # Reek reports whole-method smells, so any edit that shifts a pre-existing
+    # smell's line into the diff blocks the commit. Warn instead of failing.
+    problem_on_unmodified_line: warn
     exclude:
       # FIXME: Remove in the end
       - config/initializers/highrise.rb
