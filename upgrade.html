@@ -853,6 +853,12 @@ copied-out assets and the <code>COMMIT</code> file need to survive, and now they
       <code>Crm.init</code> now assigns unconditionally, which also makes it a real re-init. Deterministic repro:
       <code>bin/rails test test/integration/show_order_test.rb test/integration/create_order_test.rb --seed 1 -i
       "/show_additional_crm_orders|create_order_with_new_client_and_new_category/"</code>.</li>
+  <li class="done"><strong><code>timeout_safe</code> deleted, all call sites unwrapped.</strong> Its skip branch was
+      unreachable — <code>raise unless ENV['CI'] == true</code> compares a String to <code>true</code> — so the
+      wrapper only added a block frame around 12 test files, and <code>RetryOnFlakyTests</code> already handles the
+      genuinely racy classes. The same pass unskips <code>plannings_orders_test</code>'s 'create repetition'; that
+      file's remaining intermittent failures are pre-existing at baseline and undiagnosed, recorded in
+      <code>plannings_orders_test_failure2.txt</code>.</li>
 </ul>
 </div>
 
