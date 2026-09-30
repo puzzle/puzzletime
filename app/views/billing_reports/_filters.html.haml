@@ -13,7 +13,8 @@
   = direct_filter_select(:period_shortcut,
     nil,
     params[:status_preselection] == 'closed' ? predefined_past_quarter_period_options : predefined_past_period_options,
-    prompt: 'benutzerdefiniert')
+    prompt: 'benutzerdefiniert',
+    aria: { label: 'Zeitraum' })
 
   = direct_filter_select(:department_id,
                          'OE',

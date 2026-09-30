@@ -6,6 +6,6 @@
 = form_tag(nil, method: :get, id: :meal_compensations_filter_form, class: 'form-inline', role: 'search', remote: true) do
   = hidden_field_tag :page, 1
 
-  = direct_filter_select(:period_shortcut, nil, predefined_past_period_options, value: @period.shortcut, prompt: 'benutzerdefiniert')
+  = direct_filter_select(:period_shortcut, nil, predefined_past_period_options, value: @period.shortcut, prompt: 'benutzerdefiniert', aria: { label: 'Zeitraum' })
   = direct_filter_date(:start_date, 'Von', @period.start_date)
   = direct_filter_date(:end_date, 'Bis', @period.end_date)
