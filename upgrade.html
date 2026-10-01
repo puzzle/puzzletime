@@ -130,6 +130,7 @@
     <li><a href="#a11y">Accessibility, lint and release-check cleanup</a></li>
     <li><a href="#int">INT deployment — what the running system says</a></li>
     <li><a href="#ci">CI: the first run that actually executed the test suite</a></li>
+    <li><a href="#verify">INT re-verification after the rebuild</a></li>
   </ol>
 </nav>
 
@@ -3433,6 +3434,57 @@ browser but <code>visit</code>.</p>
       green. <code>lint / brakeman</code> failed on the first attempt without a finding — reviewdog's
       <code>PATCH …/check-runs/…</code> answered 404 — and passed on a rerun of the failed job.</li>
 </ul>
+
+<h2 id="verify">12. INT re-verification after the rebuild <span class="tag low">2026-10-01 – 02</span></h2>
+<p>Run 36717184431 on <code>deacaeeb</code> looked green but never produced an image: <code>build-dispatch</code> was
+<em>skipped</em> because the dispatch ran with <code>push=false</code>. INT was still on <code>git-cedece0d</code>.
+A rerun with <code>build=true push=true</code> (36868080633) pushed
+<code>git-deacaeeb0d6309593add8cb9531e9893525aaf7a</code>; the deployment repo's <code>59025d5</code> moved INT's
+<code>newTag</code> and ArgoCD synced on its own about two minutes later.</p>
+
+<h3>12.1 The nginx rules were not live before that sync</h3>
+<p><code>f640bc85</code> and <code>e775c9d7</code> had been on the deployment repo's <code>main</code> for two days,
+but the cluster only picked them up with the configmap rollout triggered by the tag bump. Before:
+<code>/assets/.manifest.json</code> 200, digested assets <code>cache-control: private</code>. After: 404 and
+<code>public, max-age=31536000, immutable</code>; the new image also showed up as a digest change
+(<code>tailwind-5360aa21</code> → <code>tailwind-6227e7d1</code>).</p>
+<p>Every response additionally carries a second <code>cache-control: private</code>, <code>/robots.txt</code>
+included. Nothing in the deployment repo sets it and nginx serves those files itself, so it is added by the
+router/WAF in front of the pod and cannot be fixed in <code>nginx.conf</code>. Browser caching still applies; shared
+caches will not store the assets — <em>[inference]</em>, no CDN sits in front of INT.</p>
+
+<h3>12.2 axe on the new image: the §10.5 fixes hold</h3>
+<p>No <code>image-alt</code> and no <code>select-name</code> on <code>/weekly_graph/:id</code>,
+<code>/plannings/employees/:id</code> or <code>/employee_master_data</code>. A clean rule is only evidence if the
+elements are on the page, so they were counted: the weekly graph serves 75 <code>img</code>, 74 of them
+<code>space.gif</code> with <code>alt=""</code>; <code>period_shortcut</code> carries
+<code>aria-label="Zeitraum"</code>, the vCard <code>department_id</code> <code>aria-label="Organisationseinheit"</code>
+— all from <code>46424dfd</code>.</p>
+<p>Two violations remained, both older than the a11y commits and both fixed in <code>5bd91bbe</code>: the weekly
+graph's week-grid corner cell was an empty <code>th</code> (<code>empty-table-header</code>, now <code>td</code>), and
+the planning legend's <code>%h5</code> sits under the board's <code>%h1.h3</code> caption and skipped four levels
+(<code>heading-order</code>, now <code>%h2.h5</code> — the same size class, in both
+<code>plannings/base/_legend</code> and <code>plannings/companies/show</code>).</p>
+<p>Open, not fixed: the selectize dropdown on the add-row panel reports
+<code>scrollable-region-focusable</code> (serious) and <code>region</code>. It only exists after clicking
+<em>add</em>, which is why the ten-page sweep and §10.5 never saw it. The underlying
+<code>add_employee_select_id</code> / <code>add_work_item_select_id</code> are <code>display: none</code> and
+unlabelled; axe skips hidden elements, so <code>select-name</code> stays quiet either way.</p>
+
+<h3>12.3 The 500 fix in the browser</h3>
+<p><code>5d593678</code> confirmed on INT, not just in the suite: on <code>/plannings/orders/1114</code>, add a member
+row, drag four empty cells, click the active <em>provisorisch</em> to clear the status, tick the repetition, OK — the
+panel shows <q>Die Auswahl enthält keine Planung, die wiederholt werden kann</q> with a 200. With the status left on
+and the percent empty the older <q>Prozent müssen angegeben werden</q> error shows instead. Nothing is written on
+either path.</p>
+
+<h3>12.4 Optimised binary assets</h3>
+<p>Four files had been sitting unstaged in the working tree since before the session: the bootstrap glyphicon SVG font
+and the three 8-bit jQuery-UI sprites, ImageOptim output. Verified lossless before committing —
+<code>compare -metric AE</code> reports 0 differing pixels on each PNG, and the SVG still holds 278
+<code>&lt;glyph&gt;</code> elements, having lost only the XML prolog, the whitespace and the numeric entity encoding
+(108737 → 92569 bytes). The 4-bit sprites in the same directory were left untouched by the tool. Both files are still
+referenced, by <code>vendor/glyphicons.scss</code> and <code>vendor/jquery-ui-theme.scss</code>.</p>
 
 <hr>
 <p class="small">Generated from a scan of this working tree: 330 HAML views, 36 CoffeeScript files, 6020 lines of SCSS,
