@@ -112,6 +112,24 @@ module Plannings
       assert_includes response.body, 'Bitte füllen Sie das Formular aus'
     end
 
+    # The board sends this for empty cells with the status toggled off and
+    # repetition ticked; it used to raise in Plannings::Creator#repeat.
+    test 'PATCH update repeating a selection without plannings renders errors' do
+      patch :update,
+            xhr: true,
+            params: {
+              format: :js,
+              id: orders(:puzzletime).id,
+              planning: { repeat_until: (Time.zone.today + 3.weeks).strftime('%G %V') },
+              items: { '1' => { employee_id: employees(:pascal).id.to_s,
+                                work_item_id: work_items(:puzzletime).id.to_s,
+                                date: (Time.zone.today.beginning_of_week + 1.week).strftime('%Y-%m-%d') } }
+            }
+
+      assert_equal 200, response.status
+      assert_includes response.body, 'Die Auswahl enthält keine Planung, die wiederholt werden kann'
+    end
+
     test 'PATCH#update as regular user fails' do
       login_as(:pascal)
       assert_raises(CanCan::AccessDenied) do

@@ -4,10 +4,24 @@
 //  https://github.com/puzzle/puzzletime.
 
 
-@import "bootstrap-sprockets";
 @import "bootstrap_variables";
-@import "bootstrap";
 @import "mixins";
+
+// Respect the OS-level "reduce motion" setting (WCAG 2.3.3). Durations are
+// collapsed to ~0 rather than set to `none` so that `transitionend` still
+// fires — Bootstrap's modal/collapse plugins wait for that event.
+// The test suite opts into this via Chrome's --force-prefers-reduced-motion,
+// which keeps elements from moving while Capybara clicks them.
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
 
 body {
   min-height: 100vh;
@@ -16,7 +30,7 @@ body {
 }
 
 main {
-  @extend .container-fluid;
+  @include bs-container-fluid;
   margin: 0 $grid-gutter-width 40px;
   padding: 0;
   flex: 1;
@@ -270,7 +284,7 @@ span.subtle-hint {
 }
 
 .form-action {
-  @extend .form-control;
+  @include bs-form-control;
   width: auto;
   border: 0;
   box-shadow: none;
@@ -334,6 +348,12 @@ html.turbolinks-progress-bar::before {
 #ui-datepicker-div {
   // make sure datepicker dialog is visible when used in bootstrap modals
   z-index: $zindex-modal + 1 !important;
+
+  .ui-datepicker-header,
+  th,
+  td .ui-state-default {
+    color: $gray-dark;
+  }
 }
 
 .db-login-panel {
@@ -342,7 +362,18 @@ html.turbolinks-progress-bar::before {
 
 @import "layout";
 
-@import "components/*";
+// dart-sass has no glob-import support, so these are listed explicitly.
+// Keep alphabetical to match the order the glob used to expand them in.
+@import "components/expense_reviews";
+@import "components/expenses";
+@import "components/form";
+@import "components/invoices";
+@import "components/nav_tabs";
+@import "components/order_edit_form";
+@import "components/plannings";
+@import "components/progress";
+@import "components/selectize";
+@import "components/table";
 
 @import "absence";
 @import "employees";

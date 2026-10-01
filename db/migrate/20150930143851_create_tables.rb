@@ -84,9 +84,9 @@ class CreateTables < ActiveRecord::Migration[5.1]
     end
 
     create_table 'delayed_jobs' do |t|
-      t.integer 'priority',               default: 0, null: false
-      t.integer 'attempts',               default: 0, null: false
-      t.text 'handler',                            null: false
+      t.integer 'priority', default: 0, null: false
+      t.integer 'attempts', default: 0, null: false
+      t.text 'handler', null: false
       t.text 'last_error'
       t.datetime 'run_at'
       t.datetime 'locked_at'
@@ -317,8 +317,8 @@ class CreateTables < ActiveRecord::Migration[5.1]
     add_index 'portfolio_items', ['name'], name: 'index_portfolio_items_on_name', unique: true
 
     create_table 'target_scopes' do |t|
-      t.string 'name',     limit: 255, null: false
-      t.string 'icon',     limit: 255
+      t.string 'name', limit: 255, null: false
+      t.string 'icon', limit: 255
       t.integer 'position', null: false
     end
 

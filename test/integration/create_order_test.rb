@@ -13,529 +13,489 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
   teardown :reset_crm
 
   test 'create order with existing client, without category' do
-    timeout_safe do
-      click_add_contact # disabled
+    click_add_contact # disabled
 
-      assert page.has_no_selector?('#order_order_contacts_attributes_0_contact_id_or_crm')
+    assert page.has_no_selector?('#order_order_contacts_attributes_0_contact_id_or_crm')
 
-      click_link('category_work_item_id_create_link') # disabled
+    click_link('category_work_item_id_create_link') # disabled
 
-      assert page.has_no_selector?('#work_item_name')
+    assert page.has_no_selector?('#work_item_name')
 
-      selectize('client_work_item_id', 'Swisstopo')
+    selectize('client_work_item_id', 'Swisstopo')
 
-      click_add_contact
-      selectize('order_order_contacts_attributes_0_contact_id_or_crm', 'Stein Erich')
-      fill_in('order_order_contacts_attributes_0_comment', with: 'Director')
+    click_add_contact
+    selectize('order_order_contacts_attributes_0_contact_id_or_crm', 'Stein Erich')
+    fill_in('order_order_contacts_attributes_0_comment', with: 'Director')
 
-      fill_mandatory_fields
+    fill_mandatory_fields
 
-      assert_creatable
-      order = WorkItem.where(name: 'New Order').first
+    assert_creatable
+    order = WorkItem.where(name: 'New Order').first
 
-      assert_equal clients(:swisstopo).work_item_id, order.parent_id
-      assert_equal [contacts(:swisstopo_2)], order.order.contacts
-    end
+    assert_equal clients(:swisstopo).work_item_id, order.parent_id
+    assert_equal [contacts(:swisstopo_2)], order.order.contacts
   end
 
   test 'create order with new client, without category' do
-    timeout_safe do
-      create_client
+    create_client
 
-      fill_mandatory_fields
+    fill_mandatory_fields
 
-      assert_creatable
-      client = WorkItem.where(name: 'New Client').first
-      order = WorkItem.where(name: 'New Order').first
+    assert_creatable
+    client = WorkItem.where(name: 'New Client').first
+    order = WorkItem.where(name: 'New Order').first
 
-      assert_equal client.id, order.parent_id
-    end
+    assert_equal client.id, order.parent_id
   end
 
   test 'create order with existing client and existing category' do
-    timeout_safe do
-      selectize('client_work_item_id', 'Puzzle')
-      check('category_active')
-      selectize('category_work_item_id', 'Interne Projekte')
+    selectize('client_work_item_id', 'Puzzle')
+    check('category_active')
+    selectize('category_work_item_id', 'Interne Projekte')
 
-      fill_mandatory_fields
+    fill_mandatory_fields
 
-      assert_creatable
-      clients(:puzzle)
-      category = work_items(:intern)
-      order = WorkItem.where(name: 'New Order').first
+    assert_creatable
+    clients(:puzzle)
+    category = work_items(:intern)
+    order = WorkItem.where(name: 'New Order').first
 
-      assert_equal category.id, order.parent_id
-    end
+    assert_equal category.id, order.parent_id
   end
 
   test 'create order with existing client and selected, but not active category' do
-    timeout_safe do
-      selectize('client_work_item_id', 'Puzzle')
-      check('category_active')
-      selectize('category_work_item_id', 'Interne Projekte')
-      uncheck('category_active')
+    selectize('client_work_item_id', 'Puzzle')
+    check('category_active')
+    selectize('category_work_item_id', 'Interne Projekte')
+    uncheck('category_active')
 
-      fill_mandatory_fields
+    fill_mandatory_fields
 
-      assert_creatable
-      client = clients(:puzzle)
-      order = WorkItem.where(name: 'New Order').first
+    assert_creatable
+    client = clients(:puzzle)
+    order = WorkItem.where(name: 'New Order').first
 
-      assert_equal client.work_item_id, order.parent_id
-    end
+    assert_equal client.work_item_id, order.parent_id
   end
 
   test 'create order with existing client and new category' do
-    timeout_safe do
-      selectize('client_work_item_id', 'Puzzle')
-      check('category_active')
-      create_category
+    selectize('client_work_item_id', 'Puzzle')
+    check('category_active')
+    create_category
 
-      fill_mandatory_fields
+    fill_mandatory_fields
 
-      assert_creatable
-      client = clients(:puzzle)
-      category = WorkItem.where(name: 'New Category').first
-      order = WorkItem.where(name: 'New Order').first
+    assert_creatable
+    client = clients(:puzzle)
+    category = WorkItem.where(name: 'New Category').first
+    order = WorkItem.where(name: 'New Order').first
 
-      assert_equal client.id, category.parent_id
-      assert_equal category.id, order.parent_id
-    end
+    assert_equal client.id, category.parent_id
+    assert_equal category.id, order.parent_id
   end
 
   test 'create order with new client and new category' do
-    timeout_safe do
-      create_client
-      check('category_active')
-      create_category
+    create_client
+    check('category_active')
+    create_category
 
-      fill_mandatory_fields
+    fill_mandatory_fields
 
-      assert_creatable
-      client = WorkItem.where(name: 'New Client').first
-      category = WorkItem.where(name: 'New Category').first
-      order = WorkItem.where(name: 'New Order').first
+    assert_creatable
+    client = WorkItem.where(name: 'New Client').first
+    category = WorkItem.where(name: 'New Category').first
+    order = WorkItem.where(name: 'New Order').first
 
-      assert_equal client.id, category.parent_id
-      assert_equal category.id, order.parent_id
-    end
+    assert_equal client.id, category.parent_id
+    assert_equal category.id, order.parent_id
   end
 
   test 'create order with new client and new, but not active category' do
-    timeout_safe do
-      create_client
-      check('category_active')
-      create_category
-      uncheck('category_active')
+    create_client
+    check('category_active')
+    create_category
+    uncheck('category_active')
 
-      fill_mandatory_fields
+    fill_mandatory_fields
 
-      assert_creatable
-      client = WorkItem.where(name: 'New Client').first
-      category = WorkItem.where(name: 'New Category').first
-      order = WorkItem.where(name: 'New Order').first
+    assert_creatable
+    client = WorkItem.where(name: 'New Client').first
+    category = WorkItem.where(name: 'New Category').first
+    order = WorkItem.where(name: 'New Order').first
 
-      assert_equal client.id, category.parent_id
-      assert_equal client.id, order.parent_id
-    end
+    assert_equal client.id, category.parent_id
+    assert_equal client.id, order.parent_id
   end
 
   test 'create order with changing clients changes category selection' do
-    timeout_safe do
-      selectize('client_work_item_id', 'Puzzle')
-      check('category_active')
-      element = find('#category_work_item_id + .selectize-control')
-      element.find('.selectize-input').click # open dropdown
-      options = element.find('.selectize-dropdown-content')
+    selectize('client_work_item_id', 'Puzzle')
+    check('category_active')
+    element = find('#category_work_item_id + .selectize-control')
+    element.find('.selectize-input').click # open dropdown
+    options = element.find('.selectize-dropdown-content')
 
-      assert options.has_selector?('div', count: 2)
-      selectize('client_work_item_id', 'Swisstopo')
+    assert options.has_selector?('div', count: 2)
+    selectize('client_work_item_id', 'Swisstopo')
 
-      assert_not options.has_selector?('div')
-    end
+    assert_not options.has_selector?('div')
   end
 
   test 'create order with changing clients creates category for last selected client' do
-    timeout_safe do
-      selectize('client_work_item_id', 'Puzzle')
-      check('category_active')
-      click_link('category_work_item_id_create_link')
-      within('.modal-dialog') do
-        click_link('Abbrechen')
-      end
-      sleep 0.5
-      selectize('client_work_item_id', 'Swisstopo')
-      click_link('category_work_item_id_create_link')
-      within('.modal-dialog') do
-        fill_in('work_item_name', with: 'New Category')
-        fill_in('work_item_shortname', with: 'NECA')
-        click_button 'Speichern'
-      end
-
-      assert find('#category_work_item_id + .selectize-control')
-        .has_selector?('.selectize-input .item', text: 'New Category')
-
-      id = find('#category_work_item_id', visible: false)['value']
-
-      category = WorkItem.find(id)
-
-      assert_equal 'New Category', category.name
-      assert_equal work_items(:swisstopo).id, category.parent_id
+    selectize('client_work_item_id', 'Puzzle')
+    check('category_active')
+    click_link('category_work_item_id_create_link')
+    within('.modal-dialog') do
+      click_link('Abbrechen')
     end
+
+    assert_no_selector('#modal.in')
+    selectize('client_work_item_id', 'Swisstopo')
+    click_link('category_work_item_id_create_link')
+    within('.modal-dialog') do
+      fill_in('work_item_name', with: 'New Category')
+      fill_in('work_item_shortname', with: 'NECA')
+      click_button 'Speichern'
+    end
+
+    assert find('#category_work_item_id + .selectize-control')
+      .has_selector?('.selectize-input .item', text: 'New Category')
+
+    id = find('#category_work_item_id', visible: false)['value']
+
+    category = WorkItem.find(id)
+
+    assert_equal 'New Category', category.name
+    assert_equal work_items(:swisstopo).id, category.parent_id
   end
 
   test 'create order with changed client and category selections' do
-    timeout_safe do
-      selectize('client_work_item_id', 'Puzzle')
-      check('category_active')
-      selectize('category_work_item_id', 'Interne Projekte')
-      selectize('client_work_item_id', 'Swisstopo')
+    selectize('client_work_item_id', 'Puzzle')
+    check('category_active')
+    selectize('category_work_item_id', 'Interne Projekte')
+    selectize('client_work_item_id', 'Swisstopo')
 
-      fill_mandatory_fields
+    fill_mandatory_fields
 
-      assert_creatable
-      order = WorkItem.where(name: 'New Order').first
+    assert_creatable
+    order = WorkItem.where(name: 'New Order').first
 
-      assert_equal work_items(:swisstopo).id, order.parent_id
-    end
+    assert_equal work_items(:swisstopo).id, order.parent_id
   end
 
   test 'create order with changing clients load contacts for last one' do
-    timeout_safe do
-      selectize('client_work_item_id', 'Swisstopo')
-      selectize('client_work_item_id', 'Puzzle')
-      selectize('client_work_item_id', 'PBS')
+    selectize('client_work_item_id', 'Swisstopo')
+    selectize('client_work_item_id', 'Puzzle')
+    selectize('client_work_item_id', 'PBS')
 
-      click_add_contact
+    click_add_contact
 
-      open_selectize('order_order_contacts_attributes_0_contact_id_or_crm', assert_empty: true)
-      selectize('client_work_item_id', 'Puzzle')
+    open_selectize('order_order_contacts_attributes_0_contact_id_or_crm', assert_empty: true)
+    selectize('client_work_item_id', 'Puzzle')
 
-      click_add_contact
+    click_add_contact
 
-      open_selectize('order_order_contacts_attributes_1_contact_id_or_crm')
-        .assert_selector('.option', count: 2)
+    within(open_selectize('order_order_contacts_attributes_1_contact_id_or_crm')) do
+      assert_selector('.option', count: 2)
     end
   end
 
   test 'failed create order keeps client and category selection' do
-    timeout_safe do
-      order = Order.new(department: departments(:devone),
-                        responsible: employees(:mark),
-                        kind: order_kinds(:projekt))
-      order.build_work_item(parent_id: work_items(:intern).id, name: 'New Order', shortname: 'NEOR')
-      order.save!
+    order = Order.new(department: departments(:devone),
+                      responsible: employees(:mark),
+                      kind: order_kinds(:projekt))
+    order.build_work_item(parent_id: work_items(:intern).id, name: 'New Order', shortname: 'NEOR')
+    order.save!
 
-      selectize('client_work_item_id', 'Puzzle')
-      check('category_active')
-      selectize('category_work_item_id', 'Interne Projekte')
-      fill_mandatory_fields
+    selectize('client_work_item_id', 'Puzzle')
+    check('category_active')
+    selectize('category_work_item_id', 'Interne Projekte')
+    fill_mandatory_fields
 
-      click_button 'Speichern'
+    click_button 'Speichern'
 
-      assert_text('ist bereits vergeben')
-      assert_equal work_items(:puzzle).id.to_s, find('#client_work_item_id', visible: false)['value']
-      assert_equal work_items(:intern).id.to_s, find('#category_work_item_id', visible: false)['value']
-      assert has_checked_field?('category_active')
-    end
+    assert_text('ist bereits vergeben')
+    assert_equal work_items(:puzzle).id.to_s, find('#client_work_item_id', visible: false)['value']
+    assert_equal work_items(:intern).id.to_s, find('#category_work_item_id', visible: false)['value']
+    assert has_checked_field?('category_active')
   end
 
   test 'order name and new client is filled from crm' do
-    timeout_safe do
-      Crm.instance = Crm::Highrise.new
-      Crm.instance.expects(:find_order).with('123').returns(name: 'New Order',
-                                                            key: 123,
-                                                            url: 'http://crm/orders/123',
-                                                            client: { name: 'New Client', key: '456' })
-      Crm.instance.expects(:find_client_contacts).returns(
-        [{ lastname: 'Miller', firstname: 'John', crm_key: 123 },
-         { lastname: 'Nader', firstname: 'Fred', crm_key: 456 }]
-      ).twice
-      Crm.instance.expects(:find_person).with('456').twice.returns(
-        lastname: 'Nader', firstname: 'Fred', crm_key: 456
-      )
+    Crm.instance = Crm::Highrise.new
+    Crm.instance.expects(:find_order).with('123').returns(name: 'New Order',
+                                                          key: 123,
+                                                          url: 'http://crm/orders/123',
+                                                          client: { name: 'New Client', key: '456' })
+    Crm.instance.expects(:find_client_contacts).returns(
+      [{ lastname: 'Miller', firstname: 'John', crm_key: 123 },
+       { lastname: 'Nader', firstname: 'Fred', crm_key: 456 }]
+    ).twice
+    Crm.instance.expects(:find_person).with('456').once.returns(
+      lastname: 'Nader', firstname: 'Fred', crm_key: 456
+    )
 
-      # reload after crm change
-      visit(new_order_path)
+    # reload after crm change
+    visit(new_order_path)
 
-      fill_in('order_crm_key', with: '123')
-      click_link('Übernehmen')
+    fill_in('order_crm_key', with: '123')
+    click_link('Übernehmen')
 
-      within('.modal-dialog') do
-        assert_equal 'New Client', find('#client_work_item_attributes_name')['value']
-        fill_in('client_work_item_attributes_shortname', with: 'NECL')
-        click_button 'Speichern'
-      end
-
-      assert_equal 'New Order', find('#order_work_item_attributes_name')['value']
-
-      click_add_contact
-      selectize('order_order_contacts_attributes_0_contact_id_or_crm', 'Nader Fred')
-
-      fill_mandatory_fields(false)
-
-      assert_creatable
-      client = WorkItem.where(name: 'New Client').first
-      order = WorkItem.where(name: 'New Order').first
-
-      assert_equal client.id, order.parent_id
-      contact = Contact.find_by(lastname: 'Nader')
-
-      assert_equal '456', contact.crm_key
-      assert_equal client.client, contact.client
-      assert_equal [contact], order.order.contacts
+    within('.modal-dialog') do
+      assert_equal 'New Client', find('#client_work_item_attributes_name')['value']
+      fill_in('client_work_item_attributes_shortname', with: 'NECL')
+      click_button 'Speichern'
     end
+
+    assert_equal 'New Order', find('#order_work_item_attributes_name')['value']
+
+    click_add_contact
+    selectize('order_order_contacts_attributes_0_contact_id_or_crm', 'Nader Fred')
+
+    fill_mandatory_fields(false)
+
+    assert_creatable
+    client = WorkItem.where(name: 'New Client').first
+    order = WorkItem.where(name: 'New Order').first
+
+    assert_equal client.id, order.parent_id
+    contact = Contact.find_by(lastname: 'Nader')
+
+    assert_equal '456', contact.crm_key
+    assert_equal client.client, contact.client
+    assert_equal [contact], order.order.contacts
   end
 
   test 'order name and new client is filled from crm, category is added' do
-    timeout_safe do
-      Crm.instance = Crm::Highrise.new
-      Crm.instance.expects(:find_order).with('123').returns(name: 'New Order',
-                                                            key: 123,
-                                                            url: 'http://crm/orders/123',
-                                                            client: { name: 'New Client', key: '456' })
-      Crm.instance.expects(:find_client_contacts).returns([]).twice
+    Crm.instance = Crm::Highrise.new
+    Crm.instance.expects(:find_order).with('123').returns(name: 'New Order',
+                                                          key: 123,
+                                                          url: 'http://crm/orders/123',
+                                                          client: { name: 'New Client', key: '456' })
+    Crm.instance.expects(:find_client_contacts).returns([]).twice
 
-      # reload after crm change
-      visit(new_order_path)
+    # reload after crm change
+    visit(new_order_path)
 
-      assert page.has_selector?('input#category_active[disabled="disabled"]')
+    assert page.has_selector?('input#category_active[disabled="disabled"]')
 
-      fill_in('order_crm_key', with: '123')
-      click_link('Übernehmen')
+    fill_in('order_crm_key', with: '123')
+    click_link('Übernehmen')
 
-      assert_equal 'New Client', find('#client_work_item_attributes_name')['value']
-      within('.modal-dialog') do
-        fill_in('client_work_item_attributes_shortname', with: 'NECL')
-        click_button 'Speichern'
-      end
-
-      assert_equal 'New Order', find('#order_work_item_attributes_name')['value']
-
-      assert page.has_no_selector?('input#category_active[disabled="disabled"]') # test to be able to click it afterwards
-
-      check('category_active')
-      create_category
-      fill_mandatory_fields(false)
-
-      assert_creatable
-      client = WorkItem.where(name: 'New Client').first
-      category = WorkItem.where(name: 'New Category').first
-      order = WorkItem.where(name: 'New Order').first
-
-      assert_equal client.id, category.parent_id
-      assert_equal category.id, order.parent_id
+    assert_equal 'New Client', find('#client_work_item_attributes_name')['value']
+    within('.modal-dialog') do
+      fill_in('client_work_item_attributes_shortname', with: 'NECL')
+      click_button 'Speichern'
     end
+
+    assert_equal 'New Order', find('#order_work_item_attributes_name')['value']
+
+    assert page.has_no_selector?('input#category_active[disabled="disabled"]') # test to be able to click it afterwards
+
+    check('category_active')
+    create_category
+    fill_mandatory_fields(false)
+
+    assert_creatable
+    client = WorkItem.where(name: 'New Client').first
+    category = WorkItem.where(name: 'New Category').first
+    order = WorkItem.where(name: 'New Order').first
+
+    assert_equal client.id, category.parent_id
+    assert_equal category.id, order.parent_id
   end
 
   test 'order name and existing client is filled from crm' do
-    timeout_safe do
-      Crm.instance = Crm::Base.new
-      client = clients(:swisstopo)
-      client.update!(crm_key: '456')
-      Crm.instance.expects(:find_order).with('123').returns(name: 'New Order',
-                                                            key: 123,
-                                                            url: 'http://crm/orders/123',
-                                                            client: { name: client.name, key: '456' })
-      Crm.instance.expects(:find_client_contacts).returns(
-        [{ lastname: 'Miller', firstname: 'John', crm_key: 123 },
-         { lastname: 'Nader', firstname: 'Fred', crm_key: 456 }]
-      ).twice
-      Crm.instance.expects(:find_person).with('456').twice.returns(
-        lastname: 'Nader', firstname: 'Fred', crm_key: 456
-      )
+    Crm.instance = Crm::Base.new
+    client = clients(:swisstopo)
+    client.update!(crm_key: '456')
+    Crm.instance.expects(:find_order).with('123').returns(name: 'New Order',
+                                                          key: 123,
+                                                          url: 'http://crm/orders/123',
+                                                          client: { name: client.name, key: '456' })
+    Crm.instance.expects(:find_client_contacts).returns(
+      [{ lastname: 'Miller', firstname: 'John', crm_key: 123 },
+       { lastname: 'Nader', firstname: 'Fred', crm_key: 456 }]
+    ).twice
+    Crm.instance.expects(:find_person).with('456').once.returns(
+      lastname: 'Nader', firstname: 'Fred', crm_key: 456
+    )
 
-      # reload after crm change
-      visit(new_order_path)
+    # reload after crm change
+    visit(new_order_path)
 
-      fill_in('order_crm_key', with: '123')
-      click_link('Übernehmen')
+    fill_in('order_crm_key', with: '123')
+    click_link('Übernehmen')
 
-      assert_equal 'New Order', find('#order_work_item_attributes_name')['value']
+    assert_equal 'New Order', find('#order_work_item_attributes_name')['value']
 
-      click_add_contact
+    click_add_contact
 
-      selectize('order_order_contacts_attributes_0_contact_id_or_crm', 'Nader Fred')
-      fill_mandatory_fields(false)
+    selectize('order_order_contacts_attributes_0_contact_id_or_crm', 'Nader Fred')
+    fill_mandatory_fields(false)
 
-      assert_creatable
-      order = WorkItem.where(name: 'New Order').first
+    assert_creatable
+    order = WorkItem.where(name: 'New Order').first
 
-      assert_equal clients(:swisstopo).work_item_id, order.parent_id
-      assert_equal [Contact.find_by(lastname: 'Nader')], order.order.contacts
-    end
+    assert_equal clients(:swisstopo).work_item_id, order.parent_id
+    assert_equal [Contact.find_by(lastname: 'Nader')], order.order.contacts
   end
 
   test 'order name and existing client is filled from crm, new category is added' do
-    timeout_safe do
-      Crm.instance = Crm::Highrise.new
-      client = clients(:swisstopo)
-      client.update!(crm_key: '456')
-      Crm.instance.expects(:find_order).with('123').returns(name: 'New Order',
-                                                            key: 123,
-                                                            url: 'http://crm/orders/123',
-                                                            client: { name: client.name, key: '456' })
-      Crm.instance.expects(:find_client_contacts).returns([]).twice
+    Crm.instance = Crm::Highrise.new
+    client = clients(:swisstopo)
+    client.update!(crm_key: '456')
+    Crm.instance.expects(:find_order).with('123').returns(name: 'New Order',
+                                                          key: 123,
+                                                          url: 'http://crm/orders/123',
+                                                          client: { name: client.name, key: '456' })
+    Crm.instance.expects(:find_client_contacts).returns([]).twice
 
-      # reload after crm change
-      visit(new_order_path)
+    # reload after crm change
+    visit(new_order_path)
 
-      fill_in('order_crm_key', with: '123')
-      click_link('Übernehmen')
+    fill_in('order_crm_key', with: '123')
+    click_link('Übernehmen')
 
-      check('category_active')
-      create_category
-      fill_mandatory_fields(false)
+    check('category_active')
+    create_category
+    fill_mandatory_fields(false)
 
-      assert_creatable
-      order = WorkItem.where(name: 'New Order').first
-      category = WorkItem.where(name: 'New Category').first
+    assert_creatable
+    order = WorkItem.where(name: 'New Order').first
+    category = WorkItem.where(name: 'New Category').first
 
-      assert_equal client.work_item_id, category.parent_id
-      assert_equal category.id, order.parent_id
-    end
+    assert_equal client.work_item_id, category.parent_id
+    assert_equal category.id, order.parent_id
   end
 
   test 'order name and existing client is filled from crm, existing category is selected' do
-    timeout_safe do
-      Crm.instance = Crm::Highrise.new
-      client = clients(:puzzle)
-      client.update!(crm_key: '456')
-      Crm.instance.expects(:find_order).with('123').returns(name: 'New Order',
-                                                            key: 123,
-                                                            url: 'http://crm/orders/123',
-                                                            client: { name: client.name, key: '456' })
-      Crm.instance.expects(:find_client_contacts).returns([]).twice
+    Crm.instance = Crm::Highrise.new
+    client = clients(:puzzle)
+    client.update!(crm_key: '456')
+    Crm.instance.expects(:find_order).with('123').returns(name: 'New Order',
+                                                          key: 123,
+                                                          url: 'http://crm/orders/123',
+                                                          client: { name: client.name, key: '456' })
+    Crm.instance.expects(:find_client_contacts).returns([]).twice
 
-      # reload after crm change
-      visit(new_order_path)
+    # reload after crm change
+    visit(new_order_path)
 
-      fill_in('order_crm_key', with: '123')
-      click_link('Übernehmen')
+    fill_in('order_crm_key', with: '123')
+    click_link('Übernehmen')
 
-      check('category_active')
-      selectize('category_work_item_id', 'Interne Projekte')
-      fill_mandatory_fields(false)
+    check('category_active')
+    selectize('category_work_item_id', 'Interne Projekte')
+    fill_mandatory_fields(false)
 
-      assert_creatable
-      order = WorkItem.where(name: 'New Order').first
-      category = work_items(:intern)
+    assert_creatable
+    order = WorkItem.where(name: 'New Order').first
+    category = work_items(:intern)
 
-      assert_equal category.id, order.parent_id
-    end
+    assert_equal category.id, order.parent_id
   end
 
   test 'failed create order keeps client selection' do
-    timeout_safe do
-      order = Order.new(department: departments(:devone),
-                        responsible: employees(:mark),
-                        kind: order_kinds(:projekt))
-      order.build_work_item(parent_id: work_items(:puzzle).id, name: 'New Order', shortname: 'NEOR')
-      order.save!
+    order = Order.new(department: departments(:devone),
+                      responsible: employees(:mark),
+                      kind: order_kinds(:projekt))
+    order.build_work_item(parent_id: work_items(:puzzle).id, name: 'New Order', shortname: 'NEOR')
+    order.save!
 
-      Crm.instance = Crm::Highrise.new
-      client = clients(:puzzle)
-      client.update!(crm_key: '456')
-      Crm.instance.expects(:find_order).with('123').returns(name: 'New Order',
-                                                            key: 123,
-                                                            url: 'http://crm/orders/123',
-                                                            client: { name: client.name, key: '456' })
-      Crm.instance.expects(:find_client_contacts).returns(
-        [{ lastname: 'Miller', firstname: 'John', crm_key: 123 },
-         { lastname: 'Nader', firstname: 'Fred', crm_key: 456 }]
-      ).twice
-      Crm.instance.expects(:find_person).with('456').returns(
-        lastname: 'Nader', firstname: 'Fred', crm_key: 456
-      )
+    Crm.instance = Crm::Highrise.new
+    client = clients(:puzzle)
+    client.update!(crm_key: '456')
+    Crm.instance.expects(:find_order).with('123').returns(name: 'New Order',
+                                                          key: 123,
+                                                          url: 'http://crm/orders/123',
+                                                          client: { name: client.name, key: '456' })
+    Crm.instance.expects(:find_client_contacts).returns(
+      [{ lastname: 'Miller', firstname: 'John', crm_key: 123 },
+       { lastname: 'Nader', firstname: 'Fred', crm_key: 456 }]
+    ).twice
+    Crm.instance.expects(:find_person).with('456').returns(
+      lastname: 'Nader', firstname: 'Fred', crm_key: 456
+    )
 
-      # reload after crm change
-      visit(new_order_path)
+    # reload after crm change
+    visit(new_order_path)
 
-      fill_in('order_crm_key', with: '123')
-      click_link('Übernehmen')
+    fill_in('order_crm_key', with: '123')
+    click_link('Übernehmen')
 
-      click_add_contact
-      selectize('order_order_contacts_attributes_0_contact_id_or_crm', 'Hauswart Hans')
-      click_add_contact
-      selectize('order_order_contacts_attributes_1_contact_id_or_crm', 'Nader Fred')
+    click_add_contact
+    selectize('order_order_contacts_attributes_0_contact_id_or_crm', 'Hauswart Hans')
+    click_add_contact
+    selectize('order_order_contacts_attributes_1_contact_id_or_crm', 'Nader Fred')
 
-      fill_mandatory_fields(false)
+    fill_mandatory_fields(false)
 
-      click_button 'Speichern'
+    click_button 'Speichern'
 
-      assert_text('ist bereits vergeben')
-      assert_equal '123', find('#order_crm_key')['value']
-      assert_equal work_items(:puzzle).id.to_s, find('#client_work_item_id', visible: false)['value']
-      assert_equal 'New Order', find('#order_work_item_attributes_name')['value']
-      assert has_unchecked_field?('category_active')
+    assert_text('ist bereits vergeben')
+    assert_equal '123', find('#order_crm_key')['value']
+    assert_equal work_items(:puzzle).id.to_s, find('#client_work_item_id', visible: false)['value']
+    assert_equal 'New Order', find('#order_work_item_attributes_name')['value']
+    assert has_unchecked_field?('category_active')
 
-      selecti0 = find('#order_order_contacts_attributes_0_contact_id_or_crm + .selectize-control')
+    selecti0 = find('#order_order_contacts_attributes_0_contact_id_or_crm + .selectize-control')
 
-      assert selecti0.has_selector?('.selectize-input .item', text: 'Hauswart Hans')
-      selecti0.find('.selectize-input').click # populate & open dropdown
+    assert selecti0.has_selector?('.selectize-input .item', text: 'Hauswart Hans')
+    selecti0.find('.selectize-input').click # populate & open dropdown
 
-      assert selecti0.has_selector?('.selectize-dropdown-content .option', count: 3)
-      find('body').send_keys(:escape) # close dropdown
+    assert selecti0.has_selector?('.selectize-dropdown-content .option', count: 3)
+    find('body').send_keys(:escape) # close dropdown
 
-      selecti1 = find('#order_order_contacts_attributes_1_contact_id_or_crm + .selectize-control')
+    selecti1 = find('#order_order_contacts_attributes_1_contact_id_or_crm + .selectize-control')
 
-      assert selecti1.has_selector?('.selectize-input .item', text: 'Nader Fred')
+    assert selecti1.has_selector?('.selectize-input .item', text: 'Nader Fred')
 
-      click_add_contact
-      selectize('order_order_contacts_attributes_2_contact_id_or_crm', 'Miller John')
-    end
+    click_add_contact
+    selectize('order_order_contacts_attributes_2_contact_id_or_crm', 'Miller John')
   end
 
   test 'unknown crm key returns message' do
-    timeout_safe do
-      Crm.instance = Crm::Highrise.new
-      Crm.instance.expects(:find_order).with('123').returns(nil)
+    Crm.instance = Crm::Highrise.new
+    Crm.instance.expects(:find_order).with('123').returns(nil)
 
-      # reload after crm change
-      visit(new_order_path)
+    # reload after crm change
+    visit(new_order_path)
 
-      fill_in('order_crm_key', with: '123')
-      click_link('Übernehmen')
+    fill_in('order_crm_key', with: '123')
+    click_link('Übernehmen')
 
-      assert page.has_selector?('#crm_key', text: 'Nicht gefunden')
-    end
+    assert page.has_selector?('#crm_key', text: 'Nicht gefunden')
   end
 
   test 'existing crm order returns message' do
-    timeout_safe do
-      Crm.instance = Crm::Highrise.new
-      order = orders(:puzzletime)
-      order.update!(crm_key: '123')
-      Crm.instance.expects(:find_order).with('123').returns(name: 'New Order',
-                                                            key: 123,
-                                                            url: 'http://crm/orders/123',
-                                                            client: { name: 'Puzzle', key: '456' })
+    Crm.instance = Crm::Highrise.new
+    order = orders(:puzzletime)
+    order.update!(crm_key: '123')
+    Crm.instance.expects(:find_order).with('123').returns(name: 'New Order',
+                                                          key: 123,
+                                                          url: 'http://crm/orders/123',
+                                                          client: { name: 'Puzzle', key: '456' })
 
-      # reload after crm change
-      visit(new_order_path)
+    # reload after crm change
+    visit(new_order_path)
 
-      fill_in('order_crm_key', with: '123')
-      click_link('Übernehmen')
+    fill_in('order_crm_key', with: '123')
+    click_link('Übernehmen')
 
-      assert_match(/bereits erfasst/, find('#crm_key').text)
-    end
+    assert_match(/bereits erfasst/, find('#crm_key').text)
   end
 
   test 'crm error returns message' do
-    timeout_safe do
-      Crm.instance = Crm::Highrise.new
-      Crm.instance.stubs(:find_order).raises(Crm::Error.new('crm error occurred'))
+    Crm.instance = Crm::Highrise.new
+    Crm.instance.stubs(:find_order).raises(Crm::Error.new('crm error occurred'))
 
-      # reload after crm change
-      visit(new_order_path)
+    # reload after crm change
+    visit(new_order_path)
 
-      fill_in('order_crm_key', with: '123')
-      click_link('Übernehmen')
+    fill_in('order_crm_key', with: '123')
+    click_link('Übernehmen')
 
-      assert_match(/crm error occurred/, find('#crm_key .help-block').text)
-      assert_equal '', find('#client_work_item_id', visible: false)['value']
-    end
+    assert_match(/crm error occurred/, find('#crm_key .help-block').text)
+    assert_equal '', find('#client_work_item_id', visible: false)['value']
   end
 
   test 'create order team members fields' do

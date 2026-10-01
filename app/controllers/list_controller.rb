@@ -56,7 +56,13 @@ class ListController < ApplicationController
   end
 
   def authorize_class
+    return if skip?(:authorize)
+
     authorize!(action_name.to_sym, model_class)
+  end
+
+  def skip?(behavior)
+    self.class.cancan_resource_class.new(self).skip?(behavior)
   end
 
   # Include these modules after the #list_entries method is defined.

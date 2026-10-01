@@ -9,42 +9,34 @@ require 'test_helper'
 
 class ListOrdersTest < ActionDispatch::IntegrationTest
   test 'list orders as employee has no create link' do
-    timeout_safe do
-      list_orders_as :pascal
+    list_orders_as :pascal
 
-      assert has_no_link?('Erstellen')
-    end
+    assert has_no_link?('Erstellen')
   end
 
   test 'list orders as order responsible member has create link' do
-    timeout_safe do
-      list_orders_as :lucien
+    list_orders_as :lucien
 
-      assert has_link?('Erstellen')
-    end
+    assert has_link?('Erstellen')
   end
 
   test 'list orders as management has create link' do
-    timeout_safe do
-      list_orders_as :mark
+    list_orders_as :mark
 
-      assert has_link?('Erstellen')
-    end
+    assert has_link?('Erstellen')
   end
 
   test 'list orders filters list by name' do
-    timeout_safe do
-      list_orders_as :mark
+    list_orders_as :mark
 
-      assert page.has_selector?('table.orders-list tbody tr', count: 3)
-      fill_in 'Name', with: 'swiss'
-      page.find('input#q').native.send_keys(:enter)
+    assert page.has_selector?('table.orders-list tbody tr', count: 3)
+    fill_in 'Name', with: 'swiss'
+    page.find('input#q').native.send_keys(:enter)
 
-      assert page.has_selector?('table.orders-list tbody tr', count: 1)
-      find('.has-clear [data-clear]').click
+    assert page.has_selector?('table.orders-list tbody tr', count: 1)
+    find('.has-clear [data-clear]').click
 
-      assert page.has_selector?('table.orders-list tbody tr', count: 3)
-    end
+    assert page.has_selector?('table.orders-list tbody tr', count: 3)
   end
 
   private

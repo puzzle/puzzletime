@@ -11,9 +11,27 @@ name: 'Lint and test on pull request'
 
 jobs:
   lint:
+    permissions:
+      contents: read
+      checks: write
+      pull-requests: write
     uses: ./.github/workflows/reusable-lint.yaml
     with:
       ref: ${{ github.event.pull_request.head.sha }}
+
+  commit-lint:
+    runs-on: 'ubuntu-latest'
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+      - uses: ruby/setup-ruby@v1
+      - name: 'Conventional Commits check'
+        run: >
+          bin/commit-lint
+          "${{ github.event.pull_request.base.sha }}"
+          "${{ github.event.pull_request.head.sha }}"
 
   test:
     uses: ./.github/workflows/reusable-test.yaml

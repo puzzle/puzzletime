@@ -7,6 +7,7 @@
 
 class WorkloadReportController < ApplicationController
   include DryCrud::Rememberable
+
   self.remember_params = %w[department_id]
 
   before_action :authorize_class

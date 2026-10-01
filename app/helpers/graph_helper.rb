@@ -76,6 +76,7 @@ module GraphHelper
   def timebox_div(box)
     worktime_link box.worktime do
       content = [image_tag('space.gif',
+                           'alt' => '',
                            'height' => "#{box.height}px",
                            'style' => "background-color: #{box.color};")]
       content << content_tag(:span, h(box.tooltip)) unless box.tooltip.strip.empty?

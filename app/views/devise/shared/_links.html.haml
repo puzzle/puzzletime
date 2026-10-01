@@ -30,7 +30,7 @@
       %br
 
 - if try(:auto_redirect?)
-  :coffeescript
-    $(document).on('turbolinks:load', ->
+  :javascript
+    $(document).on('turbolinks:load', function () {
       $('.auto-login').click();
-    )
+    });

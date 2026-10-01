@@ -1,0 +1,20 @@
+/*!
+ * jQuery UI Autocomplete 1.14.1
+ * https://jqueryui.com
+ *
+ * Copyright OpenJS Foundation and other contributors
+ * Released under the MIT license.
+ * https://jquery.org/license
+ *
+ * https://api.jqueryui.com/autocomplete/#theming
+ *
+ * The gem's own "*= require jquery-ui/theme" directive is Sprockets-only
+ * and does nothing under dart-sass; the theme is imported explicitly once,
+ * before this file, in application.scss.
+ */
+.ui-autocomplete {
+	position: absolute;
+	top: 0;
+	left: 0;
+	cursor: default;
+}

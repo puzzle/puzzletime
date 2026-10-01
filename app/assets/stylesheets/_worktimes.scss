@@ -3,6 +3,8 @@
 //  or later. See the COPYING file at the top-level directory or at
 //  https://github.com/puzzle/puzzletime.
 
+@use "sass:math";
+
 $worktimes-weeknav-active-bg: #fff;
 $worktimes-weekcontent-hover-bg: $gray-lighter;
 
@@ -12,22 +14,22 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
   }
 
   .figures {
-    @extend .row;
+    @include bs-row;
     margin-left: 0;
     margin-right: 0;
     padding-bottom: 5px;
-    color: $gray;
+    color: $gray-dark;
 
     .balance {
-      @extend .col-xs-offset-1;
-      @extend .col-xs-2;
+      @include bs-offset(1);
+      @include bs-col(2);
     }
     .monthly {
-      @extend .col-xs-6;
+      @include bs-col(6);
       text-align: center;
     }
     .holidays {
-      @extend .col-xs-2;
+      @include bs-col(2);
       text-align: right;
     }
   }
@@ -67,7 +69,7 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
   }
 
   .weeknav-link {
-    width: percentage(1 / 12);
+    width: percentage(math.div(1, 12));
     max-width: 64px;
     display: flex;
     justify-content: center;
@@ -82,7 +84,7 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
 
   .weeknav-calendar-row,
   .weeknav-add-row {
-    padding: 0 $grid-gutter-width / 2;
+    padding: 0 math.div($grid-gutter-width, 2);
     line-height: 40px;
     vertical-align: middle;
     border-width: 0 0 1px 0;
@@ -147,14 +149,15 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
 
     .add-other {
       float: right;
+      color: $brand-blue-darker;
       &.last-day {
         color: $brand-red;
       }
     }
   }
   .weeknav-add-row {
-    @extend .col-xs-offset-9;
-    @extend .col-xs-2;
+    @include bs-offset(9);
+    @include bs-col(2);
     border-right-width: 1px;
     padding-right: 0;
 
@@ -183,7 +186,7 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
 
     .day {
       flex: 1 1 auto;
-      max-width: percentage(1 / 8);
+      max-width: percentage(math.div(1, 8));
       cursor: pointer;
       border-width: 0 1px 0 0;
       border-style: solid;
@@ -198,7 +201,7 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
       }
 
       &.today {
-        background: $brand-blue image-url('day-marker-active.svg') 100% 100%
+        background: $brand-blue url('day-marker-active.svg') 100% 100%
           no-repeat;
         color: #fff;
 
@@ -208,7 +211,7 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
       }
 
       &.missing {
-        background: image-url('day-marker-missing.svg') 100% 100% no-repeat;
+        background: url('day-marker-missing.svg') 100% 100% no-repeat;
 
         .weeknav-time {
           color: $brand-red;
@@ -216,7 +219,7 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
       }
 
       &.holiday {
-        background: image-url('day-marker-holiday.svg') 100% 100% no-repeat;
+        background: url('day-marker-holiday.svg') 100% 100% no-repeat;
 
         .weeknav-label,
         .weeknav-time {
@@ -234,7 +237,7 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
     flex: 2 1 auto;
     border-right: 1px solid $gray-light;
     text-align: right;
-    padding-right: $grid-gutter-width / 2;
+    padding-right: math.div($grid-gutter-width, 2);
   }
 
   .weekcontent {
@@ -253,11 +256,11 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
     }
 
     .date-label {
-      @extend .row;
+      @include bs-row;
       margin-left: 0;
       margin-right: 0;
       margin-top: 36px;
-      color: $gray;
+      color: $gray-dark;
 
       .date-day,
       .date-time-value,
@@ -266,15 +269,15 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
         padding-bottom: 10px;
       }
       .date-day {
-        @extend .col-xs-offset-1;
-        @extend .col-xs-7;
+        @include bs-offset(1);
+        @include bs-col(7);
       }
       .date-time-value {
         text-align: right;
-        @extend .col-xs-1;
+        @include bs-col(1);
       }
       .date-action {
-        @extend .col-xs-2;
+        @include bs-col(2);
         text-align: right;
         padding-right: 50px;
         a {
@@ -291,7 +294,7 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
     }
 
     .entry {
-      @extend .row;
+      @include bs-row;
       margin-left: 0;
       margin-right: 0;
       position: relative;
@@ -317,26 +320,26 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
       }
 
       .billable-icon {
-        @extend .col-xs-offset-1;
+        @include bs-offset(1);
         display: block;
         position: absolute;
         left: -35px;
-        padding-left: $grid-gutter-width / 2;
+        padding-left: math.div($grid-gutter-width, 2);
         font-size: 22px;
       }
 
       .meal-compensation-icon {
-        @extend .col-xs-offset-1;
+        @include bs-offset(1);
         display: block;
         position: absolute;
         left: -70px;
-        padding-left: $grid-gutter-width / 2;
+        padding-left: math.div($grid-gutter-width, 2);
         font-size: 22px;
       }
 
       .title-description {
-        @extend .col-xs-offset-1;
-        @extend .col-xs-5;
+        @include bs-offset(1);
+        @include bs-col(5);
       }
 
       .title,
@@ -359,19 +362,19 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
       }
 
       .time-range {
-        @extend .col-xs-2;
+        @include bs-col(2);
         font-size: 18px;
         font-weight: 300;
       }
 
       .time-value {
-        @extend .col-xs-1;
+        @include bs-col(1);
         font-size: 18px;
         font-weight: 500;
       }
 
       .controls {
-        @extend .col-xs-2;
+        @include bs-col(2);
         font-size: 16px;
         padding-right: 50px;
         i {
@@ -392,15 +395,15 @@ $worktimes-weekcontent-hover-bg: $gray-lighter;
       }
     }
     .entry.is-empty .controls {
-      @extend .col-xs-12;
+      @include bs-col(12);
     }
   }
 }
 
 .worktimes-day-no-entries,
 .worktimes-day-add-link {
-  @extend .col-xs-offset-1;
-  @extend .col-xs-10;
+  @include bs-offset(1);
+  @include bs-col(10);
 }
 
 .worktimes-day-no-entries {

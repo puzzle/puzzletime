@@ -10,7 +10,7 @@
     background-color: $gray-lighter;
 
     th, a {
-      color: $gray;
+      color: $gray-dark;
     }
 
     tr > th {
@@ -91,7 +91,9 @@
 }
 
 .table-stripedbody {
+  // .table-striped above is still SCSS and extendable; Bootstrap's copy is not.
   @extend .table-striped;
+  @include bs-table-striped;
 
   & > thead > tr > th,
   & > thead > tr > th:nth-child(2n),

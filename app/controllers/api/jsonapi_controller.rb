@@ -18,15 +18,8 @@ module Api
 
     before_action :set_pagination_headers, only: :index
 
-    class IncludeError < StandardError
-      def self.===(exception)
-        exception.instance_of?(ArgumentError) &&
-          exception.message.include?('is not specified as a relationship on')
-      end
-    end
-
     # render a json:api error response when an illegal include is requested
-    rescue_from IncludeError do |exception|
+    rescue_from JSONAPI::Serializer::UnsupportedIncludeError do |exception|
       render_error(exception.message, detail: 'Fix or remove the offending include')
     end
 

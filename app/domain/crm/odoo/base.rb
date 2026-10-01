@@ -34,8 +34,8 @@ module Crm
           api.search_read(model, parameters:, options:)
              .map do |resource|
                resource
-                 .then { split_ids(_1) }
-                 .tap { log_resource(_1) }
+                 .then { split_ids(it) }
+                 .tap { log_resource(it) }
              end
         end
 
@@ -45,7 +45,7 @@ module Crm
           ids =
             Array
             .wrap(id)
-            .map { safe_to_i(_1) }
+            .map { safe_to_i(it) }
             .select(&:positive?)
 
           return if ids.empty?
@@ -53,11 +53,11 @@ module Crm
           api
             .read(model, ids, options:)
             .first
-            .then { split_ids(_1) }
-            .tap { log_resource(_1) }
+            .then { split_ids(it) }
+            .tap { log_resource(it) }
         end
 
-        def all(...) = resources(...).map { new(_1) }
+        def all(...) = resources(...).map { new(it) }
 
         def find(...)
           res = resource(...)
@@ -76,7 +76,7 @@ module Crm
                 .constantize
                 .where.not(crm_key: nil)
                 .pluck(:crm_key)
-                .map { safe_to_i(_1) }
+                .map { safe_to_i(it) }
             end
 
           return if ids.empty?
@@ -84,9 +84,9 @@ module Crm
           api.read(model, ids, options:)
              .map do |resource|
                resource
-                 .then { split_ids(_1) }
-                 .tap { log_resource(_1) }
-                 .then { new(_1) }
+                 .then { split_ids(it) }
+                 .tap { log_resource(it) }
+                 .then { new(it) }
              end
         end
 

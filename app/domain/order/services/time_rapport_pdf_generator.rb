@@ -97,7 +97,7 @@ class Order
           cells.borders = %i[bottom top] # Only horizontal lines
           cells.border_color = 'dddddd'
 
-          (0..row_length - 1).each do |index|
+          (0..(row_length - 1)).each do |index|
             cells[index, 0].font_style = :bold
           end
         end
@@ -248,7 +248,7 @@ class Order
           table.row(0).background_color = 'f0f0f0'  # Light gray
           table.row(0).text_color = '333333'        # Dark gray
 
-          (1..table.row_length - 1).each do |index|
+          (1..(table.row_length - 1)).each do |index|
             table.row(index).background_color = index.even? ? 'f0f0f0' : 'ffffff'
           end
 
