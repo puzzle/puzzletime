@@ -122,6 +122,24 @@ class Employee < ApplicationRecord
                                    }
   scope :active_employed_current_month, -> { joins(:employments).merge(Employment.active.during(Period.current_month)) }
 
+  # One row per order responsible and order with billable, uninvoiced worktimes last month on an
+  # accounting post that has the billing reminder on. Rows are the responsibles, plus `order_id`
+  # and `client` (the order's path names).
+  scope :responsibles_with_not_billed_times_last_month, lambda {
+    joins(:employments)
+      .joins(:worktimes)
+      .joins('INNER JOIN work_items ON work_items.id = worktimes.work_item_id')
+      .joins('INNER JOIN accounting_posts ON accounting_posts.work_item_id = work_items.id')
+      .joins('INNER JOIN orders ON orders.work_item_id = ANY (work_items.path_ids)')
+      .joins('INNER JOIN employees as responsibles ON responsibles.id = orders.responsible_id')
+      .where(accounting_posts: { billing_reminder_active: true })
+      .where(Period.parse('-1m').where_condition('worktimes.work_date'))
+      .merge(Employment.active.during(Period.previous_month))
+      .where(worktimes: { billable: true, invoice_id: nil })
+      .select('responsibles.*, orders.id as order_id, work_items.path_names as client')
+      .distinct
+  }
+
   attr_accessor :remaining_vacations # used for multiabsence and not persisted
 
   # Include default devise modules. Others available are:
