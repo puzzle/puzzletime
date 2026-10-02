@@ -8,7 +8,7 @@
   %thead
     = render 'header'
   %tbody
-    %tr{ class: 'planning-company-totals' }
+    %tr.planning-company-totals
       %td.head.nowrap
         Total
       - @period.step(7) do |date|

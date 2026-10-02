@@ -35,7 +35,7 @@
                           url: search_work_items_path })
       %span.live-budget-bar{ title: "", data: { toggle: "tooltip", original_title: "Wähle eine Buchungsposition aus" }}
         %a.progress
-          .progress-bar#live-bar-success
+          #live-bar-success.progress-bar
 
   = f.labeled_input_field(:ticket, span: 2)
   = f.labeled_text_area(:description)
