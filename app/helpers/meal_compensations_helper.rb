@@ -16,13 +16,13 @@ module MealCompensationsHelper
   # returns a 2d hash where at index [employee_id, date] the value is true if and only if this day is eligible for meal_compensation
   def employee_id_meal_compensations_days(worktimes)
     compacted_worktime(worktimes).transform_keys(&:id).transform_values do |workdates|
-      workdates.values.sum { |h| h >= 4 ? 1 : 0 }
+      workdates.values.sum { |hours| hours >= 4 ? 1 : 0 }
     end
   end
 
   def meal_compensations_total(worktimes)
     compacted_worktime(worktimes).values.flat_map do |workdates|
-      workdates.values.map { |h| h >= 4 ? 1 : 0 }
+      workdates.values.map { |hours| hours >= 4 ? 1 : 0 }
     end
     .sum
   end

@@ -66,10 +66,10 @@ module Forms
     end
 
     def build_params(date)
-      p = attributes.except('repetitions')
-      p['work_date'] = date
+      attrs = attributes.except('repetitions')
+      attrs['work_date'] = date
 
-      ActionController::Parameters.new(ordertime: p)
+      ActionController::Parameters.new(ordertime: attrs)
     end
   end
 end

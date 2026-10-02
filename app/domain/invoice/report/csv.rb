@@ -32,9 +32,11 @@ class Invoice
          'Verantwortlich', 'Manuell']
       end
 
-      def row(e)
-        [e.reference, client(e), e.period, e.billing_date, e.due_date, format_invoice_status(e.status),
-         e.total_amount, e.total_hours, e.order.department, e.order.responsible, I18n.t("global.#{e.manual_invoice?}")]
+      def row(entry)
+        order = entry.order
+        [entry.reference, client(entry), entry.period, entry.billing_date, entry.due_date,
+         format_invoice_status(entry.status), entry.total_amount, entry.total_hours, order.department,
+         order.responsible, I18n.t("global.#{entry.manual_invoice?}")]
       end
 
       def client(entry)
