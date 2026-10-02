@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+# TEMPORARY: verification tool for the asset-pipeline upgrade (upgrade.html, phase 1).
+# Delete this file together with reconcile.rb and their lint ignores:
+# `exclude_paths` in .reek.yml and the 'cssdiff.rb' entry in .rubocop_todo.yml.
+
 # Normalised CSS rule-set diff: order-insensitive, whitespace/comment-insensitive.
 # usage: ruby cssdiff.rb baseline.css current.css
 
