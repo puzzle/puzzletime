@@ -56,7 +56,7 @@ module Billing
       accounting_posts = accounting_posts_to_hash(load_accounting_posts(orders))
       hours = hours_to_hash(load_accounting_post_hours(accounting_posts.values))
       invoices = invoices_to_hash(load_invoices(orders))
-      entries = orders.filter_map { |o| build_entry(o, worktimes, accounting_posts, hours, invoices) }
+      entries = orders.filter_map { |order| build_entry(order, worktimes, accounting_posts, hours, invoices) }
       entries.filter { |e| e.not_billed_hours.positive? } # Only show if there are unbilled HOURS
     end
 

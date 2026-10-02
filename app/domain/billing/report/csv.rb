@@ -30,9 +30,9 @@ module Billing
         ['Kunde', 'Status', 'Geleistet', 'Verrechenbar', 'Verrechnet', 'Verrechnung offen']
       end
 
-      def row(e)
-        [e.client, e.status.to_s, e.supplied_amount, e.billable_amount, e.billed_amount,
-         e.not_billed_amount]
+      def row(entry)
+        [entry.client, entry.status.to_s, entry.supplied_amount, entry.billable_amount, entry.billed_amount,
+         entry.not_billed_amount]
       end
     end
   end

@@ -82,13 +82,13 @@ module Billing
       end
 
       def post_hours(id, billable = nil)
-        h = hours[id]
-        return BigDecimal(0) unless h
+        hours_by_billable = hours[id]
+        return BigDecimal(0) unless hours_by_billable
 
         if billable.nil?
-          h.values.sum.to_d
+          hours_by_billable.values.sum.to_d
         else
-          h[billable].to_d
+          hours_by_billable[billable].to_d
         end
       end
 

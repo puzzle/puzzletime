@@ -135,13 +135,13 @@ class Order
         data << header
 
         # Add table rows
-        @worktimes.each do |w|
-          row = [w.date_string, format('%.2f', w.hours)]
-          row << (f_hour(w.from_start_time) || '') << (f_hour(w.to_end_time) || '') if params[:start_stop]
-          row << w.employee.to_s
-          row << w.work_item.to_s if params[:show_work_item]
-          row << w.ticket if params[:show_ticket]
-          row << w.description if params[:description]
+        @worktimes.each do |worktime|
+          row = [worktime.date_string, format('%.2f', worktime.hours)]
+          row << (f_hour(worktime.from_start_time) || '') << (f_hour(worktime.to_end_time) || '') if params[:start_stop]
+          row << worktime.employee.to_s
+          row << worktime.work_item.to_s if params[:show_work_item]
+          row << worktime.ticket if params[:show_ticket]
+          row << worktime.description if params[:description]
 
           data << row
         end
@@ -181,9 +181,9 @@ class Order
           if params[:combine] == 'ticket'
             row << tckt_val[:employees].keys.sort.map { |e| @employees[e] }.join(', ')
           elsif params[:combine] == 'ticket_employee'
-            a = []
-            tckt_val[:employees].each_pair { |k, v| a << "#{@employees[k]} (#{v[0].round(2)}h)" }
-            row << a.sort.join(', ')
+            employee_hours = []
+            tckt_val[:employees].each_pair { |k, v| employee_hours << "#{@employees[k]} (#{v[0].round(2)}h)" }
+            row << employee_hours.sort.join(', ')
           end
           row << tckt_val[:descriptions].join(', ') if params[:description]
 
