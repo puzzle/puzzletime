@@ -48,6 +48,15 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
     assert_equal client.id, order.parent_id
   end
 
+  test 'create order with new client named with an apostrophe' do
+    create_client("O'Neil AG", 'ONAG')
+
+    fill_mandatory_fields
+
+    assert_creatable
+    assert_equal WorkItem.find_by(name: "O'Neil AG").id, WorkItem.find_by(name: 'New Order').parent_id
+  end
+
   test 'create order with existing client and existing category' do
     selectize('client_work_item_id', 'Puzzle')
     check('category_active')
@@ -519,11 +528,11 @@ class CreateOrderTest < ActionDispatch::IntegrationTest
 
   private
 
-  def create_client
+  def create_client(name = 'New Client', shortname = 'NECL')
     click_link('client_work_item_id_create_link')
     within('.modal-dialog') do
-      fill_in('client_work_item_attributes_name', with: 'New Client')
-      fill_in('client_work_item_attributes_shortname', with: 'NECL')
+      fill_in('client_work_item_attributes_name', with: name)
+      fill_in('client_work_item_attributes_shortname', with: shortname)
       click_button 'Speichern'
     end
   end
