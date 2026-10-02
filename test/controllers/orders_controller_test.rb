@@ -446,6 +446,49 @@ class OrdersControllerTest < ActionController::TestCase
                  order_team_members
   end
 
+  test 'PATCH update updates existing order contact in place without creating a duplicate' do
+    order = orders(:puzzletime)
+    contact = contacts(:puzzle_rava)
+    order_contact = order.order_contacts.create!(contact:, comment: 'PO')
+
+    patch :update, params: {
+      id: order.id,
+      order: {
+        order_contacts_attributes: {
+          '0' => { id: order_contact.id, contact_id_or_crm: contact.id, comment: 'CTO' }
+        }
+      }
+    }
+
+    assert_redirected_to edit_order_path(order)
+
+    order.reload
+
+    assert_equal 1, order.order_contacts.count
+    assert_equal order_contact.id, order.order_contacts.first.id
+    assert_equal 'CTO', order.order_contacts.first.comment
+  end
+
+  test 'PATCH update removes order contact marked for destruction' do
+    order = orders(:puzzletime)
+    contact = contacts(:puzzle_rava)
+    order_contact = order.order_contacts.create!(contact:, comment: 'PO')
+
+    assert_difference('OrderContact.count', -1) do
+      patch :update, params: {
+        id: order.id,
+        order: {
+          order_contacts_attributes: {
+            '0' => { id: order_contact.id, contact_id_or_crm: contact.id, comment: 'PO', _destroy: '1' }
+          }
+        }
+      }
+    end
+
+    assert_redirected_to edit_order_path(order)
+    assert_empty order.reload.order_contacts
+  end
+
   test 'DELETE destroys order and work item' do
     order = orders(:puzzletime)
     order.worktimes.destroy_all
