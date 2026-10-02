@@ -136,8 +136,6 @@ PreCommit:
   LineEndings:
     enabled: true
     exclude:
-      # FIXME: Remove in the end
-      - config/initializers/highrise.rb
       - "**/*.ttf"
       - "**/*.eot"
       - "**/*.woff"
@@ -154,21 +152,12 @@ PreCommit:
     enabled: true
   Reek:
     enabled: true
-    exclude:
-      # FIXME: Remove in the end
-      - config/initializers/highrise.rb
   RuboCop:
     enabled: true
-    exclude:
-      # FIXME: Remove in the end
-      - config/initializers/highrise.rb
   RubyLint:  # Does not play well with Rails
     enabled: false
   RubySyntax:
     enabled: true
-    exclude:
-      # FIXME: Remove in the end
-      - config/initializers/highrise.rb
   ScssLint:
     enabled: true
     exclude:
