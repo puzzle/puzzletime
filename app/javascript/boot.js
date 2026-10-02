@@ -7,36 +7,6 @@
 
 window.App = window.App || {}
 
-if (typeof String.prototype.endsWith !== 'function') {
-  // eslint-disable-next-line no-extend-native -- intentional polyfill for legacy browsers
-  String.prototype.endsWith = function (suffix) {
-    return this.indexOf(suffix, this.length - suffix.length) !== -1
-  }
-}
-
-if (typeof Object.assign !== 'function') {
-  Object.assign = function (target) {
-    'use strict'
-    if (target == null) {
-      throw new TypeError('Cannot convert undefined or null to object')
-    }
-    const output = Object(target)
-    let index = 1
-    while (index < arguments.length) {
-      const source = arguments[index]
-      if ((source !== undefined) && (source !== null)) {
-        for (const nextKey in source) {
-          if (Object.prototype.hasOwnProperty.call(source, nextKey)) {
-            output[nextKey] = source[nextKey]
-          }
-        }
-      }
-      index++
-    }
-    return output
-  }
-}
-
 // Fixes https://github.com/selectize/selectize.js/pull/1320
 Selectize.define('required-fix', function (options) {
   this.refreshValidityState = () => {
