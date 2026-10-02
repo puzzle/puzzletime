@@ -9,6 +9,10 @@ module Billing
   class Report
     include Filterable
 
+    NUMERIC_SORT_COLUMNS = %w[offered_amount offered_rate supplied_amount supplied_hours
+                              billable_amount billable_hours billed_amount
+                              not_billed_amount not_billed_hours].freeze
+
     attr_reader :period, :params
 
     def initialize(period, params = {})
@@ -168,9 +172,7 @@ module Billing
     end
 
     def sort_by_number?
-      Billing::Report::Entry.public_instance_methods(false)
-                            .collect(&:to_s)
-                            .include?(params[:sort])
+      NUMERIC_SORT_COLUMNS.include?(params[:sort])
     end
 
     def sort_by_string(entries, dir)
