@@ -177,7 +177,7 @@ class Order
         # Add table rows
         @tickets.each do |tckt_key, tckt_val|
           row = [tckt_key, format('%.2f', tckt_val[:sum])]
-          row << f_date(tckt_val[:date][0]) << f_date(tckt_val[:date][0]) if params[:start_stop]
+          row << f_date(tckt_val[:date][0]) << f_date(tckt_val[:date][1]) if params[:start_stop]
           if params[:combine] == 'ticket'
             row << tckt_val[:employees].keys.sort.map { |e| @employees[e] }.join(', ')
           elsif params[:combine] == 'ticket_employee'
