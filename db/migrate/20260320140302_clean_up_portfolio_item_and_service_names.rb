@@ -14,6 +14,10 @@ class CleanUpPortfolioItemAndServiceNames < ActiveRecord::Migration[7.1]
     cleanup_model(MigrationService)
   end
 
+  def down
+    raise ActiveRecord::IrreversibleMigration
+  end
+
   private
 
   def cleanup_model(model_class)
@@ -39,9 +43,5 @@ class CleanUpPortfolioItemAndServiceNames < ActiveRecord::Migration[7.1]
 
       record.update_column(:name, clean_name) if clean_name != record.name
     end
-  end
-
-  def down
-    raise ActiveRecord::IrreversibleMigration
   end
 end
