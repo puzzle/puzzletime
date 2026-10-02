@@ -135,6 +135,5 @@ group :overcommit, optional: true do
   gem 'overcommit'
   gem 'rails_best_practices'
   gem 'reek'
-  gem 'scss_lint'
   gem 'sqlint'
 end

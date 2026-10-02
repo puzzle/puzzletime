@@ -760,8 +760,6 @@ GEM
     ruby_parser (3.22.0)
       racc (~> 1.5)
       sexp_processor (~> 4.16)
-    sass (3.7.4)
-      sass-listen (~> 4.0.0)
     sass-embedded (1.105.0-aarch64-linux-gnu)
       google-protobuf (~> 4.31)
     sass-embedded (1.105.0-aarch64-linux-musl)
@@ -778,11 +776,6 @@ GEM
       google-protobuf (~> 4.31)
     sass-embedded (1.105.0-x86_64-linux-musl)
       google-protobuf (~> 4.31)
-    sass-listen (4.0.0)
-      rb-fsevent (~> 0.9, >= 0.9.4)
-      rb-inotify (~> 0.9, >= 0.9.7)
-    scss_lint (0.60.0)
-      sass (~> 3.5, >= 3.5.5)
     sdoc (2.6.5)
       rdoc (>= 5.0)
     securerandom (0.4.1)
@@ -977,7 +970,6 @@ DEPENDENCIES
   rubocop-rails
   ruby-lsp
   ruby-vips
-  scss_lint
   sdoc
   seed-fu
   sentry-delayed_job
@@ -1274,7 +1266,6 @@ CHECKSUMS
   ruby-vips (2.3.0) sha256=e685ec02c13969912debbd98019e50492e12989282da5f37d05f5471442f5374
   ruby2_keywords (0.0.5) sha256=ffd13740c573b7301cf7a2e61fc857b2a8e3d3aff32545d6f8300d8bae10e3ef
   ruby_parser (3.22.0) sha256=1eb4937cd9eb220aa2d194e352a24dba90aef00751e24c8dfffdb14000f15d23
-  sass (3.7.4) sha256=808b0d39053aa69068df939e24671fe84fd5a9d3314486e1a1457d0934a4255d
   sass-embedded (1.105.0-aarch64-linux-gnu) sha256=26dc2b0f8063f99ad4df226ebecac361c52ce06c63d8acc20ebc615d1450ea09
   sass-embedded (1.105.0-aarch64-linux-musl) sha256=f74817c6d12cd63ce8b479844b2a791c68dca69500808925276f19bab875c072
   sass-embedded (1.105.0-arm-linux-gnueabihf) sha256=32562783fcddcb83f1530b079c2920acffea40affc7bbbde4e0434fb5eb44b1b
@@ -1283,8 +1274,6 @@ CHECKSUMS
   sass-embedded (1.105.0-x86_64-darwin) sha256=4e2d4238f8e286e0b256b63d3713ad27a06542b3079087e54d2c169072fb77fa
   sass-embedded (1.105.0-x86_64-linux-gnu) sha256=c7cb4884c6d1ddad41d52f5950167d5cf77e242d7900ca0ec13170ba43878977
   sass-embedded (1.105.0-x86_64-linux-musl) sha256=fbbda8c5df1073e177382cccd8c640ed7f49553e040713cd7fffca1af194cf96
-  sass-listen (4.0.0) sha256=ae9dcb76dd3e234329e5ba6e213f48e532c5a3e7b0b4d8a87f13aaca0cc18377
-  scss_lint (0.60.0) sha256=aad2d0e1cdddcd81b81583b5c90a0ae562071b6913a0c200a7bffb7a377f375b
   sdoc (2.6.5) sha256=7998b61c10775ee3179ccb0253774332d139e2c0649c251091f5868107a09b86
   securerandom (0.4.1) sha256=cc5193d414a4341b6e225f0cb4446aceca8e50d5e1888743fac16987638ea0b1
   seed-fu (2.3.9) sha256=6d902d12dc1b88a16d487506baacc93b3a92e3671fdd603110d1600d35fbf478
