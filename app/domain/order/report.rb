@@ -11,6 +11,10 @@ class Order
     include OrderHelper
     include ProgressBarHelper
 
+    NUMERIC_SORT_COLUMNS = %w[offered_amount offered_rate offered_hours supplied_amount supplied_hours
+                              billable_amount billable_hours billed_amount billed_hours billability
+                              billed_rate average_rate major_chance_value major_risk_value].freeze
+
     attr_reader :period, :params
 
     def initialize(period, params = {})
@@ -224,9 +228,7 @@ class Order
     end
 
     def sort_by_number?
-      Order::Report::Entry.public_instance_methods(false)
-                          .collect(&:to_s)
-                          .include?(params[:sort])
+      NUMERIC_SORT_COLUMNS.include?(params[:sort])
     end
 
     def sort_by_target?
