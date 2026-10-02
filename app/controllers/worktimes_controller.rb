@@ -103,7 +103,7 @@ class WorktimesController < CrudController
     overlaps = Worktime.where(conditions).includes(:work_item).to_a
     return if overlaps.blank?
 
-    flash[:warning] = "#{@worktime}: Es besteht eine Überlappung mit mindestens einem anderen Eintrag:\n".html_safe
+    flash[:warning] = "#{ERB::Util.h(@worktime)}: Es besteht eine Überlappung mit mindestens einem anderen Eintrag:\n".html_safe
     flash[:warning] += overlaps.collect { |o| ERB::Util.h(o) }.join("\n").html_safe
   end
 
