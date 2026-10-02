@@ -3,6 +3,7 @@
 //  or later. See the COPYING file at the top-level directory or at
 //  https://github.com/puzzle/puzzletime.
 
+@use "sass:color";
 
 .table {
   & > thead {
@@ -92,6 +93,7 @@
 
 .table-stripedbody {
   // .table-striped above is still SCSS and extendable; Bootstrap's copy is not.
+  // stylelint-disable-next-line scss/at-extend-no-missing-placeholder -- needs the real class, not a placeholder
   @extend .table-striped;
   @include bs-table-striped;
 
@@ -184,7 +186,7 @@ th.subhead {
   height: 0;
 
   .table thead & {
-    color: darken($gray, 15%);
+    color: color.adjust($gray, $lightness: -15%);
   }
 
   &, .table-condensed > thead > tr > & {
