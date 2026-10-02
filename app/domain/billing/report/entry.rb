@@ -58,27 +58,24 @@ module Billing
       end
 
       def billed_amount
-        return 0 unless worktimes.present? && worktimes[true].present?
-
-        entry = worktimes[true][@order.id]
-        entry.present? ? entry['amount'] || 0 : 0
+        invoiced_worktime_sum(true, 'amount')
       end
 
       def not_billed_hours
-        return 0 unless worktimes.present? && worktimes[false].present?
-
-        entry = worktimes[false][@order.id]
-        entry.present? ? entry['hours'] || 0 : 0
+        invoiced_worktime_sum(false, 'hours')
       end
 
       def not_billed_amount
-        return 0 unless worktimes.present? && worktimes[false].present?
-
-        entry = worktimes[false][@order.id]
-        entry.present? ? entry['amount'] || 0 : 0
+        invoiced_worktime_sum(false, 'amount')
       end
 
       private
+
+      # worktimes: { invoiced? => { order_id => grouped Worktime row with 'hours' and 'amount' } }
+      def invoiced_worktime_sum(invoiced, column)
+        row = worktimes&.dig(invoiced, @order.id)
+        row ? row[column] || 0 : 0
+      end
 
       def sum_accounting_posts(&)
         accounting_posts.keys.sum(&)
