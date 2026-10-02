@@ -49,13 +49,13 @@
   position: relative;
   min-height: 1px;
   float: left;
-  width: percentage(math.div($columns, 12));
+  width: math.percentage(math.div($columns, 12));
   padding-left: math.div($grid-gutter-width, 2);
   padding-right: math.div($grid-gutter-width, 2);
 }
 
 @mixin bs-offset($columns) {
-  margin-left: percentage(math.div($columns, 12));
+  margin-left: math.percentage(math.div($columns, 12));
 }
 
 @mixin bs-container-fluid {

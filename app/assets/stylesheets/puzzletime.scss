@@ -360,6 +360,7 @@ html.turbolinks-progress-bar::before {
   border-right: solid #d7d7d7 1px;
 }
 
+// stylelint-disable no-invalid-position-at-import-rule -- Sass @import is inlined at compile time; its position sets the cascade order
 @import "layout";
 
 // dart-sass has no glob-import support, so these are listed explicitly.

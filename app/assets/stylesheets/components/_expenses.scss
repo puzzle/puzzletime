@@ -36,6 +36,7 @@
         table.table-small-blocks {
             thead {
                 border: none;
+                // stylelint-disable-next-line property-no-deprecated -- visually-hidden pattern; clip is still supported everywhere
                 clip: rect(0 0 0 0);
                 height: 1px;
                 margin: -1px;
