@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+# TEMPORARY: verification tool for the asset-pipeline upgrade (upgrade.html, phase 1).
+# Delete this file together with cssdiff.rb and their lint ignores:
+# `exclude_paths` in .reek.yml and the 'cssdiff.rb' entry in .rubocop_todo.yml.
+
 # Reconcile the phase-1 @extend -> mixin restructuring.
 # Claim under test: the ONLY difference is that selectors our SCSS used to
 # @extend into are no longer glued onto Bootstrap's own rule blocks.
