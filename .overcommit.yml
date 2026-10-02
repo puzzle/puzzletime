@@ -116,11 +116,6 @@ PreCommit:
     enabled: false
   HamlLint:
     enabled: true
-    exclude:
-      - app/views/employee_mailer/worktime_commit_reminder_mail.html.haml
-      - app/views/employee_mailer/worktime_deleted_mail.html.haml
-      - app/views/layouts/mailer.html.haml
-
   HardTabs:
     enabled: true
     exclude:

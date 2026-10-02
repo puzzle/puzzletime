@@ -7,7 +7,7 @@
 #headerbar.navbar.navbar-default{role: 'navigation', 'aria-label' => 'Kopfzeile', class: ('lonely' unless @user)}
   .container-fluid
     .navbar-header
-      .navbar-brand#navbar-app-title
+      #navbar-app-title.navbar-brand
         = image_tag 'logo.svg', size: '41x40', alt: 'PuzzleTime'
         PuzzleTime
         = link_to Puzzletime.version, Puzzletime.changelog_url, class: 'version'
