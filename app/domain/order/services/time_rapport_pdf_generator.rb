@@ -7,6 +7,7 @@
 
 class Order
   module Services
+    # Renders an order's time report (per worktime or per ticket) as a PDF with Prawn.
     class TimeRapportPdfGenerator
       # Predictable content length -> sized to fit exactly, nothing more.
       FIXED_COLUMN_HEADERS = { date: 'Datum', hours: 'Stunden', from: 'Von', to: 'Bis' }.freeze

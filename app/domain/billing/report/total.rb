@@ -7,6 +7,7 @@
 
 module Billing
   class Report
+    # Sum row over all billing report entries.
     class Total
       delegate :entries, to: :@report
 

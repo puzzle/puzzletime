@@ -6,6 +6,7 @@
 #  https://github.com/puzzle/puzzletime.
 
 class Invoice
+  # Invoice report: invoices of the period, filtered, sorted and paginated.
   class Report
     include Filterable
     include ReportFilters
