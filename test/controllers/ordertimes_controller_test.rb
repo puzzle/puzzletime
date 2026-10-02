@@ -233,6 +233,7 @@ class OrdertimesControllerTest < ActionController::TestCase
     assert_match(/unbezahlter Urlaub/, flash[:warning])
   end
 
+  # One request; redirect, flash and created dates are its outcome. :reek:TooManyStatements
   def test_create_repeated_ordertimes
     reps = 3
     work_date = Date.parse('2026-01-05')

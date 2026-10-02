@@ -126,6 +126,7 @@ module Evaluations
       assert_equal [employees(:pascal), employees(:lucien), employees(:mark)], ascending.divisions(@period_month)
     end
 
+    # Before/after one booking: one scenario. :reek:TooManyStatements
     def test_vacations_sort_value_is_bound_to_the_given_period_not_the_current_year
       employee = Fabricate(:employee, initial_vacation_days: 0, department: Department.first)
       employee.employments.create!(start_date: Date.new(2020, 1, 1), end_date: nil,

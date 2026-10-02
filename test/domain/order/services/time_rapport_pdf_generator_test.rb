@@ -66,6 +66,7 @@ class Order
 
       private
 
+      # One assertion per column header. :reek:TooManyStatements
       def assert_headers_fit(params)
         column_map, widths = column_map_and_widths_for(params)
         pdf = build_pdf

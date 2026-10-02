@@ -150,6 +150,7 @@ class Invoice
       @report ||= Invoice::Report.new(period, params)
     end
 
+    # Fixture data, one record per line. :reek:TooManyStatements
     def create_invoices
       Fabricate(:contract, order: orders(:hitobito_demo))
       Fabricate(:ordertime, work_item: work_items(:hitobito_demo_app), employee: employees(:pascal), hours: 10,
