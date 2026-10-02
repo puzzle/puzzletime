@@ -8,6 +8,7 @@
 module Billing
   class Report
     include Filterable
+    include ReportFilters
 
     NUMERIC_SORT_COLUMNS = %w[offered_amount offered_rate supplied_amount supplied_hours
                               billable_amount billable_hours billed_amount
@@ -46,12 +47,6 @@ module Billing
     end
 
     delegate :present?, to: :entries
-
-    def filters_defined?
-      filters = params.except(:action, :controller, :format, :utf8, :page,
-                              :clear)
-      filters.present? && filters.values.any?(&:present?)
-    end
 
     private
 
