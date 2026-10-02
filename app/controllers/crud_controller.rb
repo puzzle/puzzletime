@@ -68,7 +68,7 @@ class CrudController < ListController
       if created
         format.html { redirect_on_success(options) }
         format.json { render :show, status: :created, location: show_path }
-        format.js   { render plain: "'#{js_entry.to_json}'" }
+        format.js   { render js: js_entry_literal }
       else
         format.html { render :new, status: :unprocessable_content }
         format.json { render json: entry.errors, status: :unprocessable_content }
@@ -93,7 +93,7 @@ class CrudController < ListController
       if updated
         format.html { redirect_on_success(options) }
         format.json { render :show, status: :ok, location: show_path }
-        format.js   { render plain: "'#{js_entry.to_json}'" }
+        format.js   { render js: js_entry_literal }
       else
         format.html { render :edit, status: :unprocessable_content }
         format.json { render json: entry.errors, status: :unprocessable_content }
@@ -204,6 +204,15 @@ class CrudController < ListController
   # json hash representation of an entry used for javascript responses
   def js_entry
     { id: entry.id, label: entry.to_s }
+  end
+
+  # jquery-ujs runs format.js responses as a script before ajax:success sees the
+  # text, so the body must be harmless JS. The second to_json wraps the JSON in
+  # an escaped JS string literal (quotes, backslashes, <>&, U+2028/9), which
+  # modal_create.js decodes with JSON.parse twice. A hand-quoted '...' breaks on
+  # any apostrophe in the label and lets it inject script.
+  def js_entry_literal
+    js_entry.to_json.to_json
   end
 
   # Class methods for CrudActions.

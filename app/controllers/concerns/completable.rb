@@ -69,7 +69,7 @@ module Completable
     { id: entry.id,
       value: date,
       label: string,
-      content: date && "#{j(completed_icon(date))} #{string}" }
+      content: date && "#{completed_icon(date)} #{string}" }
   end
 
   def entry_date

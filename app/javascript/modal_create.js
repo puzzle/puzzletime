@@ -28,8 +28,7 @@ const showModal = function (event, data, status, xhr) {
 }
 
 const processCreatedEntry = function (event, data, status, xhr) {
-  // eslint-disable-next-line no-eval -- server renders the JSON payload as a quoted JS string literal (see CrudController#render plain)
-  data = $.parseJSON(eval(data))
+  data = JSON.parse(JSON.parse(data)) // see CrudController#js_entry_literal
   const modal = $(this).closest('.modal')
   const originator = modal.data('originator')
   if (originator.data('update') === 'selectize') {
