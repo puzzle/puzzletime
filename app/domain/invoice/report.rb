@@ -8,6 +8,7 @@
 class Invoice
   class Report
     include Filterable
+    include ReportFilters
 
     attr_reader :period, :params
 
@@ -46,12 +47,6 @@ class Invoice
     end
 
     delegate :present?, to: :entries
-
-    def filters_defined?
-      filters = params.except(:action, :controller, :format, :utf8, :page,
-                              :clear)
-      filters.present? && filters.values.any?(&:present?)
-    end
 
     private
 

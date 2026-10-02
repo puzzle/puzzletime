@@ -8,6 +8,7 @@
 class Order
   class Report
     include Filterable
+    include ReportFilters
     include OrderHelper
     include ProgressBarHelper
 
@@ -49,13 +50,9 @@ class Order
 
     delegate :present?, to: :entries
 
-    def filters_defined?
-      filters = params.except(:action, :controller, :format, :utf8, :page,
-                              :clear, :status_preselection, :without_hours)
-      filters.present? && filters.values.any?(&:present?)
-    end
-
     private
+
+    def ignored_filter_params = %i[status_preselection without_hours]
 
     def load_entries
       orders = load_orders.to_a
