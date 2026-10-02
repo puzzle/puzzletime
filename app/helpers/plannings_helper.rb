@@ -37,7 +37,7 @@ module PlanningsHelper
 
   def row_update_html(ids, items)
     is_order_board = @board.is_a? Plannings::OrderBoard
-    period_total = is_order_board ? @board.total_row_planned_hours(*ids, true) : nil
+    period_total = is_order_board ? @board.total_row_planned_hours(*ids, active_period_only: true) : nil
 
     j(
       render(

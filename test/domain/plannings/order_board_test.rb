@@ -126,7 +126,27 @@ module Plannings
 
       board = Plannings::OrderBoard.new(order, period)
 
-      assert_equal 8, board.total_row_planned_hours(employees(:lucien).id, work_items(:hitobito_demo_app).id, true)
+      assert_equal 8, board.total_row_planned_hours(employees(:lucien).id, work_items(:hitobito_demo_app).id,
+                                                    active_period_only: true)
+    end
+
+    test '#total_row_planned_hours loads each period once and keeps both totals apart' do
+      create_plannings
+      Planning.create!(work_item_id: work_items(:hitobito_demo_app).id,
+                       employee_id: employees(:lucien).id,
+                       date: date - 28.days,
+                       percent: 100)
+      board = Plannings::OrderBoard.new(order, period)
+      ids = [employees(:lucien).id, work_items(:hitobito_demo_app).id]
+      # The query cache would hide repeated loads; the board must not depend on it.
+      ActiveRecord::Base.uncached do
+        assert_equal 16, board.total_row_planned_hours(*ids)
+        assert_equal 8, board.total_row_planned_hours(*ids, active_period_only: true)
+        assert_no_queries do
+          assert_equal 16, board.total_row_planned_hours(*ids)
+          assert_equal 8, board.total_row_planned_hours(*ids, active_period_only: true)
+        end
+      end
     end
 
     test '#total_post_planned_hours includes plannings for all employees, even if only some are included' do
@@ -162,8 +182,8 @@ module Plannings
       board = Plannings::OrderBoard.new(order, period)
       board.for_rows([[employees(:lucien).id, work_items(:hitobito_demo_app).id]])
 
-      assert_equal 24, board.total_planned_hours(false)
-      assert_equal 20, board.total_planned_hours(true)
+      assert_equal 24, board.total_planned_hours
+      assert_equal 20, board.total_planned_hours(active_period_only: true)
     end
 
     private
