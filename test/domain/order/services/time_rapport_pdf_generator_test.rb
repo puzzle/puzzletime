@@ -49,6 +49,21 @@ class Order
         end
       end
 
+      test 'ticket rows show the first and the last work date of the ticket as Von/Bis' do
+        first = Date.new(2025, 3, 3)
+        last = Date.new(2025, 3, 7)
+        tickets = { 'T-1' => { sum: 8, date: [first, last], employees: {}, descriptions: [] } }
+        data = Order::Services::TimeRapportData.new(
+          order: orders(:puzzletime), worktimes: [], tickets:, ticket_view: true, employees: {},
+          employee: nil, work_items: [work_items(:puzzletime)], period: Period.new(nil, nil)
+        )
+        generator = Order::Services::TimeRapportPdfGenerator.new(data, start_stop: 'true')
+
+        _header, row, = generator.send(:tickets_table_rows)
+
+        assert_equal [I18n.l(first, format: :long), I18n.l(last, format: :long)], row[2, 2]
+      end
+
       private
 
       def assert_headers_fit(params)
