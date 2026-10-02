@@ -67,8 +67,7 @@ module Crm
     end
 
     def sync_clients(ids = nil)
-      context = Client.includes(:work_item)
-      context = context.where(id: ids) if ids.present?
+      context = only(Client.includes(:work_item), ids)
 
       clean_crm_keys(context)
 
@@ -83,8 +82,7 @@ module Crm
     end
 
     def sync_orders(ids = nil)
-      context = Order.includes(:work_item, :additional_crm_orders)
-      context = context.where(id: ids) if ids.present?
+      context = only(Order.includes(:work_item, :additional_crm_orders), ids)
 
       clean_crm_keys(context)
 
@@ -120,8 +118,7 @@ module Crm
 
     # Syncs existing contacts
     def sync_contacts(ids = nil)
-      context = Contact
-      context = context.where(id: ids) if ids.present?
+      context = only(Contact, ids)
 
       clean_crm_keys(context)
 
@@ -137,8 +134,7 @@ module Crm
 
     # Imports missing contacts for existing clients
     def import_client_contacts(ids = nil)
-      context = Client
-      context = context.where(id: ids) if ids.present?
+      context = only(Client, ids)
 
       clean_crm_keys(context)
 
@@ -158,6 +154,11 @@ module Crm
     def restrict_local? = true
 
     private
+
+    # Narrows a sync to the given record ids; nil or empty syncs everything (console use).
+    def only(context, ids)
+      ids.present? ? context.where(id: ids) : context
+    end
 
     def clean_crm_keys(context)
       return unless context.has_attribute? :crm_key
