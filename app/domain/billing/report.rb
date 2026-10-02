@@ -6,6 +6,7 @@
 #  https://github.com/puzzle/puzzletime.
 
 module Billing
+  # Billing report: one entry per order with billable hours not yet invoiced in the period.
   class Report
     include Filterable
     include ReportFilters

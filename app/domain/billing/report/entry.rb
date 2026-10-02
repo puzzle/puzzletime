@@ -7,6 +7,7 @@
 
 module Billing
   class Report
+    # One order's row in the billing report: supplied, billable, billed and open amounts.
     class Entry < SimpleDelegator
       attr_reader :order, :worktimes, :accounting_posts, :hours, :invoices
 

@@ -7,6 +7,7 @@
 
 class Invoice
   class Report
+    # Sum row over all invoice report entries.
     class Total
       delegate :entries, to: :@report
 

@@ -7,6 +7,7 @@
 
 module Billing
   class Report
+    # CSV export of the billing report.
     class Csv
       attr_reader :report
 

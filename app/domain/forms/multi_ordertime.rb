@@ -6,6 +6,7 @@
 #  https://github.com/puzzle/puzzletime.
 
 module Forms
+  # Form object that books the same ordertime on consecutive days, up to the end of the week.
   class MultiOrdertime
     include ActiveModel::Model
     include ActiveModel::Attributes

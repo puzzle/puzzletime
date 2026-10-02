@@ -7,6 +7,7 @@
 
 class Invoice
   class Report
+    # CSV export of the invoice report.
     class Csv
       attr_reader :report
 
