@@ -11,7 +11,7 @@ module DryCrud
     # consisting of a label, input field, addon, help text or
     # required mark.
     class Control
-      attr_reader :builder, :attr, :args, :options, :span, :addon, :help
+      attr_reader :builder, :attr, :args, :options, :addon, :help
 
       delegate :content_tag, :object,
                to: :builder

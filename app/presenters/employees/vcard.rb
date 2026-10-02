@@ -22,8 +22,7 @@ module Employees
     end
 
     def respond_to_missing?(method_name, include_private = false)
-      return employee.respond_to?(method_name, include_private)
-      super
+      employee.respond_to?(method_name, include_private) || super
     end
 
     private

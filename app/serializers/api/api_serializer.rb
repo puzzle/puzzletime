@@ -10,6 +10,7 @@ module Api
     include Apidocs::Annotations::Serializer
 
     def self.inherited(subclass)
+      super
       subclass.class_eval do
         include JSONAPI::Serializer
 
