@@ -131,6 +131,7 @@
     <li><a href="#int">INT deployment — what the running system says</a></li>
     <li><a href="#ci">CI: the first run that actually executed the test suite</a></li>
     <li><a href="#verify">INT re-verification after the rebuild</a></li>
+    <li><a href="#audit">Lint exceptions audit</a></li>
   </ol>
 </nav>
 
@@ -765,6 +766,46 @@ reasoning behind each decision and the phase sections for full verification deta
       (<code>71c2fba1</code>).</div>
   </div>
 
+  <div class="timeline-entry bad">
+    <div class="timeline-date">Sa, 03.10.2026</div>
+    <div class="timeline-spine bad"><button type="button" class="timeline-dot" data-sha="e93ccb7fbbf6b3ecd211cb04a47f137a947ccf97"><span class="vh">e93ccb7f</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-content">Auditing every lint exception turned up what one of them hid: modal create
+      <code>eval</code>ed a <code>'…'</code>-quoted JSON response, so <strong>a client named <code>O'Neil AG</code>
+      broke the modal</strong> and a crafted label ran script. See <a href="#audit">§13.1</a>.</div>
+  </div>
+
+  <div class="timeline-entry bad">
+    <div class="timeline-date repeat">Sa, 03.10.2026</div>
+    <div class="timeline-spine bad"><button type="button" class="timeline-dot" data-sha="68603d37f9c2f834570c8daeb6f597ac731a0514"><span class="vh">68603d37</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-content">Brakeman's ignored "Dangerous Send" was right as a security verdict and wrong as a
+      bill of health: <code>?sort=post_hours</code> answered 500 on the billing and order reports. Next to it, the
+      billing report sorted clients backwards, pinned by its test (<code>967cada7</code>).</div>
+  </div>
+
+  <div class="timeline-entry bad">
+    <div class="timeline-date repeat">Sa, 03.10.2026</div>
+    <div class="timeline-spine bad"><button type="button" class="timeline-dot" data-sha="425e841f34f4661ad020f04aa16732aa2da64c93"><span class="vh">425e841f</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-content">Reek's "boolean parameter" led to the order board rebuilding every row total on
+      each of its two calls per row since <code>74dc3a56</code> — the query cache had hidden it — and its
+      "repeated conditional" to the ticket PDF printing the first date as <em>Bis</em> (<code>bff36b66</code>).</div>
+  </div>
+
+  <div class="timeline-entry warn">
+    <div class="timeline-date repeat">Sa, 03.10.2026</div>
+    <div class="timeline-spine warn"><button type="button" class="timeline-dot" data-sha="213b5cc4d430df0aa4480133b08fbb3378e9e624"><span class="vh">213b5cc4</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-content">Exceptions that excluded nothing: haml-lint's todo never applied (arrays replace,
+      not merge, on inheritance), Brakeman skipped two views for a hang it no longer has (<code>17a88d80</code>),
+      and scss_lint could not parse <code>math.div</code> — Stylelint now lints SCSS (<code>6df7058e</code>).</div>
+  </div>
+
+  <div class="timeline-entry ok">
+    <div class="timeline-date repeat">Sa, 03.10.2026</div>
+    <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="6f217b849639f087be86ed18d432971d1c8bbe2e"><span class="vh">6f217b84</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-content"><strong>Reek 427 → 0</strong>, every category decided rather than regenerated:
+      idioms configured, 1098 dead entries removed, duplication refactored away, each remaining exclude marked
+      reviewed, deferred or not yet reviewed. See <a href="#reek">§13.3</a>.</div>
+  </div>
+
   <div class="timeline-entry accent">
     <div class="timeline-date">Mi, 07.10.2026</div>
     <div class="timeline-spine"><button type="button" class="timeline-dot" data-sha="1424ecd163a5677a80e66d7289ae9a65789ed015"><span class="vh">1424ecd1</span></button><div class="timeline-line"></div></div>
@@ -1036,7 +1077,9 @@ copied-out assets and the <code>COMMIT</code> file need to survive, and now they
       tag) and each holder drops their own. See §9.3.</li>
   <li class="todo">Add the 28.09 release-check work to the merge request's review scope:
       <code>config/brakeman.ignore</code>'s 14 entries want a second reader, and
-      <code>exit_on_warn</code> stays <code>false</code> until they have one. See <a href="#checks">§9.5</a>.</li>
+      <code>exit_on_warn</code> stays <code>false</code> until they have one. See <a href="#checks">§9.5</a>.
+      An agent review on 2026-10-02 traced all 14 to code-defined values and found no reachable input
+      (<a href="#audit">§13.2</a>); a human reader is still the ask.</li>
   <li class="todo">Design sign-off on the darkened brand colours. They are the same hues, but <code>.btn-primary</code> and the
       status badges are visibly darker than <code>master</code>. The alternative (dark text on the light brand
       backgrounds) changes the look more, not less.</li>
@@ -1105,6 +1148,51 @@ copied-out assets and the <code>COMMIT</code> file need to survive, and now they
   <li class="done"><strong>The test job had never actually run on this branch</strong> — every dispatch was "Manual
       build without tests". Turning it on exposed two CI-only faults, both fixed; the suite is green on a hosted
       runner. Full account in <a href="#ci">§11</a>.</li>
+  <li class="done"><strong>Every lint exception audited</strong> (<a href="#audit">§13</a>): twelve real defects found
+      behind them and fixed, four exception mechanisms that excluded nothing repaired, SCSS moved to Stylelint, reek
+      from 427 unexcluded warnings to 0. Full suite green on the result: 1576 tests, 0 failures.</li>
+</ul>
+
+<p style="margin-top:1.5rem"><strong>Follow-up (not merge-blocking)</strong></p>
+<ul style="margin: 0.5rem 0">
+  <li class="todo"><strong>Review the parked <code>InstanceVariableAssumption</code> excludes</strong> in
+      <code>.reek.yml</code>, marked "NOT YET REVIEWED": the four report/planning controllers reading
+      <code>before_action</code> ivars, the guarded lazy loads in <code>Employment</code>, <code>Planning</code> and
+      <code>Crm::Odoo::Api</code>, and <code>TimeRapportPdfGenerator</code>'s <code>@column_map</code>, which
+      <code>column_widths</code> can only read after a row builder has set it. Excluded unreviewed on 2026-10-02 to
+      unblock the reek cleanup.</li>
+  <li class="todo"><strong>Review the parked <code>DuplicateMethodCall</code> excludes</strong> (also marked "NOT YET
+      REVIEWED"): calls repeated 3+ times in one method. 17 of them are in <code>TimeRapportPdfGenerator</code> and go
+      with its column-list refactor, together with the four <code>RepeatedConditional</code>s deferred there.</li>
+  <li class="todo"><strong>Replace RuboCop's raised Metrics maxes with per-file excludes.</strong>
+      <code>.rubocop_todo.yml</code> sets <code>Max</code> to the worst offender, so these checks are effectively off:
+      <code>Metrics/MethodLength</code> 312 and <code>Metrics/ClassLength</code> 314 (both from the 2015
+      <code>create_tables</code> migration), <code>Metrics/AbcSize</code> 282, <code>Layout/LineLength</code> 234,
+      <code>Metrics/ModuleLength</code> 161, <code>Metrics/BlockLength</code> 78. Excluding <code>db/migrate</code> from
+      Metrics and regenerating with <code>rubocop --auto-gen-config --auto-gen-only-exclude</code> lists the offending
+      files instead, so a new long method fails again. Until then reek's <code>max_statements: 10</code> is the only
+      method-length check that bites.</li>
+  <li class="todo"><strong>A pass over <code>TimeRapportPdfGenerator</code></strong>, the file reek still flags most:
+      headers, rows and total rows are built twice (worktime and ticket view), testing
+      <code>params[:start_stop]</code>/<code>[:show_work_item]</code>/<code>[:show_ticket]</code>/<code>[:description]</code>
+      28 times. One column list (key, header, value per row) would replace both builders and remove the deferred
+      <code>RepeatedConditional</code>, <code>DuplicateMethodCall</code>, <code>TooManyStatements</code> and
+      <code>TooManyConstants</code> excludes, and the <code>@column_map</code> ordering coupling.</li>
+  <li class="todo"><strong>Extract <code>Billing::Report::Loader</code>.</strong> <code>load_*</code>,
+      <code>*_to_hash</code> and <code>build_entry</code> pass the same order set around as arguments; as one class
+      holding it they shrink <code>Billing::Report</code> (24 methods) and clear its
+      <code>LongParameterList</code>/<code>TooManyMethods</code> excludes.</li>
+  <li class="todo"><strong>Share the report skeleton.</strong> Billing, Invoice and Order reports still carry identical
+      copies of <code>initialize</code>, <code>page</code>, <code>entries</code>, <code>total</code>,
+      <code>current_page</code>, <code>total_pages</code>, <code>limit_value</code> and <code>delegate :present?</code>;
+      the same move as <code>ReportFilters</code> (<code>9814cb15</code>).</li>
+  <li class="todo"><strong>Split <code>OrderServicesController#report</code></strong> — 44 statements, by far the
+      longest method reek found; excluded as "split when touched".</li>
+  <li class="todo"><strong>Port the master-side fixes.</strong> These bugs are on <code>master</code> too and were fixed
+      here only: the modal apostrophe <code>eval</code> (<code>e93ccb7f</code>), the report sort 500 and the inverted
+      billing client sort (<code>68603d37</code>, <code>967cada7</code>), the ticket PDF's <em>Bis</em>
+      (<code>bff36b66</code>), the private <code>down</code> (<code>e94a43c8</code>) and the planning board's lost
+      memoization (<code>425e841f</code>). They merge in with the branch; port them only if master releases first.</li>
 </ul>
 </div>
 
@@ -1901,7 +1989,10 @@ standalone block. Same declarations, different selector grouping — so the file
   <li><strong>Then diff the declarations each extended element receives</strong>, and audit whatever is left by hand.
       This is where the four defects above surfaced.</li>
 </ol>
-<p><code>cssdiff.rb</code> (rule-set diff) and <code>reconcile.rb</code> (the two-part gate) sit next to this file.</p>
+<p><code>cssdiff.rb</code> (rule-set diff) and <code>reconcile.rb</code> (the two-part gate) sit next to this file.
+They exist only for this upgrade: when it is done, delete both together with their lint ignores —
+<code>exclude_paths</code> in <code>.reek.yml</code> and the <code>cssdiff.rb</code> entry in
+<code>.rubocop_todo.yml</code>. Each script's header says the same.</p>
 </div>
 
 <p><strong>Result:</strong> <code>application.js</code> and <code>phone.css</code> byte-for-byte identical,
@@ -2786,7 +2877,7 @@ variables (byte-identical CSS); the changelog before/after screenshots remain a 
 </div>
 
 <div class="phase">
-<h3 id="p7">Phase 7 — Out of scope, but write it down <span class="tag med">deferred · 0 / 6</span> <span class="tag med">est 3–4 weeks · not scheduled</span></h3>
+<h3 id="p7">Phase 7 — Out of scope, but write it down <span class="tag med">deferred · 0 / 7</span> <span class="tag med">est 3–4 weeks · not scheduled</span></h3>
 <p class="goal">Explicitly <em>not</em> part of this migration. Listed so nobody smuggles them in mid-phase.</p>
 <ul>
   <li>Bootstrap JS plugins → native <code>&lt;dialog&gt;</code> / Stimulus. Only 4 plugins remain after phase 4.</li>
@@ -2798,6 +2889,20 @@ variables (byte-identical CSS); the changelog before/after screenshots remain a 
       curated picker to replace <code>order_helper#glyphicons</code>, and a data migration for
       <code>target_scopes.icon</code> with a fallback. This is the last piece of Bootstrap left standing after phase 6.</li>
   <li><code>layouts/mailer.html.haml</code>'s inlined Bootstrap — e-mail needs inline CSS; leave it alone.</li>
+  <li><strong>Unique indexes behind the 17 uniqueness validations</strong> <span class="tag med">found 2026-10-02</span>
+      — <code>Rails/UniqueValidationWithoutIndex</code>, parked in <code>.rubocop_todo.yml</code>. Without an index,
+      two concurrent saves both pass the validation and both insert. Not asset-related, and every index is a
+      migration that fails if production already holds duplicates, so: count duplicates per column on a production
+      copy first, clean them up, then add the index. Highest value first: <code>employees.shortname</code> /
+      <code>ldapname</code> (case-insensitive, so <code>lower()</code> expression indexes), the one-to-one
+      <code>work_item_id</code> on <code>orders</code>, <code>clients</code> and <code>accounting_posts</code>, and
+      <code>invoices.invoicing_key</code>. The rest: <code>crm_key</code> on <code>clients</code>/<code>orders</code>,
+      <code>invoicing_key</code> on <code>clients</code>/<code>contacts</code>/<code>billing_addresses</code>
+      (blank allowed, so partial indexes), <code>order_targets (order_id, target_scope_id)</code>,
+      <code>sectors.name</code>, <code>services.name</code>, <code>workplaces.name</code> (case-insensitive),
+      <code>working_conditions.valid_from</code>, and <code>work_items (parent_id, lower(name))</code> /
+      <code>(parent_id, lower(shortname))</code> — top-level work items have a <code>NULL</code> parent, which a plain
+      unique index treats as distinct, so that one needs <code>NULLS NOT DISTINCT</code>.</li>
 </ul>
 <div class="box">
 <p><strong>daisyUI — rejected.</strong> Evaluated in <a href="upgrade-daisyui.html"><code>upgrade-daisyui.html</code></a>
@@ -3705,6 +3810,105 @@ and the three 8-bit jQuery-UI sprites, ImageOptim output. Verified lossless befo
 <code>&lt;glyph&gt;</code> elements, having lost only the XML prolog, the whitespace and the numeric entity encoding
 (108737 → 92569 bytes). The 4-bit sprites in the same directory were left untouched by the tool. Both files are still
 referenced, by <code>vendor/glyphicons.scss</code> and <code>vendor/jquery-ui-theme.scss</code>.</p>
+
+<h2 id="audit">13. Lint exceptions audit <span class="tag low">2026-10-02 – 03</span></h2>
+
+<p>Every place a linter or Brakeman is told to look away — <code>.rubocop.yml</code>/<code>.rubocop_todo.yml</code>,
+inline <code>rubocop:disable</code>, <code>.reek.yml</code>, <code>.haml-lint*.yml</code>, the overcommit excludes,
+<code>config/brakeman.yml</code>/<code>brakeman.ignore</code> and the two <code>eslint-disable</code> comments — was
+checked for two things: <strong>does it still exclude anything</strong> (run the tool without it and match the result
+against the entry), and <strong>is the excluded finding really a false positive</strong> (read the code). Same lesson as
+<a href="#checks">§9.5</a>, one level down: an exception list is a gate that nobody re-reads.</p>
+
+<h3>13.1 Real defects behind exceptions <span class="tag low">fixed</span></h3>
+<table>
+  <tr><th>Finding</th><th>Hidden by</th><th>Commit</th></tr>
+  <tr><td>Modal create/update: the server wrapped the entry JSON in <code>'…'</code> and <code>modal_create.js</code>
+      <code>eval</code>ed it. A label with an apostrophe (<code>O'Neil AG</code>) broke the modal with a
+      <code>SyntaxError</code>, and a crafted one ran script. Now an escaped JSON string literal (jquery-ujs runs
+      <code>format.js</code> responses as script, so the body must stay harmless JS) parsed twice; regression test
+      creates that client from the order form.</td>
+      <td><code>eslint-disable no-eval</code></td><td><code>e93ccb7f</code></td></tr>
+  <tr><td>The worktime overlap warning put the work item name into an <code>html_safe</code> flash unescaped.</td>
+      <td>RuboCop todo, <code>Rails/OutputSafety</code></td><td><code>0ba92b78</code></td></tr>
+  <tr><td>A dead <code>attr_reader :span</code> overridden by a method, an unreachable <code>super</code> in
+      <code>Vcard#respond_to_missing?</code>, <code>ApiSerializer.inherited</code> without <code>super</code>, a
+      hand-rolled <code>Period#hash</code>.</td>
+      <td>RuboCop todo, <code>Lint/*</code>, <code>Security/CompoundHash</code></td><td><code>b67a8c78</code></td></tr>
+  <tr><td><code>?sort=post_hours</code> (or <code>order</code>, <code>invoices</code>, <code>major_chance</code>,
+      <code>targets</code>) on the billing/order reports answered 500: any public <code>Entry</code> method passed the
+      check. Explicit numeric column lists now.</td>
+      <td><code>brakeman.ignore</code> (Dangerous Send, correctly a false positive as a security finding)</td>
+      <td><code>68603d37</code></td></tr>
+  <tr><td>The billing report sorted clients Z–A when asked for A–Z; its test pinned the inverted order.</td>
+      <td>found next to the above</td><td><code>967cada7</code></td></tr>
+  <tr><td>Ticket PDF: <em>Bis</em> printed the ticket's first date (<code>[:date][0]</code> twice). On master too.</td>
+      <td>reek <code>RepeatedConditional</code> led there</td><td><code>bff36b66</code></td></tr>
+  <tr><td><code>OrderBoard#total_row_planned_hours</code> lost its memoization in <code>74dc3a56</code> and rebuilt
+      all row totals on every call, twice per board row (the query cache hid the SQL, not the work). The view also
+      passed its flag as <code>only_for_active_period=true</code>, assigning a stray local.</td>
+      <td>reek <code>ControlParameter</code>/<code>BooleanParameter</code></td><td><code>425e841f</code></td></tr>
+  <tr><td>Rollback of <code>CleanUpPortfolioItemAndServiceNames</code> died with <code>NoMethodError</code>:
+      <code>down</code> sat below <code>private</code>.</td><td>reading the db/migrate reek hits</td>
+      <td><code>e94a43c8</code></td></tr>
+  <tr><td>Expense PDF export raised for a PDF receipt without <code>page_count</code> metadata.</td>
+      <td>reek <code>UtilityFunction</code></td><td><code>1eef9dfc</code></td></tr>
+</table>
+<p class="small">New regression tests cover the modal, both report sorts, the ticket PDF and the board; the RuboCop-todo
+fixes run under the existing tests. <code>PdfExport</code> has no test, so its rewrite was
+compared against the old code by a throwaway script (same pages for images and 1-/3-page PDFs; the old code raises on
+missing metadata). One suspected bug did not survive reading the caller: <code>calculate_order_progress</code> cannot
+divide by a zero budget, <code>order_progress</code> returns before it.</p>
+
+<h3>13.2 Exceptions that excluded nothing</h3>
+<ul>
+  <li><strong>haml-lint's todo never applied.</strong> <code>.haml-lint.yml</code> defined
+      <code>InlineStyles</code>/<code>ViewLength</code> excludes too, and haml-lint replaces arrays on inheritance
+      instead of merging them — so 34 lints were live while the todo listed them as parked. Its
+      <code>Rubocop: enabled: false</code> never matched the <code>RuboCop</code> linter either
+      (<code>213b5cc4</code>).</li>
+  <li><strong>Brakeman skipped two views "because brakeman hangs".</strong> Brakeman 8 scans them in 2.5 s with no
+      new warning (<code>17a88d80</code>). The 14 <code>brakeman.ignore</code> entries all re-checked as false
+      positives.</li>
+  <li><strong>scss_lint could not parse dart-sass's <code>math.div</code></strong>, listed two deleted paths and
+      missed the moved vendor stylesheets. Replaced by Stylelint (<code>6df7058e</code>); its findings fixed in
+      <code>acf3717b</code>, compiled CSS byte-identical.</li>
+  <li>Overcommit's <code>highrise.rb</code> "FIXME: Remove in the end" excludes on four hooks (<code>5b599d89</code>),
+      three <code>.rubocop.yml</code> excludes, seven RuboCop todo entries, and both JS polyfills behind the
+      <code>no-extend-native</code> disable (<code>0a93f1f2</code>).</li>
+</ul>
+
+<h3 id="reek">13.3 Reek: 427 → 0</h3>
+<p>Reek only lints changed files in the hook, so the todo had drifted unnoticed: <strong>427 warnings had no
+exclude</strong> (403 on master) and half of its 2118 entries matched nothing. Each category was decided on its own,
+then <code>6f217b84</code> recorded the result. Highlights:</p>
+<table>
+  <tr><th>Setting</th><th>Why</th></tr>
+  <tr><td><code>accept: '/^[ehktv]$/'</code></td><td>key/value, entry/error, the <code>h</code> in
+      <code>Hash.new { |h, k| }</code>, dry_crud's table builder. Reek matches accept patterns <em>unanchored</em>:
+      a bare <code>e</code> would have accepted every name containing an "e". Other one-letter names were renamed
+      (<code>2b9b7b00</code>).</td></tr>
+  <tr><td><code>directories: test</code></td><td>off: IrresponsibleModule, DuplicateMethodCall,
+      InstanceVariableAssumption, UtilityFunction, BooleanParameter (Minitest idioms). TooManyStatements stays on;
+      one test was split, five carry an inline note (<code>f2147feb</code>).</td></tr>
+  <tr><td><code>directories: db/migrate</code></td><td>off: class comments, repeats, length — write-once code. Design
+      smells still apply to new migrations.</td></tr>
+  <tr><td><code>UtilityFunction public_methods_only</code>, off for <code>app/helpers</code></td><td>private steps
+      that take their data as arguments are normal; helpers are modules of functions. The two public hits moved:
+      the reminder query to an <code>Employee</code> scope (<code>2a524e53</code>), the page count onto the receipt
+      metadata (<code>1eef9dfc</code>).</td></tr>
+  <tr><td><code>max_allowed_nesting: 2</code>, <code>max_calls: 2</code>, <code>max_statements: 10</code></td>
+      <td><code>CSV.generate { rows.each }</code> is normal; two reads of a param are fine. With RuboCop's Metrics maxes
+      raised to the worst offender, <code>max_statements</code> is the only method-length check that bites.</td></tr>
+</table>
+<p>Duplication reek pointed at was removed (<code>9814cb15</code> <code>ReportFilters</code>, <code>378ba1f8</code>),
+and the 13 classes without a comment got one (<code>e1886df5</code>). Every exclude added carries a note:
+<em>reviewed</em> (with the reason), <em>deferred</em> (to the PDF generator pass) or <em>NOT YET REVIEWED</em>
+(<code>InstanceVariableAssumption</code>, the 3+ <code>DuplicateMethodCall</code>s) — the last two are in the follow-up
+list above. The Odoo mappers stay in the adapter on purpose: they turn API records into our attributes, like
+<code>Crm::Highrise#contact_attributes</code>, and need the adapter's URL and <code>false</code>-handling.</p>
+<p class="small"><code>cssdiff.rb</code> and <code>reconcile.rb</code> are excluded too; delete their lines with the
+scripts (phase 1).</p>
 
 <hr>
 <p class="small">Generated from a scan of this working tree: 330 HAML views, 36 CoffeeScript files, 6020 lines of SCSS,
