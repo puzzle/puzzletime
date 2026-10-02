@@ -9,9 +9,10 @@
 #
 # Table name: order_contacts
 #
+#  id         :bigint           not null, primary key
+#  comment    :string
 #  contact_id :integer          not null
 #  order_id   :integer          not null
-#  comment    :string
 #
 
 class OrderContact < ApplicationRecord

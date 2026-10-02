@@ -54,6 +54,7 @@ Rails/CreateTableWithTimestamps:
 Rails/DangerousColumnNames:
   Exclude:
     - "db/migrate/20240311175613_add_id_to_order_team_members.rb" # Added id to many_to_many join table
+    - "db/migrate/20261002090000_add_id_to_order_contacts.rb" # Added id to many_to_many join table
 
 Style/SafeNavigationChainLength:
   Exclude:
