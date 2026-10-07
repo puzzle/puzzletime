@@ -767,7 +767,7 @@ reasoning behind each decision and the phase sections for full verification deta
 
   <div class="timeline-entry accent">
     <div class="timeline-date">Mi, 07.10.2026</div>
-    <div class="timeline-spine"><button type="button" class="timeline-dot" data-sha="b4f59ec0a2c993631e2cb225554bd1aa6733dbd3"><span class="vh">b4f59ec0</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-spine"><button type="button" class="timeline-dot" data-sha="1424ecd163a5677a80e66d7289ae9a65789ed015"><span class="vh">1424ecd1</span></button><div class="timeline-line"></div></div>
     <div class="timeline-content"><strong><code>master</code> merged in for the first time, and the branch is cut
       into a stack.</strong> Two commits behind (#363, order contacts gaining a primary key), two conflicts:
       <code>.rubocop.yml</code> additive, and <code>db/schema.rb</code> where master's
@@ -794,7 +794,9 @@ reasoning behind each decision and the phase sections for full verification deta
 hash. Hashes, here and in the text, are the branch's as of the 30.09.2026 filter-branch — every rewrite so far
 invalidated the previous set, so the next one has to remap them too (match old to new by author date, confirm with
 <code>git patch-id</code>). The 02.10 and 07.10 entries were written after that rewrite and are unaffected by it; the
-07.10 merge (<code>b4f59ec0</code>) is the reason there should not be a fourth, see <a href="#d6">D6</a>.
+07.10 merge (<code>1424ecd1</code>) is the reason there should not be a fourth, see <a href="#d6">D6</a> — its own
+subject had to be amended once, because git's default merge subject is 83 characters and
+<code>bin/commit-lint</code> caps them at 72.
 Deliberately left as measured: rewrite ranges (<code>f3a6cbe0...7e6df3c3</code>,
 <code>adeef56d</code>) and the SHA INT's image was built from (<code>cedece0d</code>, §10.1).</p>
 
