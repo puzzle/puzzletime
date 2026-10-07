@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_07_27_130000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_02_090000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -312,7 +312,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_27_130000) do
     t.index ["order_id"], name: "index_order_comments_on_order_id"
   end
 
-  create_table "order_contacts", id: false, force: :cascade do |t|
+  create_table "order_contacts", force: :cascade do |t|
     t.string "comment"
     t.integer "contact_id", null: false
     t.integer "order_id", null: false

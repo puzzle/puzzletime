@@ -55,6 +55,7 @@ Rails/CreateTableWithTimestamps:
 Rails/DangerousColumnNames:
   Exclude:
     - "db/migrate/20240311175613_add_id_to_order_team_members.rb"
+    - "db/migrate/20261002090000_add_id_to_order_contacts.rb"
 
 Style/SafeNavigationChainLength:
   Exclude:
