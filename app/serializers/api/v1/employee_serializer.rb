@@ -49,9 +49,8 @@ module Api
 
       # attribute annotations for the generated api docs
 
-      annotate_attributes :shortname, :firstname, :lastname,
-                          :email, :graduation, :department_shortname,
-                          :department_name, :city,
+      annotate_attributes :shortname, :firstname, :lastname, :ldapname, :email,
+                          :graduation, :department_shortname, :department_name, :city,
                           type: :string
 
       annotate_attribute :marital_status,
@@ -86,6 +85,10 @@ module Api
                          type: :string,
                          format: :date,
                          description: 'The employee’s birth date in YYYY-MM-DD format'
+
+      annotate_attribute :is_employed,
+                         type: :boolean,
+                         description: 'Whether the employee is currently employed'
 
       annotate_attribute :employed_within_three_months,
                          type: :boolean,

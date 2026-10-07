@@ -23,6 +23,7 @@ Rails.application.routes.draw do
     defaults format: :jsonapi do
       namespace :v1 do
         resources :employees, only: %i[index show]
+        resources :orders, only: %i[index show]
       end
     end
 

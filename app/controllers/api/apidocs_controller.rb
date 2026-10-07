@@ -25,7 +25,9 @@ module Api
     private
 
     def generate_doc
-      Apidocs::Setup.new(api_version, request.url, controller_classes).run
+      I18n.with_locale(:en) do
+        Apidocs::Setup.new(api_version, request.url, controller_classes).run
+      end
     end
 
     def controller_classes

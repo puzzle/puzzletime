@@ -54,7 +54,11 @@ module JsonapiFilterable
     def filter_params
       return {} if filter_attrs.blank?
 
-      params.fetch(:filter, {}).permit(*filter_attrs).to_h.symbolize_keys
+      params
+        .permit(filter: filter_attrs)
+        .to_h
+        .fetch(:filter, {})
+        .symbolize_keys
     end
   end
 

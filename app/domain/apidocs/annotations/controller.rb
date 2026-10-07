@@ -13,9 +13,7 @@ module Apidocs
       Param = Struct.new(:name, :type, :description, :required, :enum)
 
       included do
-        class_attribute :param_annotations,
-                        instance_writer: false,
-                        default: Hash.new { |hash, key| hash[key] = [] }
+        class_attribute :param_annotations, instance_writer: false, default: {}
       end
 
       class_methods do
@@ -30,7 +28,10 @@ module Apidocs
         # enum - Valid values can be documented with this
         #
         def annotate_param(action, name, type:, description: nil, required: false, enum: nil)
-          param_annotations[action.to_sym] << Param.new(name, type, description, required, enum)
+          action = action.to_sym
+          param = Param.new(name, type, description, required, enum)
+          # Reassign per class; a shared class_attribute hash would leak params between controllers.
+          self.param_annotations = param_annotations.merge(action => param_annotations.fetch(action, []) + [param])
         end
       end
     end

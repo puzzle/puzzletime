@@ -1,0 +1,18 @@
+# == Schema Information
+#
+# Table name: order_team_members
+#
+#  id          :bigint           not null, primary key
+#  employee_id :integer          not null
+#  order_id    :integer          not null
+#  comment     :string
+#
+
+---
+# :api_filter_alice is a team member (but not responsible) of :api_order_two,
+# so the JSON:API order filter must return it via the team_member branch.
+api_order_two_alice:
+  employee_id: 20 # api_filter_alice
+  order: api_order_two
+  comment: 'Worker bee'
+
