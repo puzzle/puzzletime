@@ -58,7 +58,7 @@ namespace :crm_migration do # rubocop:disable Metrics/BlockLength
         [only_model]
       else
         all_models = %w[Client Employee Contact AdditionalCrmOrder Order]
-        skip_models = ENV.fetch('SKIP_MODELS', '').split(',').map { _1.strip.classify }
+        skip_models = ENV.fetch('SKIP_MODELS', '').split(',').map { it.strip.classify }
 
         puts "All Models: #{all_models.join(', ')}"
         puts "Models to skip: #{skip_models.join(', ')}"
@@ -107,7 +107,7 @@ namespace :crm_migration do # rubocop:disable Metrics/BlockLength
         [only_model]
       else
         all_models = %w[Client Employee Contact AdditionalCrmOrder Order]
-        skip_models = ENV.fetch('SKIP_MODELS', '').split(',').map { _1.strip.classify }
+        skip_models = ENV.fetch('SKIP_MODELS', '').split(',').map { it.strip.classify }
 
         puts "All Models: #{all_models.join(', ')}"
         puts "Models to skip: #{skip_models.join(', ')}"
@@ -125,7 +125,7 @@ namespace :crm_migration do # rubocop:disable Metrics/BlockLength
           .constantize
           .pluck(:id, :crm_key)
           .uniq
-          .each { csv << _1 }
+          .each { csv << it }
       end
       puts "Created '#{model_name.underscore}.csv' with crm_key backups at #{backup_folder}"
     end
@@ -152,7 +152,7 @@ namespace :crm_migration do # rubocop:disable Metrics/BlockLength
         [only_model]
       else
         all_models = %w[Client Employee Contact AdditionalCrmOrder Order]
-        skip_models = ENV.fetch('SKIP_MODELS', '').split(',').map { _1.strip.classify }
+        skip_models = ENV.fetch('SKIP_MODELS', '').split(',').map { it.strip.classify }
 
         puts "All Models: #{all_models.join(', ')}"
         puts "Models to skip: #{skip_models.join(', ')}"

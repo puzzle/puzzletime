@@ -26,7 +26,7 @@ module EmployeesHelper
 
     safe_join(employment.employment_roles_employments.map do |ere|
       [ere.employment_role.name,
-       ere.employment_role_level.present? ? ere.employment_role_level.name : nil,
+       ere.employment_role_level.presence&.name,
        format_percent(ere.percent)].compact.join(' ')
     end, separator)
   end

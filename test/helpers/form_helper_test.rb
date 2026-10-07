@@ -89,7 +89,7 @@ class FormHelperTest < ActionView::TestCase
     assert_match(/input .*?type="hidden"
                         .*?name="_method"
                         .*?value="(patch|put)"/x, f)
-    assert_match(/div[^>]* id='error_explanation'/, f)
+    assert_match(/div[^>]* id="error_explanation"/, f)
     assert_match(/div\ class="field_with_errors">.*?
                   <input .*?type="text"
                           .*?name="crud_test_model\[name\]"/x, f)

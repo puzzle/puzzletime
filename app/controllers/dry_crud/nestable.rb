@@ -50,7 +50,7 @@ module DryCrud
       Array(optional_nesting).each do |clazz|
         key = clazz.name.underscore
         id = params["#{key}_id"]
-        if id && request.path =~ %r{/#{key.pluralize}/#{id}/}
+        if id && request.path.include?("/#{key.pluralize}/#{id}/")
           parent = [parent_entry(clazz)]
           break
         end

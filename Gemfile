@@ -1,24 +1,23 @@
 # frozen_string_literal: true
 
-source 'https://rubygems.org'
+source 'https://rubygems.org', cooldown: 7
 
 git_source(:github) { |name| "https://github.com/#{name}.git" }
 
-gem 'rails', '~> 7.0.x'
+gem 'rails', '~> 8.1.0'
 
-gem 'activerecord-nulldb-adapter', github: 'puzzle/nulldb'
-gem 'pg'
+gem 'nochmal'
 
-gem 'nochmal', github: 'puzzle/nochmal'
-
+gem 'activerecord-nulldb-adapter'
 gem 'acts_as_tree'
-gem 'annotate'
+gem 'annotaterb'
 gem 'aws-sdk-s3', require: false
 gem 'bleib'
 gem 'bootsnap'
 gem 'brakeman'
 gem 'cancancan'
 gem 'config'
+gem 'connection_pool'
 gem 'country_select'
 gem 'csv'
 gem 'daemons'
@@ -27,18 +26,17 @@ gem 'delayed_cron_job'
 gem 'delayed_job_active_record'
 gem 'devise'
 gem 'email_address'
-gem 'fast_jsonapi'
 gem 'haml'
-gem 'haml-lint'
 gem 'highrise'
 gem 'image_processing'
 gem 'jbuilder'
+gem 'jsonapi-serializer'
 gem 'kaminari'
 gem 'kaminari-bootstrap'
 gem 'listen'
 gem 'lograge'
 gem 'matrix'
-gem 'mini_racer'
+gem 'mini_magick', require: false
 gem 'minitest-reporters'
 gem 'nested_form_fields'
 gem 'net-ldap'
@@ -48,6 +46,7 @@ gem 'omniauth-keycloak'
 gem 'omniauth-rails_csrf_protection'
 gem 'omniauth-saml'
 gem 'ostruct'
+gem 'pg'
 gem 'prawn'
 gem 'prawn-table'
 gem 'prometheus_exporter'
@@ -66,6 +65,7 @@ gem 'rubocop-checkstyle_formatter', require: false
 gem 'rubocop-minitest'
 gem 'rubocop-performance'
 gem 'rubocop-rails'
+gem 'ruby-vips', require: false
 gem 'sdoc'
 gem 'seed-fu'
 gem 'swagger-blocks'
@@ -80,16 +80,11 @@ gem 'sentry-rails'
 gem 'sentry-ruby'
 
 ## assets
-gem 'autoprefixer-rails'
-gem 'bootstrap-sass'
-gem 'chartjs-ror'
-gem 'coffee-rails'
-gem 'execjs'
-gem 'jquery-rails'
-gem 'jquery-ui-rails'
-gem 'sass-rails'
-gem 'selectize-rails'
-gem 'terser'
+gem 'dartsass-rails'
+gem 'jsbundling-rails'
+gem 'propshaft'
+gem 'tailwindcss-rails', '~> 4.6'
+# Kept for Turbolinks::Controller, included by config/initializers/devise.rb.
 gem 'turbolinks'
 
 # debugging
@@ -101,10 +96,11 @@ gem 'pry-rails'
 gem 'paper_trail'
 
 group :development, :test do
+  # gem 'codez-tarantula', require: 'tarantula-rails3'
   gem 'better_errors'
   gem 'binding_of_caller'
-  # gem 'codez-tarantula', require: 'tarantula-rails3'
   gem 'faker'
+  gem 'parallel_tests'
   gem 'rb-readline'
   gem 'request_profiler'
 end
@@ -122,9 +118,23 @@ group :test do
   gem 'database_cleaner'
   gem 'fabrication'
   gem 'm'
+  gem 'minitest'
   gem 'mocha', require: false
   gem 'rails-controller-testing'
-  gem 'selenium-webdriver'
-  gem 'webdrivers'
   gem 'webmock'
+end
+
+# Linters run only by overcommit's hooks (.overcommit.yml); install with bin/setup_overcommit.
+group :overcommit, optional: true do
+  gem 'chamber'
+  gem 'erb_lint'
+  gem 'fasterer'
+  gem 'haml-lint'
+  gem 'image_optim'
+  gem 'image_optim_pack'
+  gem 'overcommit'
+  gem 'rails_best_practices'
+  gem 'reek'
+  gem 'scss_lint'
+  gem 'sqlint'
 end

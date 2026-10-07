@@ -166,6 +166,7 @@ detectors:
       - Period
       - EvalTestHelper
       - CustomAssertions
+      - IntegrationHelper
   DuplicateMethodCall:
     exclude:
       - AbsencetimesController#create
@@ -553,6 +554,7 @@ detectors:
       - IntegrationHelper#open_selectize
       - ActiveSupport::TestCase#login_as
       - ActiveSupport::TestCase#logout
+      - ActionDispatch::IntegrationTest#drain_pending_requests
   FeatureEnvy:
     exclude:
       - Api::ApidocsController#controller_classes
@@ -700,6 +702,7 @@ detectors:
       - CrudTestModelsController#method_missing
       - CustomAssertions#mu_pp
       - IntegrationHelper#open_selectize
+      - IntegrationHelper#clear_selectize
   InstanceVariableAssumption:
     exclude:
       - AbsencetimesController
@@ -2169,6 +2172,7 @@ detectors:
       - CrudTestHelper#without_transaction
       - IntegrationHelper#clear_cookies
       - ActiveSupport::TestCase#setup_regular_holidays
+      - CreateOrdertimeTest#expected_color
 
 exclude_paths:
   - vendor/bundle

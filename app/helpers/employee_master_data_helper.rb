@@ -8,7 +8,7 @@
 module EmployeeMasterDataHelper
   def format_year_of_service(employment_date)
     start = employment_date.to_time.to_i
-    now = DateTime.now.to_i
+    now = Time.zone.now.to_i
     duration = ActiveSupport::Duration.build(now - start)
 
     duration.parts[:years]

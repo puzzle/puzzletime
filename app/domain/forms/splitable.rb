@@ -44,7 +44,15 @@ module Forms
 
     def save
       Worktime.transaction do
-        worktimes.each(&:save!)
+        worktimes.each do |w|
+          if w.new_record?
+            w.save!
+          else
+            fresh = w.class.find(w.id)
+            fresh.assign_attributes(w.attributes.except('id', 'type'))
+            fresh.save!
+          end
+        end
       end
     end
 

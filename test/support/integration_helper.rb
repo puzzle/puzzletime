@@ -15,21 +15,9 @@ module IntegrationHelper
 
   def set_period(start_date: '1.1.2006', end_date: '31.12.2006', back_url: current_url)
     visit periods_path(back_url:)
-    fill_in 'period_start_date', with: start_date, fill_options: { clear: :backspace }
-    fill_in 'period_end_date', with: end_date, fill_options: { clear: :backspace }
+    fill_in 'period_start_date', with: start_date
+    fill_in 'period_end_date', with: end_date
     find('input[name=commit]').click
-  end
-
-  # catch some errors occuring now and then in capybara tests
-  def timeout_safe
-    yield
-  rescue Errno::ECONNREFUSED,
-         Timeout::Error,
-         Capybara::FrozenInTime,
-         Capybara::ElementNotFound => e
-    raise unless ENV['CI'] == true
-
-    skip e.message || e.class.name
   end
 
   def open_selectize(id, options = {})
@@ -38,9 +26,9 @@ module IntegrationHelper
     element.find('.selectize-input input').native.send_keys(:backspace) if options[:clear]
     element.find('.selectize-input input').native.send_keys(options[:term].chars) if options[:term].present?
     if options[:assert_empty]
-      page.assert_no_selector('.selectize-dropdown-content')
+      assert_no_selector('.selectize-dropdown-content')
     else
-      page.assert_selector('.selectize-dropdown-content')
+      assert_selector('.selectize-dropdown-content')
       find('.selectize-dropdown-content')
     end
   end

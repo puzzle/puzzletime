@@ -6,7 +6,7 @@
 
 - @title ||= 'Umsatz'
 
-= form_tag(nil, method: :get, class: 'form-inline', role: 'filter') do
+= form_tag(nil, method: :get, class: 'form-inline', role: 'search') do
   = hidden_field_tag :sort, params[:sort]
   = hidden_field_tag :sort_dir, params[:sort_dir]
   = direct_filter_select(:grouping,

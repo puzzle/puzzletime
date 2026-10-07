@@ -1,12 +1,12 @@
 # 2.18
 ## Features und Improvements
 * **Auftrag / Auftragsmangement**
-	* **Tab "Leistungen"**: zusätzlicher CSV-Export der erfassten Leistungen ohne Spalte 'interne Bemerkungen' (#64960)
- 	* **Tab "Auftrags-Controlling"**: Auswahlfilter für Solution (= Portfolio auf Buchungsposition) eingefügt. Über den Filter "Portfolio" werden alle Aufträge angezeigt, die mindestens eine Buchungsposition der ausgewählten Solution enthalten. (#65398)
- 
- ## Bugfixes
- * **Auftrag / Auftragsmangement**
-	* **Tab "Leistungen"**: CSV-Exports und Anzeigen in der App enthalten eine Variable für die Währung (CHF für CH und EUR für DE) (#65386)
+    * **Tab "Leistungen"**: zusätzlicher CSV-Export der erfassten Leistungen ohne Spalte 'interne Bemerkungen' (#64960)
+    * **Tab "Auftrags-Controlling"**: Auswahlfilter für Solution (= Portfolio auf Buchungsposition) eingefügt. Über den Filter "Portfolio" werden alle Aufträge angezeigt, die mindestens eine Buchungsposition der ausgewählten Solution enthalten. (#65398)
+
+## Bugfixes
+* **Auftrag / Auftragsmangement**
+    * **Tab "Leistungen"**: CSV-Exports und Anzeigen in der App enthalten eine Variable für die Währung (CHF für CH und EUR für DE) (#65386)
 
 # 2.17
 ## Features und Improvements
@@ -20,26 +20,26 @@
 # 2.16
 ## Features und Improvements
 * **Auftrag / Auftragsmanagement**
-	* **Tab "Positionen"**:
-		* Der CSV-Export umfasst auch den ausgeschriebenen Namen der Buchungsposition (#64412)
-  		* Link zu betroffenen Leistungen auch bei Zeile 'Total' verfügbar (#64388)
-	* **Tab "Leistungen"**:
- 		* die Filterung bleibt nach dem Bearbeiten von Leistungen bestehen (#64984)
-	* **Tab "Auftrags-Controlling"**:
-   		* Beim Öffnen ist standardmässig der Tab "Laufende" geöffnet (#64109)
+    * **Tab "Positionen"**:
+        * Der CSV-Export umfasst auch den ausgeschriebenen Namen der Buchungsposition (#64412)
+        * Link zu betroffenen Leistungen auch bei Zeile 'Total' verfügbar (#64388)
+    * **Tab "Leistungen"**:
+        * die Filterung bleibt nach dem Bearbeiten von Leistungen bestehen (#64984)
+    * **Tab "Auftrags-Controlling"**:
+        * Beim Öffnen ist standardmässig der Tab "Laufende" geöffnet (#64109)
     * **Tab "Verrechnungs-Controlling"**:
-    	* Verrechnungs-Controlling: neue Übersicht zur Anzeige nicht noch verrechneter Leistungen (#64087)
+        * Verrechnungs-Controlling: neue Übersicht zur Anzeige nicht noch verrechneter Leistungen (#64087)
     * * **Tab "Rechnungs-Controlling"**:
-      	* Rechnungs-Controlling: Das Listenergebnis kann exportiert werden (#64444)
+        * Rechnungs-Controlling: Das Listenergebnis kann exportiert werden (#64444)
 * **Member Management**
-	* Members > Absenzen Übersicht:
- 		* Sortierung nach Spalte "übrige Ferien" möglich (#64536)
-   		* Filterung nach OE möglich (#64537)
-	* Members > Zeit Übersicht: neue Spalte Feriensaldo per Ende Jahr (#64535)
- 	* beim Member kann der Member Coach hinterlegt werden (Verwalten > Members > Bearbeiten > Feld "Member Coach") (#64907)
-		* hinterlegter Member Coach wird angezeigt unter Members > Memberliste und unter Members > Zeiten (bei letzterem Filterung nach Member Coach möglich)
+    * Members > Absenzen Übersicht:
+        * Sortierung nach Spalte "übrige Ferien" möglich (#64536)
+        * Filterung nach OE möglich (#64537)
+    * Members > Zeit Übersicht: neue Spalte Feriensaldo per Ende Jahr (#64535)
+    * beim Member kann der Member Coach hinterlegt werden (Verwalten > Members > Bearbeiten > Feld "Member Coach") (#64907)
+        * hinterlegter Member Coach wird angezeigt unter Members > Memberliste und unter Members > Zeiten (bei letzterem Filterung nach Member Coach möglich)
 * **Spesen**:
-	* Belege neu als (mehrseitige) PDF möglich. Für den Export werden die PDFs in Bilder konvertiert, jede Seite des PDFs gibt eine Seite im Export. Erste Seite des Spesen-Eintrages enthält den Header, die weiteren dazugehörigen Seiten sind ohne Header. (#64085)
+    * Belege neu als (mehrseitige) PDF möglich. Für den Export werden die PDFs in Bilder konvertiert, jede Seite des PDFs gibt eine Seite im Export. Erste Seite des Spesen-Eintrages enthält den Header, die weiteren dazugehörigen Seiten sind ohne Header. (#64085)
 
 ## Bugfixes
 * **Member-Management**: Members > Auslastung: Export für aktuellen Zeitraum behoben (#64619)
@@ -83,7 +83,7 @@
    * Budgetstand anzeigen (#51298):
         * Bei der Auswahl der Buchungsposition zeigt ein farbiger Punkt die Budget-Situation dieser Buchungsposition an (rot = weniger oder gleich 0% offenes Budget, orange = weniger oder gleich 20% offenes Budget, grün = mehr oder gleich 20% offenes Budget). Nach Auswahl der Buchungsposition erfolgt die Anzeige als Balken (Mouse-over auf Balken: Summe geleistete Stunden  (inkl. nicht verrechenbar) / Budget auf Position (Prozent verbraucht ggü. Budget))
     * Interne Bemerkungen (#63818): im Zeiterfassungsformular gibt es ein neues Feld "interne Bemerkungen" z.B. für interne Bemerkungen/Argumentation zur Verrechenbarkeit.
-       * Der Feldinhalt wird in den CSV-Export integriert, aber nicht in den Zeitrapport. 
+       * Der Feldinhalt wird in den CSV-Export integriert, aber nicht in den Zeitrapport.
 * **Auftrag / Auftragsmanagement**:
    * Übergreifend:
      * UI Probleme die bei der Benutzung von 'Page back' im Browser behoben (z.B. wird das Feld 'Auftrag' nach 'Page Back'nicht mehr dupliziert) (#63952, #63820, #63817, #63994)

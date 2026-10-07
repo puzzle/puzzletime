@@ -24,13 +24,13 @@ module OrderControllingHelper
         {
           label: set[:label],
           data: @efforts_per_week_cumulated
-            .keys
-            .sort
-            .map { |week| @efforts_per_week_cumulated[week][set[:type]][:amount] },
+                .keys
+                .sort
+                .map { |week| @efforts_per_week_cumulated[week][set[:type]][:amount] },
           tooltipData: @efforts_per_week_cumulated
-            .keys
-            .sort
-            .map { |week| @efforts_per_week_cumulated[week][set[:type]][:hours].round(2) },
+                       .keys
+                       .sort
+                       .map { |week| @efforts_per_week_cumulated[week][set[:type]][:hours].round(2) },
           backgroundColor: set[:color]
         }
       end.to_json.html_safe

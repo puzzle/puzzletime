@@ -11,7 +11,10 @@ module Api
 
     def self.inherited(subclass)
       subclass.class_eval do
-        include FastJsonapi::ObjectSerializer
+        include JSONAPI::Serializer
+
+        # ponytail: gem leaves this nil with no relationships — see upgrade.html #p0
+        self.relationships_to_serialize ||= {}
       end
     end
   end

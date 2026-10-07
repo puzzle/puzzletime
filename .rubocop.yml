@@ -51,10 +51,11 @@ Rails/CreateTableWithTimestamps:
     - "db/migrate/20220322152042_create_workplaces.rb"
     - "db/migrate/20230207231358_create_active_storage_variant_records.active_storage.rb"
 
+# Added id to many_to_many join table
 Rails/DangerousColumnNames:
   Exclude:
-    - "db/migrate/20240311175613_add_id_to_order_team_members.rb" # Added id to many_to_many join table
-    - "db/migrate/20261002090000_add_id_to_order_contacts.rb" # Added id to many_to_many join table
+    - "db/migrate/20240311175613_add_id_to_order_team_members.rb"
+    - "db/migrate/20261002090000_add_id_to_order_contacts.rb"
 
 Style/SafeNavigationChainLength:
   Exclude:

@@ -7,25 +7,19 @@
 
 ENV['RAILS_ENV'] = 'test'
 
-# if ENV['TEST_REPORTS']
-#   require 'simplecov'
-#   require 'simplecov-rcov'
-#   SimpleCov.coverage_dir 'test/coverage'
-#   # use this formatter for jenkins compatibility
-#   SimpleCov.formatter = SimpleCov::Formatter::RcovFormatter
-#   SimpleCov.command_name 'Unit Tests'
-#   SimpleCov.start 'rails'
-
-#   require 'minitest/reporters'
-#   MiniTest::Reporters.use! [MiniTest::Reporters::DefaultReporter.new,
-#                             MiniTest::Reporters::JUnitReporter.new]
-# end
+require 'minitest/reporters'
+# Minitest::Reporters.use!
+Minitest::Reporters.use! Minitest::Reporters::ProgressReporter.new(detailed_skip: false, color: true)
+# Minitest::Reporters.use! Minitest::Reporters::DefaultReporter.new(color: true)
+# Minitest::Reporters.use! Minitest::Reporters::SpecReporter.new(color: true)
+# Minitest::Reporters.use! Minitest::Reporters::HtmlReporter.new(reports_dir: "log/html_reports#{ENV.fetch('TEST_ENV_NUMBER', '')}")
 
 require File.expand_path('../config/environment', __dir__)
 Rails.env = 'test'
 require 'rails/test_help'
 require 'mocha/minitest'
 require 'capybara/rails'
+require 'capybara/minitest'
 Settings.reload!
 
 Rails.root.glob('test/support/**/*.rb').each { |f| require f }
@@ -40,8 +34,20 @@ Capybara.register_driver :chrome do |app|
     # See additional options for Dockerized environment in the respective section of this article
     browser_options: {
       # Required for ARM chips on which CI might run
-      'disable-smooth-scrolling' => true
+      'disable-smooth-scrolling' => true,
+      # Animations move elements after Capybara has computed a click's
+      # coordinates, so clicks land on stale positions. This makes the browser
+      # report the OS "reduce motion" preference, which our stylesheet honours
+      # by collapsing all durations. Asserted by ReducedMotionTest.
+      'force-prefers-reduced-motion' => true,
+      # Chrome's sandbox needs an unprivileged user, but act runs jobs as root
+      **(Process.uid.zero? ? { 'no-sandbox' => nil } : {})
     },
+    # Fail a test on an uncaught JS exception rather than letting Capybara wait
+    # out its timeout looking for an element the exception prevented. Safe now
+    # that teardown drains in-flight requests; before that it could reach a
+    # heap-corrupting race in pg. See upgrade.html #p2.
+    js_errors: true,
     # Increase Chrome startup wait time (required for stable CI builds)
     process_timeout: 10,
     # Enable debugging capabilities
@@ -114,6 +120,7 @@ end
 module ActionDispatch
   class IntegrationTest
     include Capybara::DSL
+    include Capybara::Minitest::Assertions
     include Devise::Test::IntegrationHelpers
     include IntegrationHelper
 
@@ -127,7 +134,26 @@ module ActionDispatch
     end
 
     teardown do
+      drain_pending_requests
       DatabaseCleaner.clean
+      ActiveRecord::Base.connection_pool.release_connection
+    end
+
+    private
+
+    # The planning board fires AJAX that can still be executing once an
+    # assertion is satisfied and the test ends. Truncating underneath a live
+    # request corrupts the pg connection's heap ("corrupted size vs. prev_size",
+    # aborting inside PQisBusy with the GVL released) or hangs the process at
+    # exit. Ferrum knows which connections are outstanding, so wait them out
+    # before DatabaseCleaner runs. See upgrade.html #p2.
+    def drain_pending_requests
+      return unless page.driver.is_a?(Capybara::Cuprite::Driver)
+
+      page.driver.browser.network.wait_for_idle(timeout: 5)
+    rescue StandardError
+      # A dead or never-started browser has nothing to drain.
+      nil
     end
   end
 end

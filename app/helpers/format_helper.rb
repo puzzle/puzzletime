@@ -49,7 +49,7 @@ module FormatHelper
 
   def format_hour(hour, precision = 2)
     number = format_number(hour, precision)
-    number && safe_join([number, ' h'])
+    number && safe_join([number, '&nbsp;h'.html_safe])
   end
 
   def format_time(time)
@@ -119,7 +119,7 @@ module FormatHelper
   # Transform the given text into a form as used by labels or table headers.
   def captionize(text, clazz = nil)
     text = text.to_s
-    if clazz.respond_to?(:human_attribute_name)
+    if clazz.respond_to?(:human_attribute_name) && text.present?
       text_without_id = text.end_with?('_ids') ? text[0..-5].pluralize : text
       clazz.human_attribute_name(text_without_id)
     else
@@ -167,8 +167,8 @@ module FormatHelper
     return UtilityHelper::EMPTY_STRING if val.blank? && val != false
 
     case column_type(obj, attr)
-    when :time    then l(val, format: :time)
-    when :date    then f(val.to_date)
+    when :time then l(val, format: :time)
+    when :date then f(val.to_date)
     when :datetime, :timestamp then f(val.time)
     when :text then simple_format(h(val))
     when :decimal

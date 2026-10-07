@@ -76,19 +76,19 @@ class OrdersController < CrudController
 
   def search
     respond_to do |format|
-      format.json do
-        @orders =
-          if params[:id].present?
-            Order.where(id: params[:id])
-          else
-            params[:q] ||= params[:term]
-            search_entries
-          end
-      end
+      format.json { @orders = search_results }
     end
   end
 
   private
+
+  def search_results
+    id = params[:id]
+    return Order.where(id:) if id.present?
+
+    params[:q] ||= params[:term]
+    search_entries
+  end
 
   def search_entries
     orders = Order.list.where(search_conditions)
@@ -180,9 +180,10 @@ class OrdersController < CrudController
     Employee
       .joins(:managed_orders)
       .employed_ones(Period.current_year)
-      .select('employees.*, ' \
-              "CASE WHEN employees.id = #{current_user.id.to_fs(:db)} THEN 1 " \
-              'ELSE 2 END AS employee_order') # current user should be on top
+      .select(Employee.sanitize_sql_array( # current user should be on top
+                ['employees.*, CASE WHEN employees.id = ? THEN 1 ELSE 2 END AS employee_order',
+                 current_user.id]
+              ))
       .reorder('employee_order, lastname, firstname')
   end
 

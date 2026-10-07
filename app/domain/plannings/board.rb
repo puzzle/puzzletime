@@ -190,8 +190,8 @@ module Plannings
     end
 
     def load_holidays
-      Holiday.holidays(period).each_with_object({}) do |h, hash|
-        hash[h.holiday_date] = h.musthours_day
+      Holiday.holidays(period).to_h do |h|
+        [h.holiday_date, h.musthours_day]
       end
     end
 

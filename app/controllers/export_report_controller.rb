@@ -19,7 +19,7 @@ class ExportReportController < ApplicationController
           send_csv(rep.to_csv, rep.filename)
         else
           flash[:alert] = 'Bitte wählen Sie ein Stichdatum.'
-          redirect_back(fallback_location: root_path)
+          redirect_back_or_to(root_path)
         end
       end
     end
