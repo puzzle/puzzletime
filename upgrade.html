@@ -136,10 +136,158 @@
 
 <h2 id="timeline">1. Timeline — what we found out, and when</h2>
 <p class="lede" style="font-size: 1rem">One row per finding or decision, in the order it actually happened —
-not the order the phases are numbered. Dates are commit dates; see <a href="#decisions">§8</a> for the
+not the order the phases are numbered. It starts at 20.05.2026 with the Ruby/Rails half of the task, which this
+document's title does not cover but the branch does; the asset pipeline work begins at phase 0 on 27.07. Dates are
+author dates (the commit dates were rewritten three times, see below); see <a href="#decisions">§8</a> for the
 reasoning behind each decision and the phase sections for full verification detail.</p>
 
 <div class="timeline">
+
+  <div class="timeline-entry accent">
+    <div class="timeline-date">Mi, 20.05.2026</div>
+    <div class="timeline-spine"><button type="button" class="timeline-dot" data-sha="1600f6db1fcf943d0fa312872c49f333380def38"><span class="vh">1600f6db</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-content"><strong>The branch opens on Rails 7.0 → 7.1.</strong> Everything from here to
+      24.07 is the Ruby/Rails half of the task; the asset work starts at phase 0 below. <code>app:update</code>
+      applied, then the suite triaged (<code>723cca96</code>): <code>minitest</code> pinned <code>&lt; 6</code> (7.1's
+      <code>line_filtering.rb</code> calls the old <code>run()</code> signature — fixed in Rails 8.1.2, so the pin
+      came out on the way up), <code>show_exceptions</code> back to <code>:none</code> because
+      <code>app:update</code>'s <code>:rescuable</code> swallows the exceptions controller tests assert on, and
+      rails-dom-testing 2.3.0 now collapses <code>\n</code> between block elements into a space, which the log
+      controller's text assertions had pinned.</div>
+  </div>
+
+  <div class="timeline-entry warn">
+    <div class="timeline-date repeat">Mi, 20.05.2026</div>
+    <div class="timeline-spine warn"><button type="button" class="timeline-dot" data-sha="723cca9679b7e16f161cbd75064ec2455dc7563f"><span class="vh">723cca96</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-content"><code>raise_on_missing_callback_actions = true</code> was <em>commented out</em>
+      rather than satisfied, with a note that it exposes a real bug in <code>OrderServicesController</code>. That
+      deferral is the whole thread: the guard written for it on 06.06 was wrong, and
+      <a href="#p0">phase 0</a>'s full suite found the 13 failures two months later.</div>
+  </div>
+
+  <div class="timeline-entry bad">
+    <div class="timeline-date">Fr, 22.05.2026</div>
+    <div class="timeline-spine bad"><button type="button" class="timeline-dot" data-sha="e8aa7e8a8de428ceb11b42e1799af325b2be7156"><span class="vh">e8aa7e8a</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-content"><strong>Session-serialized records lost their dirty tracking.</strong>
+      <code>marshalling_format_version = 7.1</code> round-trips an AR object without its changed-attribute state, so
+      <code>Splitable#save</code> saw nothing to write. Fixed by reloading the existing record from the database
+      before saving. Also that day: an <code>attr_readonly</code> assignment that older Rails silently ignored
+      (<code>50b4c355</code>) and Cuprite's dropped <code>fill_options</code> (<code>83c86317</code>).</div>
+  </div>
+
+  <div class="timeline-entry warn">
+    <div class="timeline-date repeat">Fr, 22.05.2026</div>
+    <div class="timeline-spine warn"><button type="button" class="timeline-dot" data-sha="c9c36c62bed9ec70e0b764300050d5dae3883ac1"><span class="vh">c9c36c62</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-content">Three config defaults that only look like housekeeping.
+      <code>key_generator_hash_digest_class</code> moves to SHA256 — nothing encrypted in the database depends on it
+      (Devise uses bcrypt), but <strong>every session and remember-me cookie is invalidated, so users are signed out
+      once on deploy</strong>. <code>secret_key_base</code> moves out of the deprecated
+      <code>config/secrets.yml</code>, whose fallback raised in test and development (<code>72dc3f16</code>). And
+      <code>error_tracker</code> becomes <code>require_relative</code>: 7.1 stops adding autoload paths to
+      <code>$LOAD_PATH</code>, and initializers run before Zeitwerk is set up, so neither <code>require</code> nor
+      autoloading could reach it (<code>178b020f</code>).</div>
+  </div>
+
+  <div class="timeline-entry ok">
+    <div class="timeline-date repeat">Fr, 22.05.2026</div>
+    <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="fef50613e8c31ccbde520097285c1397560c2a20"><span class="vh">fef50613</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-content"><strong>7.1 → 7.2.</strong> The <code>puzzle/nulldb</code> fork goes away — its
+      <code>unique_constraint</code> patch is upstream in 1.2.2. <code>Base.connection</code> →
+      <code>with_connection</code> in <code>StatusController</code>. Two fallout fixes from 7.2 changing
+      <code>human_attribute_name</code> for enum models: <code>captionize</code> guards blank attribute names, and
+      dry_crud's form control emits a plain <code>label</code> rather than routing through the Rails helper.</div>
+  </div>
+
+  <div class="timeline-entry bad">
+    <div class="timeline-date repeat">Fr, 22.05.2026</div>
+    <div class="timeline-spine bad"><button type="button" class="timeline-dot" data-sha="af2f8ebfc4739902319b3acd0adad7e5eec5ee4f"><span class="vh">af2f8ebf</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-content"><strong>7.2 → 8.0, and the quietest bug on the branch.</strong> Rails 8.0's
+      implicit render calls <code>render</code> with no arguments, so <code>_normalize_render()</code> returns
+      <code>{}</code> and <code>options[:template]</code> is always nil — <code>render_callbacks.rb</code> had been
+      keying on it, which means <em>no</em> <code>before_render_index</code>/<code>_form</code> callback ran for any
+      implicitly rendered action. Now falls back to <code>options[:action]</code> then <code>action_name</code>.
+      Alongside it: <code>throw(:abort)</code> in an <code>after_create</code> raises
+      <code>UncaughtThrowError</code> in 8.0 (<code>AccountingPost</code> now raises
+      <code>ActiveRecord::Rollback</code>), <code>as_json(_options)</code> needs a default,
+      <code>resource :order_plannings</code> with <code>only: :index</code> raises, <code>annotate</code> →
+      <code>annotaterb</code>, and <code>sprockets-rails</code> has to be named explicitly because 8.0 no longer
+      ships it. One test expectation turned out to be pinning old behaviour rather than intent:
+      <code>find_person</code> ran <code>.twice</code> only because 7.2 validated nested records twice per save.</div>
+  </div>
+
+  <div class="timeline-entry warn">
+    <div class="timeline-date">Do, 28.05.2026</div>
+    <div class="timeline-spine warn"><button type="button" class="timeline-dot" data-sha="570c901ab31af02d75f61ce0bb9537a27eba2f65"><span class="vh">570c901a</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-content"><strong>8.0 holds connections more strictly</strong> — the test thread's AR
+      connection was never returned between tests and the pool ran dry. Released explicitly in teardown, pool size
+      now follows <code>RAILS_MAX_THREADS</code>. <strong>8.0 → 8.1</strong> follows the same day
+      (<code>37afa32d</code>): <code>pool:</code> → <code>max_connections:</code> in <code>database.yml</code> — the
+      rename that collides with <code>bleib</code>'s hardcoded <code>pool: 1</code> four months later (§9, 28.09) —
+      test pool raised to 15, and bullet/paper_trail/activeresource/omniauth-rails_csrf_protection bumped for 8.1.
+      Also here: a <code>sleep 0.5</code> in the modal test replaced by <code>assert_no_selector</code> polling for
+      <code>.in</code> to drop (<code>c7c4af2a</code>).</div>
+  </div>
+
+  <div class="timeline-entry ok">
+    <div class="timeline-date">Do, 04.06.2026</div>
+    <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="b004347adc86084153bce42d1b289383f2652be4"><span class="vh">b004347a</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-content"><strong>Ruby 3.2 → 3.3 → 3.4 → 4.0</strong>, three commits in a row, each its own
+      <code>Gemfile.lock</code>. 3.3 also pulled in the gems the stdlib stopped shipping
+      (<code>ostruct</code>, <code>csv</code>, <code>matrix</code>). No application changes were needed for any of
+      the three.</div>
+  </div>
+
+  <div class="timeline-entry bad">
+    <div class="timeline-date">Sa, 06.06.2026</div>
+    <div class="timeline-spine bad"><button type="button" class="timeline-dot" data-sha="e8dd89b8bfedc7e603b6635a258a5478b3994591"><span class="vh">e8dd89b8</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-content">The route 8.0 had forced to plural comes back as a singular resource, and the
+      reason it could is a real dry_crud gap: <code>authorize_class</code> ignored
+      <code>skip_load_and_authorize_resource</code>, which now routes through
+      <code>cancan_resource_class#skip?</code>. <code>params.expect(:order_id)</code> for 8.1 strong params.</div>
+  </div>
+
+  <div class="timeline-entry warn">
+    <div class="timeline-date repeat">Sa, 06.06.2026</div>
+    <div class="timeline-spine warn"><button type="button" class="timeline-dot" data-sha="c795b72c0488a89197b3a541e72843e66ac45d02"><span class="vh">c795b72c</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-content">The 20.05 deferral is picked up — and the fix is wrong, as its own commit message
+      says in a follow-up note: <code>before_action … only: [:index] if respond_to?(:index)</code> is evaluated at
+      class-eval time inside <code>included do</code>, where <code>self</code> is the including <em>class</em>, so it
+      asked for a class method and was always false. Six controllers silently stopped remembering their filters.
+      Found and corrected in <a href="#p0">phase 0</a> with <code>if: -&gt; { action_name == 'index' }</code>.</div>
+  </div>
+
+  <div class="timeline-entry warn">
+    <div class="timeline-date">Do, 18.06.2026</div>
+    <div class="timeline-spine warn"><button type="button" class="timeline-dot" data-sha="6643015c186f081c5e15887b5ecc76091ddc6145"><span class="vh">6643015c</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-content"><code>config.load_defaults 8.1</code> — with
+      <code>belongs_to_required_by_default = false</code> and <code>time_zone_aware_types</code> commented out rather
+      than resolved. That one comment is what made 31 unaudited associations required and produced
+      <a href="#p0">phase 0</a>'s 52-association audit, its three <code>NOT NULL</code> migrations and the
+      four-worktime release gate.</div>
+  </div>
+
+  <div class="timeline-entry bad">
+    <div class="timeline-date">Mo, 20.07.2026</div>
+    <div class="timeline-spine bad"><button type="button" class="timeline-dot" data-sha="0991b42480a86fcf3545b086c86ade0e760ce62d"><span class="vh">0991b424</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-content">Abandoned <code>fast_jsonapi</code> → <code>jsonapi-serializer</code> 2.2.0,
+      <code>webdrivers</code> dropped. The swap broke <code>?include</code> validation twice over and both halves had
+      to be fixed (<code>a90bc8ad</code>): the gem only initialises
+      <code>relationships_to_serialize</code> inside <code>add_relationship</code>, so our relationship-free
+      serializers indexed <code>nil</code> and raised <code>NoMethodError</code> before the gem's own
+      <code>UnsupportedIncludeError</code> could surface — and the old duck-typed <code>ArgumentError</code> matcher
+      no longer matched that error, so <code>rescue_from</code> had gone dead. See <a href="#p0">phase 0</a>.</div>
+  </div>
+
+  <div class="timeline-entry ok">
+    <div class="timeline-date">Fr, 24.07.2026</div>
+    <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="5de121b13d7c677acf522dbf6d54dbe26b468cc0"><span class="vh">5de121b1</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-content">Dockerfile reworked for layer caching and size: <code>Gemfile</code> copied and
+      bundled before the source, <code>--mount=type=cache</code> for bundler, <code>.c</code>/<code>.o</code>/
+      <code>.h</code> and gem <code>spec</code>/<code>test</code>/<code>doc</code> trees pruned,
+      <code>useradd</code> instead of <code>adduser</code>, <code>HEALTHCHECK</code> and <code>EXPOSE</code> added.
+      <code>nochmal</code> leaves the <code>github:</code> source. This is the tree state
+      <a href="#p0">phase 0</a> reverts onto.</div>
+  </div>
 
   <div class="timeline-entry ok">
     <div class="timeline-date">Mo, 27.07.2026</div>
@@ -592,6 +740,48 @@ reasoning behind each decision and the phase sections for full verification deta
       with nothing to repeat and then crashed in <code>#repeat</code>; the panel showed nothing. Now a form error. Two
       existing tests had pinned exactly those inputs as valid. See <a href="#planflake">§11.5</a>.</div>
   </div>
+
+  <div class="timeline-entry bad">
+    <div class="timeline-date">Fr, 02.10.2026</div>
+    <div class="timeline-spine bad"><button type="button" class="timeline-dot" data-sha="5bd91bbebedad5082e1c696ad1aa535eeb956a90"><span class="vh">5bd91bbe</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-content"><a href="#verify"><strong>INT re-verified on the rebuilt image</strong></a> — the
+      30.09 run had looked green while <code>build-dispatch</code> was skipped for <code>push=false</code>, so INT
+      was still serving <code>git-cedece0d</code>. On the real image the nginx caching rules finally went live
+      (<code>private</code> → <code>public, max-age=31536000, immutable</code>; <code>/assets/.manifest.json</code>
+      now 404) and axe confirmed the §10.5 fixes — but found two violations <em>older than the branch</em>: the
+      weekly graph's week-grid corner cell was an empty <code>th</code> and the planning legend's <code>%h5</code>
+      skipped four levels under the board's <code>%h1.h3</code>. Fixed as <code>td</code> and
+      <code>%h2.h5</code>. Still open: the add-row selectize dropdown reports
+      <code>scrollable-region-focusable</code>, reachable only after clicking <em>add</em>.</div>
+  </div>
+
+  <div class="timeline-entry ok">
+    <div class="timeline-date repeat">Fr, 02.10.2026</div>
+    <div class="timeline-spine ok"><button type="button" class="timeline-dot" data-sha="f619e3a137bc1e339df80ca40f6790a5f03ba203"><span class="vh">f619e3a1</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-content">Four binary assets that had been unstaged in the working tree since before the
+      session — ImageOptim output — verified lossless and committed: the glyphicon SVG font 108737 → 92569 bytes
+      with all 278 <code>&lt;glyph&gt;</code> elements intact, three 8-bit jQuery-UI sprites at
+      <code>compare -metric AE</code> 0. Recorded as <a href="#verify">§12</a> the same day
+      (<code>71c2fba1</code>).</div>
+  </div>
+
+  <div class="timeline-entry accent">
+    <div class="timeline-date">Mi, 07.10.2026</div>
+    <div class="timeline-spine"><button type="button" class="timeline-dot" data-sha="b4f59ec0a2c993631e2cb225554bd1aa6733dbd3"><span class="vh">b4f59ec0</span></button><div class="timeline-line"></div></div>
+    <div class="timeline-content"><strong><code>master</code> merged in for the first time, and the branch is cut
+      into a stack.</strong> Two commits behind (#363, order contacts gaining a primary key), two conflicts:
+      <code>.rubocop.yml</code> additive, and <code>db/schema.rb</code> where master's
+      <code>create_table "order_contacts", force: :cascade</code> meets the branch's 8.1 dumper and its
+      <code>comment</code> column. Resolved by hand to <code>Schema[8.1]</code> at version
+      <code>2026_10_02_090000</code>, then <em>proved</em> rather than eyeballed: a from-scratch
+      <code>db:drop db:create db:migrate</code> re-dumps byte-identically to the resolution (47 tables, 57
+      migrations, <code>order_contacts</code> PK <code>id</code>). Full suite 1571 tests, 6546 assertions, 0
+      failures. Merge, not rebase — see <a href="#decisions">D6</a>. Three self-contained commits were also lifted
+      off onto their own <code>master</code>-based branches:
+      <code>refactor/expense-arel</code> (<code>24eda2e8</code>),
+      <code>feature/department-export-script</code> (<code>de73b36c</code>) and
+      <code>feature/order-uncertainty-export-script</code> (<code>e24c3ae8</code>).</div>
+  </div>
 </div>
 
 <p class="timeline-legend">
@@ -603,7 +793,9 @@ reasoning behind each decision and the phase sections for full verification deta
 <p class="small">Each dot's tooltip shows the short hash of the commit it evidences; click a dot to copy the full
 hash. Hashes, here and in the text, are the branch's as of the 30.09.2026 filter-branch — every rewrite so far
 invalidated the previous set, so the next one has to remap them too (match old to new by author date, confirm with
-<code>git patch-id</code>). Deliberately left as measured: rewrite ranges (<code>f3a6cbe0...7e6df3c3</code>,
+<code>git patch-id</code>). The 02.10 and 07.10 entries were written after that rewrite and are unaffected by it; the
+07.10 merge (<code>b4f59ec0</code>) is the reason there should not be a fourth, see <a href="#d6">D6</a>.
+Deliberately left as measured: rewrite ranges (<code>f3a6cbe0...7e6df3c3</code>,
 <code>adeef56d</code>) and the SHA INT's image was built from (<code>cedece0d</code>, §10.1).</p>
 
 <div class="box ok">
@@ -2793,7 +2985,7 @@ are added by the plugin at runtime)</p>
       <td>Grep for literal <code>/assets/</code> outside helpers.</td></tr>
 </table>
 
-<h2 id="decisions">8. Decisions <span class="tag low">D1–D4 resolved 2026-07-27 · D5 2026-08-21</span></h2>
+<h2 id="decisions">8. Decisions <span class="tag low">D1–D4 resolved 2026-07-27 · D5 2026-08-21 · D6 2026-10-07</span></h2>
 
 <h4>D1 — What happens to <code>design_guide/index.html.haml</code>? <span class="tag low">resolved — no action</span></h4>
 <p>Closer inspection dissolved this one. The page is a table-styling gallery plus two invoice mockups, not a Bootstrap
@@ -2856,6 +3048,32 @@ follow-up work rather than a phase-6 co-requisite.</p>
 earns its keep once Tailwind utilities are being added to markup that our own SCSS also styles; under (a) the shims live
 in <code>@layer components</code> and the app SCSS keeps winning over them, which <a href="#risks">§7</a> already calls
 expected and mostly desirable during the migration. It stays the fix-it-when-it-bites item §7 describes.</p>
+
+<h4 id="d6">D6 — Integrate <code>master</code> by merge or by rebase, and how does this branch get reviewed?
+<span class="tag low">decided 2026-10-07: merge, reviewed as a stack</span></h4>
+<p><strong>Merge.</strong> A rebase of the 152 commits onto <code>master</code> buys nothing measurable here —
+<code>master</code> was two commits ahead — and costs a <em>fourth</em> hash rewrite. §1's timeline pins every dot to a
+branch SHA, and the note under it already carries the remapping chore from the first three rewrites; the INT image
+reference (<code>cedece0d</code>, §10.1) is in the same position. A merge commit leaves all of them resolvable.
+The only argument for rebasing was a linear history for review, and the stack below gives that without touching a
+hash.</p>
+<p><strong>Reviewed as a stack, not as independent pull requests.</strong> Four PRs along the boundaries this document
+already draws, each targeting the previous branch rather than <code>master</code>: Ruby/Rails (28 commits, §1 up to
+24.07 plus phase 0), the asset build swap (17, <a href="#p1">phases 1</a>–<a href="#p3">3</a>), Tailwind and the shim
+(36, <a href="#p4">phases 4</a>–<a href="#p6">6</a>), and the remainder (71 — CI, lint, a11y, test fixes, this
+document). Splitting them into PRs that each open against <code>master</code> was considered and rejected: the 36
+CoffeeScript files only become <code>app/javascript/*.js</code> in phase 2, so every later JS fix would have to be
+re-authored against the files it replaced; the shims do not compile without dartsass and Propshaft from phase 3; the
+Gemfile's asset block retires in one move, so a Rails-only PR would have to carry a Sprockets config the next PR
+deletes; and <code>reusable-test.yaml</code> needs node and esbuild. Above all, every gate in this document — the
+byte-comparable baselines, the §4.6 computed-style harness, the CI run in §11, the INT verifications in §10 and §12 —
+was measured at the top of the stack. Independent PRs would ask for sign-off on four intermediate states that were
+never booted.</p>
+<p>Three commits <em>are</em> free-standing and were lifted out to their own <code>master</code>-based branches rather
+than reviewed as part of the upgrade: the <code>Expense.reimbursement_months</code>/<code>payment_years</code> raw-SQL
+refactor (<code>refactor/expense-arel</code>), and the two one-off report scripts
+(<code>feature/department-export-script</code>, <code>feature/order-uncertainty-export-script</code>) — both marked
+as throwaway in their own headers.</p>
 
 <h2 id="a11y">9. Accessibility, lint and release-check cleanup <span class="tag low">2026-09-25 – 28</span></h2>
 
