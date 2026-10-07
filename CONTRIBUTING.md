@@ -39,8 +39,8 @@ Follow [Conventional Commits](https://www.conventionalcommits.org/): a
 * **Types:** `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`,
   `build`, `ci`, `chore`, `revert`. Scope is optional; `!` marks a breaking change.
 * Subject in the imperative, lowercase after the type, no trailing period, ≤ 72 chars.
-* Keep the body short — bullet points where possible. Put longer rationale in the
-  relevant doc and reference it from the body rather than inlining prose.
+* Keep the body short, use bullet points where possible.
+* Put longer rationale in the relevant doc and reference it from the body rather than inlining prose.
 
 `./bin/setup` wires a commit template (`.gitmessage`). The `overcommit` hooks
 that enforce this format (`CommitMsg/MessageFormat` in `.overcommit.yml`) are
