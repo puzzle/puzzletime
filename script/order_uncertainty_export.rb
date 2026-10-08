@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # One-time export: Chancen & Risiken across all orders as a self-contained HTML file.
 # Run with: bin/rails runner script/order_uncertainty_export.rb
 # Preview with fixture data instead of the DB: PREVIEW=1 bin/rails runner script/order_uncertainty_export.rb
@@ -24,8 +26,10 @@ if ENV['PREVIEW']
 
   orders = names.each_with_index.map do |name, i|
     status = statuses[i % 4 == 3 ? 2 : i % 2]
-    { id: i + 1, label: "#{%w[KPR MIG OPS DAT MOB IDP ARC ERP MON WEB][i]}-#{100 + i}: #{name}",
-      client: %w[Kunde\ A Kunde\ B Kunde\ C][i % 3], responsible: people[i % people.size],
+    shortcodes = %w[KPR MIG OPS DAT MOB IDP ARC ERP MON WEB].freeze
+    customers = ['Kunde A', 'Kunde B', 'Kunde C'].freeze
+    { id: i + 1, label: "#{shortcodes[i]}-#{100 + i}: #{name}",
+      client: customers[i % 3], responsible: people[i % people.size],
       department: departments[i % departments.size], status: status[0], closed: status[1] }
   end
   uncertainties = orders.first(8).flat_map do |order|
@@ -37,7 +41,7 @@ if ENV['PREVIEW']
   end
 else
   conn = ActiveRecord::Base.connection
-  orders = conn.exec_query(<<~SQL).map do |r|
+  orders = conn.exec_query(<<~SQL.squish).map(&:symbolize_keys)
     SELECT o.id,
            wi.path_shortnames || ': ' || wi.name AS label,
            split_part(wi.path_names, E'\\n', 1) AS client,
@@ -52,8 +56,6 @@ else
     LEFT JOIN order_statuses s ON s.id = o.status_id
     ORDER BY wi.path_shortnames
   SQL
-    r.symbolize_keys
-  end
 
   uncertainties = OrderUncertainty.order(:order_id, :id).map do |u|
     { order_id: u.order_id, type: u.is_a?(OrderChance) ? 'chance' : 'risk', name: u.name,
