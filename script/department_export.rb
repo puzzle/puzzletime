@@ -25,7 +25,7 @@ if ENV['PREVIEW']
     end
   end.flatten
 else
-  sql = <<~SQL
+  sql = <<~SQL.squish
     SELECT date_trunc('month', w.work_date)::date AS month,
            s.name AS service,
            w.billable,
