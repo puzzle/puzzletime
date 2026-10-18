@@ -24,8 +24,8 @@ module Invoicing
         end
 
         def fetch_remote_keys
-          SmallInvoice::Api.instance.list(:client).each_with_object({}) do |client, hash|
-            hash[client['number']] = client['id']
+          SmallInvoice::Api.instance.list(:client).to_h do |client|
+            [client['number'], client['id']]
           end
         end
 

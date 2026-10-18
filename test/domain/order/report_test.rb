@@ -179,6 +179,15 @@ class Order
       assert_equal orders(:webauftritt, :puzzletime, :allgemein), report.entries.collect(&:order)
     end
 
+    test 'sort by an entry method that is no column leaves entries unsorted' do
+      unsorted = report.entries.collect(&:order)
+      %w[post_hours order major_chance targets].each do |sort|
+        sorted = Order::Report.new(Period.new(nil, nil), sort:).entries.collect(&:order)
+
+        assert_equal unsorted, sorted, sort
+      end
+    end
+
     ### calculating
 
     test 'it counts orders' do

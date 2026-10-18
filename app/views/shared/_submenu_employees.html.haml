@@ -27,7 +27,7 @@
 
 = nav 'Ferienplan', vacations_path
 
--if can?(:export_report, Evaluations::Evaluation)
+- if can?(:export_report, Evaluations::Evaluation)
   = nav 'Exporte',
         reports_export_path
 

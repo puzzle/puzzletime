@@ -1,0 +1,37 @@
+{
+  "extends": "stylelint-config-recommended",
+  "ignoreFiles": [
+    "app/assets/builds/**",
+    "app/assets/stylesheets/vendor/**",
+    "app/assets/stylesheets/_bootstrap_variables.scss"
+  ],
+  "rules": {
+    "no-descending-specificity": null
+  },
+  "overrides": [
+    {
+      "files": ["**/*.css"],
+      "rules": {
+        "at-rule-no-unknown": [
+          true,
+          {
+            "ignoreAtRules": [
+              "apply",
+              "custom-variant",
+              "plugin",
+              "reference",
+              "source",
+              "theme",
+              "utility",
+              "variant"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["**/*.scss"],
+      "extends": "stylelint-config-recommended-scss"
+    }
+  ]
+}

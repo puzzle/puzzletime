@@ -43,7 +43,7 @@ class Employment < ApplicationRecord
 
   before_create :update_previous_end_date
 
-  scope :list, -> { order('start_date DESC') }
+  scope :list, -> { order(start_date: :desc) }
   scope :active, -> { where('"employments"."percent" > 0') }
 
   class << self
@@ -86,15 +86,16 @@ class Employment < ApplicationRecord
   end
 
   def previous_employment
-    @previous_employment ||=
-      Employment.find_by('employee_id = ? AND start_date < ? AND end_date IS NULL',
-                         employee_id, start_date)
+    return @previous_employment if defined?(@previous_employment)
+
+    @previous_employment = Employment.find_by('employee_id = ? AND start_date < ? AND end_date IS NULL',
+                                              employee_id, start_date)
   end
 
   def following_employment
     @following_employment ||=
       Employment.where('employee_id = ? AND start_date > ?', employee_id, start_date)
-                .order('start_date')
+                .order(:start_date)
                 .first
   end
 
@@ -168,6 +169,6 @@ class Employment < ApplicationRecord
       conditions[0] += ' AND (start_date = ? OR (start_date <= ? AND end_date >= ?))'
       conditions.push(start_date, start_date, start_date)
     end
-    Employment.where(conditions).count.positive?
+    Employment.where(conditions).any?
   end
 end

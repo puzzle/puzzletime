@@ -15,7 +15,10 @@ require 'active_support/core_ext/integer/time'
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
-  config.cache_classes = true
+  # While tests run files are not watched, reloading is not necessary.
+  config.enable_reloading = false
+
+  config.secret_key_base = '994fa8ae693d47a35765af4b09f4a85b1879d04af4faefaac31950b11b9a05a89a1a4511a00863a8d92688bce4dde0f3d80f2c16df3cb94ffe65a3d0900c1c8a'
 
   # config.session_store(
   #   ActionDispatch::Session::CacheStore,
@@ -25,14 +28,20 @@ Rails.application.configure do
   # )
 
   config.cache_store = :memory_store
-  config.session_store(:mem_cache_store)
+  # Sessions live in memcached, so the store has to follow RAILS_MEMCACHED_*
+  # like config/application.rb does — CI runs memcached off the default port.
+  config.session_store(
+    :mem_cache_store,
+    memcache_server: "#{ENV['RAILS_MEMCACHED_HOST'] || 'localhost'}:#{ENV['RAILS_MEMCACHED_PORT'] || '11211'}"
+  )
 
   # config.action_dispatch.cookies_serializer = :marshal
 
-  # Do not eager load code on boot. This avoids loading your whole application
-  # just for the purpose of running a single test. If you are using a tool that
-  # preloads Rails for running tests, you may have to set it to true.
-  config.eager_load = false
+  # Eager loading loads your entire application. When running a single test locally,
+  # this is usually not necessary, and can slow down your test suite. However, it's
+  # recommended that you enable it in continuous integration systems to ensure eager
+  # loading is working properly before deploying your code.
+  config.eager_load = ENV['CI'].present?
 
   # Configure public file server for tests with Cache-Control for performance.
   config.public_file_server.enabled = true
@@ -41,10 +50,10 @@ Rails.application.configure do
   }
 
   # Show full error reports and disable caching.
-  config.consider_all_requests_local       = true
+  config.consider_all_requests_local = true
   config.action_controller.perform_caching = false
 
-  # Raise exceptions instead of rendering exception templates.
+  # Render exception templates for rescuable exceptions and raise for other exceptions.
   config.action_dispatch.show_exceptions = :none
 
   # Disable request forgery protection in test environment.
@@ -74,4 +83,7 @@ Rails.application.configure do
 
   # Annotate rendered view with file names.
   # config.action_view.annotate_rendered_view_with_filenames = true
+
+  # Raise error when a before_action's only/except options reference missing actions
+  config.action_controller.raise_on_missing_callback_actions = true
 end

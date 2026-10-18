@@ -11,38 +11,32 @@ class ChooseOrderTest < ActionDispatch::IntegrationTest
   setup :login
 
   test 'changes path when choosable order changes' do
-    timeout_safe do
-      selectize('choosable_order_id', 'Demo', term: 'demo', clear: true)
+    selectize('choosable_order_id', 'Demo', term: 'demo', clear: true)
 
-      assert_equal order_path(orders(:hitobito_demo)), current_path
-    end
+    assert_equal order_path(orders(:hitobito_demo)), current_path
   end
 
   test 'changes path when hitting TAB key in order chooser' do
-    timeout_safe do
-      control = find('#choosable_order_id + .selectize-control')
-      control.find('.selectize-input').click # open dropdown
-      open_selectize('choosable_order_id', term: 'swiss', clear: true)
-      find('#choosable_order_id + .selectize-control').find('.selectize-input input').native.send_keys(:tab)
+    control = find('#choosable_order_id + .selectize-control')
+    control.find('.selectize-input').click # open dropdown
+    open_selectize('choosable_order_id', term: 'swiss', clear: true)
+    find('#choosable_order_id + .selectize-control').find('.selectize-input input').native.send_keys(:tab)
 
-      assert page.has_selector?('dd.value', text: 'Webauftritt') # dummy query to wait for page load
-      assert_equal order_path(orders(:webauftritt)), current_path
-    end
+    assert page.has_selector?('dd.value', text: 'Webauftritt') # dummy query to wait for page load
+    assert_equal order_path(orders(:webauftritt)), current_path
   end
 
   test 'keeps current tab when changing orders' do
-    timeout_safe do
-      click_link 'Positionen'
+    click_link 'Positionen'
 
-      assert page.has_link?(href: new_order_accounting_post_path(order_id: order.id)) # query forces to wait for page load
-      assert_equal order_accounting_posts_path(order), current_path
+    assert page.has_link?(href: new_order_accounting_post_path(order_id: order.id)) # query forces to wait for page load
+    assert_equal order_accounting_posts_path(order), current_path
 
-      selectize('choosable_order_id', 'Demo', term: 'demo', clear: true)
+    selectize('choosable_order_id', 'Demo', term: 'demo', clear: true)
 
-      assert page.has_link?(href: new_order_accounting_post_path(order_id: orders(:hitobito_demo).id)) # query forces to wait for page load
-      assert_equal order_accounting_posts_path(orders(:hitobito_demo)), current_path
-      assert page.has_selector?('li.active', text: 'Positionen')
-    end
+    assert page.has_link?(href: new_order_accounting_post_path(order_id: orders(:hitobito_demo).id)) # query forces to wait for page load
+    assert_equal order_accounting_posts_path(orders(:hitobito_demo)), current_path
+    assert page.has_selector?('li.active', text: 'Positionen')
   end
 
   private

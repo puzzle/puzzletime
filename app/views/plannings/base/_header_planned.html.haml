@@ -15,7 +15,7 @@
     .header-planned-prefix
       Durch Filter angezeigter Zeitbereich:
     .header-planned-amount
-      = format_number(@board.total_planned_hours(true), 0)
+      = format_number(@board.total_planned_hours(active_period_only: true), 0)
     .header-planned-postfix
       Stunden verplant
   .header-planned-row.selected-sum

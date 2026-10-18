@@ -9,6 +9,7 @@
   = hidden_field_tag :page, 1
 
   .input-group.has-feedback.has-clear
+    = label_tag :q, ti(:"button.search"), class: 'sr-only'
     = search_field_tag :q, params[:q], class: 'form-control initial-focus'
     %span.form-control-feedback{ data: { clear: true }, style: 'right: 73px;' }
       = icon(:remove)

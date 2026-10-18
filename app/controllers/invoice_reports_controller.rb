@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Invoice report: filtered invoice list for a period (HTML/CSV) and single-invoice sync.
 class InvoiceReportsController < ApplicationController
   include DryCrud::Rememberable
   include WithPeriod

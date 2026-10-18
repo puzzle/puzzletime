@@ -37,7 +37,7 @@
         - entries.each do |order|
           %tr
             %td
-              =order.parent_names
+              = order.parent_names
               %br/
               %span.subtitle
                 = link_to_if(can?(:show, order),

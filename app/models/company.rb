@@ -22,7 +22,7 @@ class Company
         Settings
         .company_logo
         .presence
-        &.then { Rails.root.join("public/images/#{_1}") }
+        &.then { Rails.root.join("public/images/#{it}") }
 
       logo if logo&.exist?
     end

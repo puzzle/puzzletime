@@ -43,6 +43,7 @@ module Evaluations
       assert_sum_total_times 0.0, 12.0, 40.0, 40.0
     end
 
+    # Arrange, find the division, compare: one scenario. :reek:TooManyStatements
     def test_remaining_vacations_is_bound_to_the_given_period_not_the_current_year
       create_absences
 
@@ -54,22 +55,22 @@ module Evaluations
       assert_equal expected, division.remaining_vacations
     end
 
-    def test_sum_total_times
-      Absencetime.delete_all
-      create_absences
-
-      employees(:mark).update_column(:department_id, 1)
-      employees(:lucien).update_column(:department_id, 1)
-      employees(:pascal).update_column(:department_id, 2)
-
+    def test_sum_total_times_without_department
+      create_absences_in_departments
       @evaluation.stubs(:department_id).returns(nil)
 
       assert_in_delta(3.0, @evaluation.sum_total_times(@period_month))
+    end
 
+    def test_sum_total_times_for_department_with_two_employees
+      create_absences_in_departments
       @evaluation.stubs(:department_id).returns(1)
 
       assert_in_delta(2.0, @evaluation.sum_total_times(@period_month))
+    end
 
+    def test_sum_total_times_for_department_with_one_employee
+      create_absences_in_departments
       @evaluation.stubs(:department_id).returns(2)
 
       assert_in_delta(1.0, @evaluation.sum_total_times(@period_month))
@@ -132,6 +133,15 @@ module Evaluations
                                          employment_roles_employments: [Fabricate.build(:employment_roles_employment)])
         Fabricate(:absencetime, employee: employees(e), work_date: @period_month.start_date, hours: 1)
       end
+    end
+
+    # One hour of absence each for mark and lucien (department 1) and pascal (department 2).
+    def create_absences_in_departments
+      Absencetime.delete_all
+      create_absences
+      employees(:mark).update_column(:department_id, 1)
+      employees(:lucien).update_column(:department_id, 1)
+      employees(:pascal).update_column(:department_id, 2)
     end
   end
 end

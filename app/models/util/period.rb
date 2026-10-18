@@ -286,7 +286,7 @@ class Period
   end
 
   def hash
-    (37 * start_date.hash) ^ (43 * end_date.hash)
+    [start_date, end_date].hash
   end
 
   def to_s

@@ -21,8 +21,6 @@ module CrudControllerTestHelper
   end
 
   def test_index_json # :nodoc:
-    skip 'these tests are currently broken'
-
     get :index, params: test_params(format: 'json')
 
     assert_response :success
@@ -33,7 +31,7 @@ module CrudControllerTestHelper
   def test_index_search # :nodoc:
     field = @controller.search_columns.first
     val = field && test_entry[field].to_s
-    return if val.blank? # does not support search or no value in this field
+    return pass if val.blank? # does not support search or no value in this field
 
     get :index, params: test_params(q: val[0..((val.size + 1) / 2)])
 
@@ -43,8 +41,6 @@ module CrudControllerTestHelper
   end
 
   def test_index_sort_asc # :nodoc:
-    skip 'these tests are currently broken'
-
     col = model_class.column_names.first
     get :index, params: test_params(sort: col, sort_dir: 'asc')
 
@@ -56,8 +52,6 @@ module CrudControllerTestHelper
   end
 
   def test_index_sort_desc # :nodoc:
-    skip 'these tests are currently broken'
-
     col = model_class.column_names.first
     get :index, params: test_params(sort: col, sort_dir: 'desc')
 
@@ -164,7 +158,7 @@ module CrudControllerTestHelper
   end
 
   def not_existing
-    # run this method for disabled tests
+    pass
   end
 
   private
@@ -241,7 +235,7 @@ module CrudControllerTestHelper
 
   # Attribute hash used in edit/update tests.
   def edit_entry_attrs
-    test_entry_attrs
+    test_entry_attrs.reject { |attr, _| model_class.readonly_attributes.include?(attr.to_s) }
   end
 
   # Attribute hash used in new/create tests.

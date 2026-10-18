@@ -2,12 +2,12 @@
 
 module Apidocs
   module Helper
-    def setup_swagger_path(path, helper = self, &block)
+    def setup_swagger_path(path, helper = self, &)
       return unless path
 
       @path = path.gsub('/1', '/{id}')
       swagger_spec.send(:swagger_path, @path) do
-        instance_exec(helper, &block)
+        instance_exec(helper, &)
       end
     end
 

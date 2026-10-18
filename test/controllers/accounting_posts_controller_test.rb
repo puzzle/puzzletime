@@ -69,7 +69,7 @@ class AccountingPostsControllerTest < ActionController::TestCase
              }
            }
 
-      assert_response :unprocessable_entity
+      assert_response :unprocessable_content
       assert_template :new
       assert_match(/es existieren bereits/, assigns(:accounting_post).errors.full_messages.join)
     end
@@ -248,7 +248,7 @@ class AccountingPostsControllerTest < ActionController::TestCase
               accounting_post: { description: 'asdf' }
             }
 
-      assert_response :unprocessable_entity
+      assert_response :unprocessable_content
       assert_template :edit
       assert_match(/es existieren bereits/, assigns(:accounting_post).errors.full_messages.join)
     end

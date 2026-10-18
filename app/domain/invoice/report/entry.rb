@@ -7,6 +7,7 @@
 
 class Invoice
   class Report
+    # One invoice's row in the invoice report, with its order's responsible and department.
     class Entry < SimpleDelegator
       attr_reader :invoice
 
