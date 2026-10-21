@@ -66,7 +66,8 @@ class Ability
            manage_plannings
            show_worktime_graph
            social_insurance
-           log],
+           log
+           update_planning_note],
         Employee
 
     can :update, OrderComment do |c|
@@ -160,6 +161,7 @@ class Ability
 
     can :revenue_reports, Department
     can :social_insurance, Employee
+    can :update_planning_note, Employee
   end
 
   def api_client_abilities; end

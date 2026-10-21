@@ -47,4 +47,17 @@ class PlanningsHelperTest < ActionView::TestCase
   test 'planning_heatmap_class with float totals' do
     assert_equal 'heat-60', planning_heatmap_class(1234.5, 2000.0)
   end
+
+  test 'planning_note_markdown renders markdown' do
+    assert_includes planning_note_markdown('**fett**'), '<strong>fett</strong>'
+  end
+
+  test 'planning_note_markdown blank is nil' do
+    assert_nil planning_note_markdown(nil)
+    assert_nil planning_note_markdown('')
+  end
+
+  test 'planning_note_markdown does not render script tags' do
+    assert_no_match(/<script/, planning_note_markdown('<script>alert(1)</script>'))
+  end
 end
