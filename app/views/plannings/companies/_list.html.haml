@@ -8,29 +8,35 @@
   %thead
     = render 'header'
   %tbody
-    %tr{ class: 'planning-company-totals' }
-      %td.head.nowrap
+    %tr.planning-company-totals
+      %td.head.nowrap.planning-name
         Total
       - @period.step(7) do |date|
-        %td{ class: @overview.week_planning_state(date) }
+        %td{ class: planning_heatmap_class(@overview.weekly_planned_percent(date), @overview.weekly_employment_percent(date)) }
           = link_to '#', class: 'has-tooltip' do
-            #{(@overview.weekly_planned_percent(date) / 100).round(1)}/#{(@overview.weekly_employment_percent(date) / 100).round(1)} FTE
+            = (@overview.weekly_planned_percent(date) / 100).round(1)
             %span
+              #{(@overview.weekly_planned_percent(date) / 100).round(1)}/#{(@overview.weekly_employment_percent(date) / 100).round(1)} FTE
+              %br
               = weekly_planned_of_total_percent(@overview, date)
               %br
               FTE = Anzahl Vollzeitstellen
     - @overview.boards.each do |board|
       %tr
-        %td.head.nowrap
-          = link_to_if(can?(:show_plannings, board.employee),
-                       board.employee.label,
-                       plannings_employee_path(board.employee))
-
+        %td.head.nowrap.planning-name
+          - if board.detail_rows.present?
+            %a.planning-details-toggle.collapsed{ href: "#planning-details-#{board.employee.id}", role: 'button', title: 'Detailplanung ein-/ausblenden', 'aria-expanded': 'false', data: { toggle: 'collapse', target: ".planning-details-#{board.employee.id}" } }
+          - else
+            %span.planning-details-placeholder
+          %span.planning-name-label= link_to_if(can?(:show_plannings, board.employee),
+                                                board.employee.label,
+                                                plannings_employee_path(board.employee))
         - @period.step(7) do |date|
-          %td{ class: board.week_planning_state(date) }
+          %td{ class: planning_heatmap_class(board.weekly_planned_percent(date), board.weekly_employment_percent(date)) }
             = link_to '#', class: 'has-tooltip' do
               = board.weekly_planned_percent(date).to_f.round
               %span= weekly_planned_of_total_percent(board, date)
+      = render 'details', board: board
 
   %tfoot
     = render 'header'

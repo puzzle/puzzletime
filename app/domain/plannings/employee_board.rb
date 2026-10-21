@@ -25,6 +25,11 @@ module Plannings
 
     alias employee subject
 
+    def initialize(subject, period, include_provisional: true)
+      super(subject, period)
+      @include_provisional = include_provisional
+    end
+
     def load_employments
       employee.statistics.employments_during(period)
     end
@@ -80,10 +85,17 @@ module Plannings
         @absencetimes.to_a.sum(&:hours)
     end
 
+    # Weekly percents per planned work item plus absences and holidays, shown as details of the employee row.
+    def detail_rows
+      rows # assert data is loaded
+      @detail_rows ||= build_detail_rows
+    end
+
     private
 
     def load_plannings(p = period)
-      super.where(employee_id: employee.id)
+      plannings = super.where(employee_id: employee.id)
+      @include_provisional ? plannings : plannings.definitive
     end
 
     def load_employees
@@ -113,6 +125,29 @@ module Plannings
         return percent if percent
       end
       0
+    end
+
+    def build_detail_rows
+      weeks = period.step(7).to_a
+      planned = detail_planned_percents
+      work_items = WorkItem.where(id: planned.keys).index_by(&:id)
+      # plannings has no foreign key on work_items, so orphaned plannings are skipped
+      entries = planned.filter_map do |work_item_id, percents|
+        work_item = work_items[work_item_id]
+        [work_item.label_verbose, weeks.index_with { |date| percents[date] }] if work_item
+      end
+      entries.sort_by!(&:first)
+      absences = weeks.index_with { |date| (weekly_absence_percent(date) + weekly_holiday_percent(date)).to_f }
+      entries << ['Abwesenheiten/Feiertage', absences]
+      entries.select { |_label, percents| percents.each_value.any?(&:nonzero?) }
+    end
+
+    def detail_planned_percents
+      totals = Hash.new { |hash, work_item_id| hash[work_item_id] = Hash.new(0.0) }
+      load_plannings.group(:work_item_id, :date).sum(:percent).each do |(work_item_id, date), percent|
+        totals[work_item_id][date.at_beginning_of_week] += percent / 5.0
+      end
+      totals
     end
 
     def compute_weekly_employment_percent(date)

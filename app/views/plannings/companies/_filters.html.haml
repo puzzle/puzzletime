@@ -1,0 +1,24 @@
+-#  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
+-#  PuzzleTime and licensed under the Affero General Public License version 3
+-#  or later. See the COPYING file at the top-level directory or at
+-#  https://github.com/puzzle/puzzletime.
+
+
+-# Own form instead of plannings/base/_date_filter: this page is left aligned, so the period select comes
+-# first and the Von/Bis fields it hides sit to its right; the company-only filters go on a second line.
+= form_tag(nil, method: :get, id: :planning_filter_form, class: 'form-inline', role: 'search', remote: true) do
+  = hidden_field_tag :page, 1
+
+  = direct_filter_select(:period_shortcut, nil, predefined_future_period_options, value: @period.shortcut, prompt: 'benutzerdefiniert', aria: { label: 'Zeitraum' })
+  = direct_filter_date(:start_date, 'Von', @period.start_date, class: 'only-mondays')
+  = direct_filter_date(:end_date, 'Bis', @period.end_date, class: 'only-fridays')
+
+  %div
+    = hidden_field_tag 'custom_list_ids[]', '', id: nil
+    = direct_filter_select(:custom_list_ids, 'Listen', @custom_lists, class: 'searchable', multiple: true, value: @filters[:custom_list_ids])
+    = direct_filter_select(:department_id, 'Organisationseinheit', Department.list, value: @filters[:department_id])
+    = direct_filter_select(:member_coach_id, 'Member Coach', Employee.management.list, value: @filters[:member_coach_id])
+    = direct_filter(:include_provisional, nil) do
+      = hidden_field_tag :include_provisional, '0', id: nil
+      = check_box_tag :include_provisional, '1', @filters[:include_provisional], data: { submit: true }
+      = label_tag :include_provisional, 'Provisorische Planungen berücksichtigen'

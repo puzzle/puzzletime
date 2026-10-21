@@ -208,6 +208,68 @@ module Plannings
       assert_equal 120, board.total_plannable_hours
     end
 
+    test '#detail_rows lists weekly percents per work item ordered by label' do
+      create_plannings
+      board = Plannings::EmployeeBoard.new(employee, period)
+      app = work_items(:hitobito_demo_app).label_verbose
+      site = work_items(:hitobito_demo_site).label_verbose
+      rows = board.detail_rows.to_h
+
+      assert_equal [app, site], board.detail_rows.map(&:first)
+      assert_in_delta(60.0, rows[app][date])
+      assert_in_delta(0.0, rows[app][date + 1.week])
+      assert_in_delta(20.0, rows[site][date])
+      assert_in_delta(10.0, rows[site][date + 1.week])
+    end
+
+    test '#detail_rows respects include_provisional' do
+      Planning.create!(work_item_id: work_items(:hitobito_demo_app).id,
+                       employee_id: employee.id,
+                       date:,
+                       percent: 100,
+                       definitive: true)
+      Planning.create!(work_item_id: work_items(:hitobito_demo_site).id,
+                       employee_id: employee.id,
+                       date: date + 1.day,
+                       percent: 100,
+                       definitive: false)
+      app = work_items(:hitobito_demo_app).label_verbose
+      site = work_items(:hitobito_demo_site).label_verbose
+
+      assert_equal [app, site], Plannings::EmployeeBoard.new(employee, period).detail_rows.map(&:first)
+      assert_equal [app], Plannings::EmployeeBoard.new(employee, period, include_provisional: false)
+                                                  .detail_rows.map(&:first)
+    end
+
+    test '#detail_rows includes absence row only if absences exist' do
+      create_plannings
+      board = Plannings::EmployeeBoard.new(employee, period)
+
+      assert_not_includes board.detail_rows.map(&:first), 'Abwesenheiten/Feiertage'
+
+      Absencetime.create!(work_date: date + 4.days,
+                          hours: 4,
+                          employee_id: employee.id,
+                          absence: absences(:doctor))
+      board = Plannings::EmployeeBoard.new(employee, period)
+      label, percents = board.detail_rows.last
+
+      assert_equal 'Abwesenheiten/Feiertage', label
+      assert_in_delta 10.0, percents[date], 0.001
+      assert_in_delta(0.0, percents[date + 1.week])
+    end
+
+    test '#detail_rows skips plannings whose work item no longer exists' do
+      create_plannings
+      orphan = Planning.create!(work_item_id: work_items(:hitobito_demo_app).id, employee_id: employee.id,
+                                date: date + 4.days, percent: 50)
+      orphan.update_column(:work_item_id, WorkItem.maximum(:id) + 1)
+      board = Plannings::EmployeeBoard.new(employee, period)
+
+      assert_equal [work_items(:hitobito_demo_app), work_items(:hitobito_demo_site)].map(&:label_verbose),
+                   board.detail_rows.map(&:first)
+    end
+
     private
 
     def period

@@ -458,8 +458,47 @@ body.order_plannings {
   background-color: #B0DAA5 !important;
 }
 
-table.company-planning {
+// Heatmap of planned percent relative to employment percent (see PlanningsHelper#planning_heatmap_class)
+$heat-colors: (
+  0: #fff,
+  10: #fffde7,
+  20: #fff9c4,
+  30: #fff59d,
+  40: #fff176,
+  50: #ffd54f,
+  60: #c5e1a5,
+  70: #aed581,
+  80: #81c784,
+  90: #43a047,
+  100: #1b5e20,
+  over: #e53935
+);
+
+@each $bucket, $color in $heat-colors {
+  .heat-#{$bucket} {
+    background-color: $color !important;
+  }
+}
+
+.heat-90,
+.heat-100,
+.heat-over {
+  &, a {
+    color: #fff !important;
+  }
+}
+
+table.company-planning.table-condensed {
+  $company-week-width: 34px;
   width: 100%;
+
+  th,
+  td {
+    min-width: $company-week-width;
+    padding: 1px 2px;
+    font-size: 11px;
+    line-height: 1.4;
+  }
 
   .head th,
   .head td {
@@ -473,6 +512,16 @@ table.company-planning {
 
   tbody td.head {
     text-align: left;
+    min-width: 0;
+    padding-left: 4px;
+    white-space: nowrap;
+  }
+
+  // name column: only as wide as the longest name
+  td.planning-name {
+    width: 1%;
+    padding-right: 12px;
+    white-space: nowrap;
   }
 
   td a {
@@ -481,6 +530,68 @@ table.company-planning {
 
   td.head a {
     color: $link-color;
+  }
+
+  // sortable header links
+  th a {
+    color: $link-color;
+  }
+
+  th a.sort-active {
+    font-weight: bold;
+  }
+
+  .planning-details-toggle,
+  .planning-details-placeholder {
+    display: inline-block;
+    width: 1.25em;
+    margin-right: 2px;
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  .planning-name-label {
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: middle;
+  }
+
+  .planning-details-toggle {
+    text-decoration: none;
+    cursor: pointer;
+
+    &::before {
+      content: '\2212';
+    }
+
+    &.collapsed::before {
+      content: '+';
+    }
+  }
+
+  tr.planning-details {
+    font-size: 10px;
+    color: #777;
+    background-color: #fafafa;
+
+    td.head {
+      padding-left: 1.5em;
+      font-weight: normal;
+    }
+
+    // zero intrinsic width: long work item labels take the column width and are truncated instead of widening it
+    .planning-name-label {
+      display: block;
+      width: 0;
+      min-width: 100%;
+    }
+  }
+
+  a.has-tooltip:hover span {
+    font-size: 12px;
+    line-height: 1.4;
   }
 }
 

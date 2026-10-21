@@ -50,4 +50,37 @@ module PlanningsHelper
       )
     )
   end
+
+  # Heatmap bucket for a planned percent relative to the employment percent.
+  # Returns a css class (heat-0 … heat-90, heat-100, heat-over) or nil.
+  def planning_heatmap_class(planned_percent, employed_percent)
+    planned = planned_percent.to_f
+    employed = employed_percent.to_f
+    return nil if planned.zero? && employed.zero?
+    return 'heat-0' if planned.zero?
+    return 'heat-over' if employed.zero?
+    return 'heat-100' if (planned - employed).abs < 1
+    return 'heat-over' if planned > employed
+
+    ratio = planned * 100 / employed
+    "heat-#{[(ratio / 10).floor * 10, 10].max}"
+  end
+
+  # Remote sort link for the company planning header. `current` is the active sort ({ key:, dir:, week: }).
+  # The active column is bold and shows its direction; clicking it flips the direction,
+  # clicking another column starts with its default direction.
+  def company_sort_link(label, current:, sort:, default_dir:, sort_week: nil)
+    active = current[:key] == sort && (sort != 'week' || current[:week] == sort_week)
+    dir = if active
+            current[:dir] == 'asc' ? 'desc' : 'asc'
+          else
+            default_dir
+          end
+    params = { sort: sort, sort_dir: dir }
+    params[:sort_week] = sort_week if sort == 'week'
+    return link_to(label, plannings_company_path(params), remote: true) unless active
+
+    safe_join([link_to(label, plannings_company_path(params), remote: true, class: 'sort-active'),
+               current[:dir] == 'asc' ? ' ▲' : ' ▼'])
+  end
 end
