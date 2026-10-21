@@ -153,12 +153,14 @@ AccountingPost.seed(
     portfolio_item_id: PortfolioItem.find_by(name: 'Ruby on Rails').id,
     service_id: Service.find_by(name: 'Software-Entwicklung').id,
     offered_hours: 500,
+    offered_rate: 0,
     billable: false },
   # Puzzletime ERP
   { work_item_id: accounting_posts[1].id,
     portfolio_item_id: PortfolioItem.find_by(name: 'Ruby on Rails').id,
     service_id: Service.find_by(name: 'Software-Entwicklung').id,
     offered_hours: 500,
+    offered_rate: 0,
     billable: false },
   # Enclouder 2013
   { work_item_id: accounting_posts[2].id,
@@ -208,11 +210,13 @@ AccountingPost.seed(
   { work_item_id: orders[1].id,
     portfolio_item_id: PortfolioItem.find_by(name: 'Java EE').id,
     service_id: Service.find_by(name: 'Beratung').id,
+    offered_rate: 0,
     billable: false },
   # Workshops
   { work_item_id: orders[2].id,
     portfolio_item_id: PortfolioItem.find_by(name: 'Java EE').id,
     service_id: Service.find_by(name: 'Beratung').id,
+    offered_rate: 0,
     billable: false },
   # DIS
   { work_item_id: orders[6].id,
