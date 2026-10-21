@@ -5,7 +5,11 @@
 
 
 %tr.head
-  %td{rowspan: 2}
+  %td.planning-name{rowspan: 2}
+    = company_sort_link('Name', current: @sort, sort: 'name', default_dir: 'asc')
+    %br/
+    = company_sort_link('Freie Kapazität', current: @sort, sort: 'free', default_dir: 'desc')
   = month_header(@period)
 %tr.head
-  = week_header(@period)
+  - @period.step(7) do |date|
+    %th= company_sort_link(format('%02d', date.cweek), current: @sort, sort: 'week', sort_week: date, default_dir: 'desc')

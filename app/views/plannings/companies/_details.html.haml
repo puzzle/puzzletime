@@ -1,0 +1,15 @@
+-#  Copyright (c) 2006-2017, Puzzle ITC GmbH. This file is part of
+-#  PuzzleTime and licensed under the Affero General Public License version 3
+-#  or later. See the COPYING file at the top-level directory or at
+-#  https://github.com/puzzle/puzzletime.
+
+-# The first row's id lets Bootstrap's collapse find exactly this member's toggle (it looks up
+-# triggers by href="#<target id>"; without an id it matched every toggle with href="#").
+- board.detail_rows.each_with_index do |(label, percents), index|
+  %tr.planning-details.collapse{ class: "planning-details-#{board.employee.id}",
+                                 id: index.zero? ? "planning-details-#{board.employee.id}" : nil }
+    %td.head.small.planning-name{ title: label }
+      %span.planning-name-label= label
+    - @period.step(7) do |date|
+      - value = percents[date].to_f
+      %td= value.nonzero? ? value.round : nil
