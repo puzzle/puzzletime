@@ -1,0 +1,10 @@
+= form_with model: @employee, url: plannings_company_note_path(@employee), method: :patch, local: false do |f|
+  - if @employee.errors.any?
+    .alert.alert-danger= @employee.errors.full_messages.to_sentence
+
+  .form-group
+    = f.text_area :planning_note, rows: 10, class: 'form-control planning-note-source', aria: { label: 'Notiz (Markdown)' }
+    %p.help-block Markdown wird unterstützt, z.B. **fett**, *kursiv* oder Aufzählungen mit -
+
+  = f.submit 'Speichern', class: 'btn btn-primary', data: { disable_with: 'Speichern …' }
+  = link_to 'Abbrechen', '#', class: 'cancel'

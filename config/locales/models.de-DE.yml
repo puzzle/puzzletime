@@ -201,6 +201,7 @@ de-DE:
         social_insurance: Sozialversicherungsnummer
         nationalities: Nationalitäten
         additional_information: Zusätzliche Informationen
+        planning_note: Planungsnotiz
         crm_key: Highrise ID
         identity_card_type: Ausweistyp
         identity_card_valid_until: Ausweis gültig bis

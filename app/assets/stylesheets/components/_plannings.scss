@@ -542,12 +542,95 @@ table.company-planning.table-condensed {
   }
 
   .planning-details-toggle,
-  .planning-details-placeholder {
+  .planning-details-placeholder,
+  .planning-note-link,
+  .planning-note-placeholder {
     display: inline-block;
     width: 1.25em;
     margin-right: 2px;
     text-align: center;
     vertical-align: middle;
+  }
+
+  .planning-note {
+    position: relative;
+  }
+
+  .planning-note-link {
+    .planning-note-icon {
+      color: #fff;
+      text-shadow: -1px 0 #999, 1px 0 #999, 0 -1px #999, 0 1px #999;
+      font-size: 13px;
+    }
+    .planning-note-icon.has-note {
+      color: #f5b971;
+      text-shadow: none;
+    }
+  }
+
+  // Speech bubble with the rendered note; shown on hover/focus after a delay.
+  .planning-note-preview {
+    position: absolute;
+    top: 100%;
+    left: -9px;
+    z-index: $zindex-popover;
+    width: max-content;
+    max-width: 320px;
+    margin-top: 8px;
+    padding: 6px 8px;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    color: #333;
+    font-size: 12px;
+    font-weight: normal;
+    line-height: 1.4;
+    text-align: left;
+    white-space: normal;
+    pointer-events: none;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0s, visibility 0s;
+
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 100%;
+      left: 10px;
+      border: 7px solid transparent;
+      border-top: 0;
+    }
+    &::before {
+      border-bottom-color: #ccc;
+    }
+    &::after {
+      left: 11px;
+      bottom: calc(100% - 1px);
+      border-width: 6px;
+      border-bottom-color: #fff;
+      border-left-width: 6px;
+    }
+
+    p,
+    ul,
+    ol {
+      margin: 0 0 0.25em;
+    }
+    > .planning-note-markdown > :last-child {
+      margin-bottom: 0;
+    }
+    a {
+      color: $link-color;
+    }
+  }
+
+  .planning-note-link:hover + .planning-note-preview,
+  .planning-note-link:focus + .planning-note-preview {
+    visibility: visible;
+    opacity: 1;
+    transition: opacity 0.15s ease-out 0.6s, visibility 0s linear 0.6s;
   }
 
   .planning-name-label {
@@ -593,6 +676,32 @@ table.company-planning.table-condensed {
     font-size: 12px;
     line-height: 1.4;
   }
+}
+
+.planning-note-markdown {
+  text-align: left;
+  overflow-wrap: break-word;
+
+  > :first-child {
+    margin-top: 0;
+  }
+  > :last-child {
+    margin-bottom: 0;
+  }
+
+  // notes are short: keep headings close to body size
+  h1, h2, h3, h4, h5, h6 {
+    margin: 0.6em 0 0.3em;
+    font-weight: bold;
+    line-height: 1.2;
+  }
+  h1 { font-size: 1.4em; }
+  h2 { font-size: 1.25em; }
+  h3, h4, h5, h6 { font-size: 1.1em; }
+}
+
+.planning-note-source {
+  font-family: monospace;
 }
 
 .planning-company-totals {

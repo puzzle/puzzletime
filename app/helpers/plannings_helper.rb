@@ -66,6 +66,13 @@ module PlanningsHelper
     "heat-#{[(ratio / 10).floor * 10, 10].max}"
   end
 
+  # Renders the planning note as sanitized Markdown; nil when blank.
+  def planning_note_markdown(text)
+    return nil if text.blank?
+
+    sanitize(Commonmarker.to_html(text.to_s))
+  end
+
   # Remote sort link for the company planning header. `current` is the active sort ({ key:, dir:, week: }).
   # The active column is bold and shows its direction; clicking it flips the direction,
   # clicking another column starts with its default direction.

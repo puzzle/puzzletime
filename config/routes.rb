@@ -218,6 +218,7 @@ Rails.application.routes.draw do
     end
 
     resource :company, only: :show
+    resources :company_notes, only: %i[show edit update]
   end
 
   resources :meal_compensations, only: %i[index show] do

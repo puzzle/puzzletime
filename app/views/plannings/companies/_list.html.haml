@@ -28,6 +28,7 @@
             %a.planning-details-toggle.collapsed{ href: "#planning-details-#{board.employee.id}", role: 'button', title: 'Detailplanung ein-/ausblenden', 'aria-expanded': 'false', data: { toggle: 'collapse', target: ".planning-details-#{board.employee.id}" } }
           - else
             %span.planning-details-placeholder
+          = render 'note', employee: board.employee
           %span.planning-name-label= link_to_if(can?(:show_plannings, board.employee),
                                                 board.employee.label,
                                                 plannings_employee_path(board.employee))

@@ -11,7 +11,7 @@ class EmployeesController < ManageController
                           :graduation, :management, :phone_office, :phone_private,
                           :street, :postal_code, :city, :birthday, :emergency_contact_name,
                           :emergency_contact_phone, :marital_status,
-                          :social_insurance, :additional_information,
+                          :social_insurance, :additional_information, :planning_note,
                           :identity_card_type, :identity_card_valid_until,
                           { nationalities: [] }]
 

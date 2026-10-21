@@ -50,3 +50,7 @@
                      { required: false, multiple: true, class: 'form-control searchable' })
 
   = f.labeled_input_fields :additional_information
+  = f.labeled_input_field :planning_note,
+                          rows: 6,
+                          class: 'planning-note-source',
+                          help: safe_join(['Wird auf der Unternehmensplanung angezeigt.', tag.br, 'Markdown wird unterstützt.'])

@@ -44,6 +44,7 @@
 #  workplace_id              :bigint
 #  worktimes_commit_reminder :boolean          default(TRUE), not null
 #  member_coach_id           :integer
+#  planning_note             :text
 #
 
 class Employee < ApplicationRecord

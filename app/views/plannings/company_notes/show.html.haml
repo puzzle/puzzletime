@@ -1,0 +1,17 @@
+- if @employee.planning_note.present?
+  .planning-note-markdown= planning_note_markdown(@employee.planning_note)
+- else
+  %p.text-muted Keine Notiz
+
+- if can?(:update_planning_note, @employee)
+  %p
+    = link_to edit_plannings_company_note_path(@employee),
+              class: 'btn btn-default btn-sm',
+              data: { modal: '#modal',
+                      title: "Notiz bearbeiten: #{@employee.label}",
+                      remote: true,
+                      type: :html,
+                      update: 'element',
+                      element: "#planning_note_#{@employee.id}" } do
+      = icon(:pencil)
+      Bearbeiten
