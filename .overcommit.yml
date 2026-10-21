@@ -83,7 +83,10 @@ PreCommit:
   BundleCheck:
     enabled: true
   BundleOutdated:
-    enabled: true
+    # Disabled: `bundle outdated` re-resolves git-sourced gems on every commit;
+    # bundler's git checkout inherits GIT_INDEX_FILE from the hook env and
+    # overwrites the repo index (bundler 4.0.20 git_proxy does not scrub it).
+    enabled: false
   CaseConflicts:
     enabled: true
   ChamberSecurity:
@@ -155,6 +158,8 @@ PreCommit:
     enabled: true
   RailsBestPractices:
     enabled: true
+    # Legacy findings everywhere; only block on lines you touched.
+    problem_on_unmodified_line: warn
   RailsSchemaUpToDate:
     enabled: true
   Reek:
