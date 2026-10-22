@@ -33,6 +33,7 @@ namespace :db do # rubocop:disable Metrics/BlockLength
   end
 
   desc 'Create missing testusers, passwords are random unless provided by env
+    ALL=<password>
     MB1=<password>
     MB2=<password2>
     MGT=<password3>
@@ -43,7 +44,7 @@ namespace :db do # rubocop:disable Metrics/BlockLength
       employee: {
         firstname: 'First',
         lastname: 'Member',
-        password: ENV['MB1'] || Devise.friendly_token(64),
+        password: ENV['MB1'] || ENV['ALL'] || Devise.friendly_token(64),
         email: 'mb1@puzzle.ch',
         management: false
       },
@@ -72,7 +73,7 @@ namespace :db do # rubocop:disable Metrics/BlockLength
       employee: {
         firstname: 'Second',
         lastname: 'Member',
-        password: ENV['MB2'] || Devise.friendly_token(64),
+        password: ENV['MB2'] || ENV['ALL'] || Devise.friendly_token(64),
         email: 'mb2@puzzle.ch',
         management: false
       },
@@ -98,7 +99,7 @@ namespace :db do # rubocop:disable Metrics/BlockLength
       employee: {
         firstname: 'Manager',
         lastname: 'Management',
-        password: ENV['MGT'] || Devise.friendly_token(64),
+        password: ENV['MGT'] || ENV['ALL'] || Devise.friendly_token(64),
         email: 'mgt@puzzle.ch',
         management: true
       },
