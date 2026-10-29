@@ -44,6 +44,11 @@ name: "Manual build"
         required: true
         type: boolean
         default: true
+      no_cache:
+        description: "Build without the registry cache (rebuilds :buildcache)?"
+        required: true
+        type: boolean
+        default: false
       sbom:
         description: "Generate and upload the SBOM?"
         required: true
@@ -71,6 +76,7 @@ jobs:
       environment: ${{ inputs.environment }}
       project_name: ${{ inputs.project_name  }}
       push: ${{ inputs.push }}
+      no_cache: ${{ inputs.no_cache }}
     secrets:
       PUZZLE_REGISTRY_USERNAME: ${{ secrets.PUZZLE_REGISTRY_USERNAME }}
       PUZZLE_REGISTRY_TOKEN: ${{ secrets.PUZZLE_REGISTRY_TOKEN }}
