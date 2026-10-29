@@ -1,8 +1,0 @@
-:ruby
-  progress = order_progress(order)
-
-.progress{ title: "Fortschritt: #{f(progress[:percent_title])}%" }
-  - if progress[:percent] > 0
-    .progress-bar.progress-bar-success{ style: "width:#{f(progress[:percent])}%" }
-  - if progress[:over_budget_percent] > 0
-    .progress-bar.progress-bar-danger{ style: "width:#{f(progress[:over_budget_percent])}%" }

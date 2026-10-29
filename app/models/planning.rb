@@ -45,10 +45,11 @@ class Planning < ApplicationRecord
   end
 
   def order
-    @order ||=
-      Order.joins('LEFT JOIN work_items ON ' \
-                  'orders.work_item_id = ANY (work_items.path_ids)')
-           .find_by('work_items.id = ?', work_item_id)
+    return @order if defined?(@order)
+
+    @order = Order.joins('LEFT JOIN work_items ON ' \
+                         'orders.work_item_id = ANY (work_items.path_ids)')
+                  .find_by('work_items.id = ?', work_item_id)
   end
 
   private

@@ -13,7 +13,7 @@
     = render 'period_work_items'
 
 = f.labeled :invoice_posts do
-  %p.form-control-static='Gruppieren nach:'
+  %p.form-control-static= 'Gruppieren nach:'
   .radio
     %label
       = radio_button(:invoice, :grouping, 'accounting_posts', checked: entry.grouping != 'employees')

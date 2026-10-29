@@ -13,10 +13,11 @@ module Plannings
       employees.detect { |e| e.id == employee_id }
     end
 
-    def total_row_planned_hours(employee_id, work_item_id, only_for_active_period = false)
-      period_to_calculate_hours = only_for_active_period ? @period : Period.new(nil, nil)
-      @total_row_planned_hours = load_total_included_rows_planned_hours(period_to_calculate_hours)
-      @total_row_planned_hours[key(employee_id, work_item_id)] || 0
+    def total_row_planned_hours(employee_id, work_item_id, active_period_only: false)
+      period = active_period_only ? @period : Period.new(nil, nil)
+      @total_row_planned_hours ||= {}
+      @total_row_planned_hours[active_period_only] ||= load_total_included_rows_planned_hours(period)
+      @total_row_planned_hours[active_period_only][key(employee_id, work_item_id)] || 0
     end
 
     def total_post_planned_hours(post)
@@ -29,8 +30,8 @@ module Plannings
     end
 
     # total planned hours on this order for all times, not limited to current period.
-    def total_planned_hours(only_for_active_period = false)
-      period_to_calculate_hours = only_for_active_period ? @period : Period.new(nil, nil)
+    def total_planned_hours(active_period_only: false)
+      period_to_calculate_hours = active_period_only ? @period : Period.new(nil, nil)
       WorkingCondition.sum_with(:must_hours_per_day, period_to_calculate_hours) do |period, val|
         percent_to_hours(load_plannings(period).sum(:percent), val)
       end

@@ -75,9 +75,19 @@ module Plannings
     end
 
     def validate_repeat(_p)
-      return unless repeat_until_week && !repeat_until_week.valid?
+      return unless repeat_until_week
 
-      @errors << 'Wiederholungsdatum ist ungültig'
+      if !repeat_until_week.valid?
+        @errors << 'Wiederholungsdatum ist ungültig'
+      elsif nothing_to_repeat?
+        @errors << 'Die Auswahl enthält keine Planung, die wiederholt werden kann'
+      end
+    end
+
+    # #repeat copies the plannings just created or updated, or, for a
+    # repeat-only request, the existing ones in the selection.
+    def nothing_to_repeat?
+      repeat_only? ? existing_items.none? : items.blank?
     end
 
     def validate_present(p)

@@ -9,105 +9,91 @@ require 'test_helper'
 
 class OrderReportsTest < ActionDispatch::IntegrationTest
   test 'live reloads when period filter change' do
-    timeout_safe do
-      list_orders
+    list_orders
 
-      assert_no_selector('table.orders-report tbody tr')
+    assert_no_selector('table.orders-report tbody tr')
 
-      fill_in('start_date', with: '1.11.2006')
-      fill_in('end_date', with: ' ') # required to lose focus on start_date
+    fill_in('start_date', with: '1.11.2006')
+    fill_in('end_date', with: ' ') # required to lose focus on start_date
 
-      assert_selector('table.orders-report tbody tr', count: 4)
+    assert_selector('table.orders-report tbody tr', count: 4)
 
-      fill_in('end_date', with: '1.12.2006')
-      fill_in('start_date', with: '2.11.2006') # required to lose focus on end_date
+    fill_in('end_date', with: '1.12.2006')
+    fill_in('start_date', with: '2.11.2006') # required to lose focus on end_date
 
-      assert_selector('table.orders-report tbody tr', count: 2)
-    end
+    assert_selector('table.orders-report tbody tr', count: 2)
   end
 
   test 'clear timespan when period shortcut selected' do
-    timeout_safe do
-      list_orders
+    list_orders
 
-      fill_in('start_date', with: '1.11.2006')
+    fill_in('start_date', with: '1.11.2006')
 
-      assert_selector(:field, 'start_date', with: '01.11.2006')
+    assert_selector(:field, 'start_date', with: '01.11.2006')
 
-      select('Dieser Monat', from: 'period_shortcut')
+    select('Dieser Monat', from: 'period_shortcut')
 
-      sleep 0.2 # give time to JS to disable the fields and clear the previous input
+    sleep 0.2 # give time to JS to disable the fields and clear the previous input
 
-      assert page.find('#start_date')[:disabled]
-      assert page.find('#end_date')[:disabled]
+    assert page.find('#start_date')[:disabled]
+    assert page.find('#end_date')[:disabled]
 
-      assert_predicate page.find('#start_date')[:value], :blank?
+    assert_predicate page.find('#start_date')[:value], :blank?
 
-      select('benutzerdefiniert', from: 'period_shortcut')
+    select('benutzerdefiniert', from: 'period_shortcut')
 
-      sleep 0.2
+    sleep 0.2
 
-      assert_not page.find('#start_date')[:disabled]
-      assert_not page.find('#end_date')[:disabled]
-    end
+    assert_not page.find('#start_date')[:disabled]
+    assert_not page.find('#end_date')[:disabled]
   end
 
   test 'show flash message if period filter is not valid' do
-    timeout_safe do
-      list_orders
+    list_orders
 
-      fill_in('start_date', with: '1.11.2006')
-      fill_in('end_date', with: '1.10.2006')
-      select('Rot', from: 'target') # required to lose focus on end_date
+    fill_in('start_date', with: '1.11.2006')
+    fill_in('end_date', with: '1.10.2006')
+    select('Rot', from: 'target') # required to lose focus on end_date
 
-      assert_selector('#flash .alert-danger')
+    assert_selector('#flash .alert-danger')
 
-      fill_in('end_date', with: '1.12.2006')
-      select('Orange', from: 'target') # required to lose focus on end_date
+    fill_in('end_date', with: '1.12.2006')
+    select('Orange', from: 'target') # required to lose focus on end_date
 
-      assert_no_selector('#flash .alert-danger')
-    end
+    assert_no_selector('#flash .alert-danger')
   end
 
   test 'changes category filter when client filter change' do
-    timeout_safe do
-      list_orders
+    list_orders
 
-      element = find('#category_work_item_id + .selectize-control')
+    element = find('#category_work_item_id + .selectize-control')
 
-      element.assert_no_selector('.selectize-dropdown-content .option', visible: false)
+    within(element) { assert_no_selector('.selectize-dropdown-content .option', visible: false) }
 
-      selectize('client_work_item_id', 'Puzzle')
+    selectize('client_work_item_id', 'Puzzle')
 
-      element.assert_selector('.selectize-dropdown-content .option', count: 2, visible: false)
-    end
+    within(element) { assert_selector('.selectize-dropdown-content .option', count: 2, visible: false) }
   end
 
   test 'passing no params will initialize the listing with default params' do
-    timeout_safe do
-      login_as :pascal
-      visit reports_orders_path
+    login_as :pascal
+    visit reports_orders_path
 
-      assert has_select?('period_shortcut', selected: 'Dieser Monat')
-      assert_equal find('#department_id', visible: :all).value, [employees(:pascal).department.id.to_s]
-    end
+    assert has_select?('period_shortcut', selected: 'Dieser Monat')
+    assert_equal find('#department_id', visible: :all).value, [employees(:pascal).department.id.to_s]
 
-    timeout_safe do
-      login_as :pascal
-      visit reports_orders_path(status_preselection: 'closed')
+    login_as :pascal
+    visit reports_orders_path(status_preselection: 'closed')
 
-      assert has_select?('period_shortcut', selected: 'Letztes Quartal')
-      assert_equal find('#department_id', visible: :all).value, [employees(:pascal).department.id.to_s]
-    end
+    assert has_select?('period_shortcut', selected: 'Letztes Quartal')
+    assert_equal find('#department_id', visible: :all).value, [employees(:pascal).department.id.to_s]
 
-    timeout_safe do
-      login_as :pascal
-      visit reports_orders_path(status_preselection: 'not_closed')
+    login_as :pascal
+    visit reports_orders_path(status_preselection: 'not_closed')
 
-      assert has_select?('period_shortcut', selected: 'Dieser Monat')
-      assert_equal find('#department_id', visible: :all).value, [employees(:pascal).department.id.to_s]
-      assert_equal find('#status_id', visible: :all).value, OrderStatus.where(default: true).pluck(:id).map(&:to_s)
-    end
+    assert has_select?('period_shortcut', selected: 'Dieser Monat')
+    assert_equal find('#department_id', visible: :all).value, [employees(:pascal).department.id.to_s]
+    assert_equal find('#status_id', visible: :all).value, OrderStatus.where(default: true).pluck(:id).map(&:to_s)
   end
 
   private

@@ -46,8 +46,6 @@ namespace :ci do
   end
 end
 
-private
-
 def system_geckodriver
   @system_geckodriver ||=
     begin

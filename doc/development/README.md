@@ -7,3 +7,4 @@ Diese Dokumente beschreiben verschiedene Aspekte, welche bei der Entwicklung zu 
 * [Entwicklungsumgebung](01_setup.md)
 * [Deployment](02_deployment.md)
 * [Guidelines](03_guidelines.md)
+* [Tests](04_testing.md)

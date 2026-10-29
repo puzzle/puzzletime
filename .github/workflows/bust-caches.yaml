@@ -1,0 +1,52 @@
+---
+name: "Bust build caches"
+
+"on":
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Environment whose image build cache to rebuild"
+        required: true
+        type: choice
+        options:
+          - pitc-ptime-int
+          - pitc-ptime-prod
+          - pude-ptime-int
+          - pude-ptime-prod
+        default: "pitc-ptime-int"
+      actions_cache:
+        description: "Delete all GitHub Actions caches (bundler, npm)?"
+        required: true
+        type: boolean
+        default: true
+      image_cache:
+        description: "Rebuild the registry :buildcache from scratch (no image push)?"
+        required: true
+        type: boolean
+        default: true
+
+jobs:
+  actions-cache:
+    if: ${{ inputs.actions_cache }}
+    runs-on: "ubuntu-latest"
+    permissions:
+      actions: write
+    steps:
+      - env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh cache delete --all --succeed-on-no-caches --repo "${{ github.repository }}"
+
+  # cache-to exports the fresh cache even with push: false, overwriting :buildcache
+  # without touching :latest.
+  image-cache:
+    if: ${{ inputs.image_cache }}
+    uses: ./.github/workflows/reusable-build.yaml
+    with:
+      environment: ${{ inputs.environment }}
+      project_name: ${{ inputs.environment }}
+      push: false
+      no_cache: true
+    secrets:
+      PUZZLE_REGISTRY_USERNAME: ${{ secrets.PUZZLE_REGISTRY_USERNAME }}
+      PUZZLE_REGISTRY_TOKEN: ${{ secrets.PUZZLE_REGISTRY_TOKEN }}
+...

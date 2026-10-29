@@ -11,34 +11,30 @@ class CreateOrdertimeTest < ActionDispatch::IntegrationTest
   setup :login
 
   test 'create ordertime is successfull' do
-    timeout_safe do
-      selectize('ordertime_account_id', 'Site', term: 'site')
-      fill_in('ordertime_hours', with: 2)
-      click_button 'Speichern'
+    selectize('ordertime_account_id', 'Site', term: 'site')
+    fill_in('ordertime_hours', with: 2)
+    click_button 'Speichern'
 
-      assert_equal '/ordertimes', current_path
-      time = Worktime.order(:id).last
+    assert_equal '/ordertimes', current_path
+    time = Worktime.order(:id).last
 
-      assert_equal work_items(:hitobito_demo_site), time.account
-    end
+    assert_equal work_items(:hitobito_demo_site), time.account
   end
 
   test 'create ordertime with validation error keeps account selection' do
-    timeout_safe do
-      accounting_posts(:hitobito_demo_site).update!(description_required: true)
+    accounting_posts(:hitobito_demo_site).update!(description_required: true)
 
-      selectize('ordertime_account_id', 'Site', term: 'site')
-      fill_in('ordertime_hours', with: 2)
-      click_button 'Speichern'
+    selectize('ordertime_account_id', 'Site', term: 'site')
+    fill_in('ordertime_hours', with: 2)
+    click_button 'Speichern'
 
-      assert page.has_selector?('#error_explanation')
-      item = work_items(:hitobito_demo_site)
+    assert page.has_selector?('#error_explanation')
+    item = work_items(:hitobito_demo_site)
 
-      assert_equal item.id.to_s, find('#ordertime_account_id', visible: false).value
-      element = find('#ordertime_account_id + .selectize-control')
+    assert_equal item.id.to_s, find('#ordertime_account_id', visible: false).value
+    element = find('#ordertime_account_id + .selectize-control')
 
-      assert_equal item.label_verbose, element.find('.selectize-input div').text
-    end
+    assert_equal item.label_verbose, element.find('.selectize-input div').text
   end
 
   test 'create ordertime select accounting_post with billable=true checks billable checkbox' do
@@ -104,12 +100,10 @@ class CreateOrdertimeTest < ActionDispatch::IntegrationTest
   end
 
   test 'creating repeated worktimes from a Wednesday on only allows 3 repetitions' do
-    timeout_safe do
-      fill_in('ordertime_work_date', with: '07.01.2026') # A Wednesday
-      input = find('input[name*="repetitions"]')
+    fill_in('ordertime_work_date', with: '07.01.2026') # A Wednesday
+    input = find('input[name*="repetitions"]')
 
-      assert_equal '3', input[:max]
-    end
+    assert_equal '3', input[:max]
   end
 
   def login
@@ -122,15 +116,16 @@ class CreateOrdertimeTest < ActionDispatch::IntegrationTest
     offered_hours = accounting_post.offered_hours
     worked_hours = Worktime.where(work_item_id: accounting_post.work_item_id).sum(:hours)
 
-    offered_hours.nil? ? 0 : [(worked_hours * 100) / offered_hours, 100].min
+    return 0 unless offered_hours
+
+    [(worked_hours * 100) / offered_hours, 100].min
   end
 
   def expected_color(percentage)
-    if percentage < 80
-      'green'
-    else
-      percentage < 100 ? 'orange' : 'red'
-    end
+    return 'green' if percentage < 80
+    return 'orange' if percentage < 100
+
+    'red'
   end
 
   # returns the width of the progressbar in percent as float

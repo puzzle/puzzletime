@@ -7,6 +7,7 @@
 
 class Order
   module Services
+    # Everything TimeRapportPdfGenerator renders, collected by the order services controller.
     TimeRapportData = Struct.new(
       :order, :worktimes, :tickets, :ticket_view,
       :employees, :employee, :work_items, :period, keyword_init: true

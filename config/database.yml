@@ -26,7 +26,8 @@ default: &default
   encoding: unicode
   # For details on connection pooling, see rails configuration guide
   # http://guides.rubyonrails.org/configuring.html#database-pooling
-  pool: 5
+  # bleib hardcodes `pool: 1`, which clashes with `max_connections` (Rails 8.1)
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS", 5) %>
   timeout: 5000
   host: <%= ENV['RAILS_DB_HOST'] || '127.0.0.1' %>
   port: <%= ENV['RAILS_DB_PORT'] || '5432' %>
@@ -69,11 +70,15 @@ development:
 # Do not set this db to the same as development or production.
 test:
   <<: *default
+  pool: 15
   host: <%= ENV['RAILS_TEST_DB_HOST'] || '127.0.0.1' %>
   port: <%= ENV['RAILS_TEST_DB_PORT'] || '5432' %>
-  database: <%= ENV['RAILS_TEST_DB_NAME'] || 'puzzletime_test' %>
+  database: <%= ENV['RAILS_TEST_DB_NAME'] || 'puzzletime_test' %><%= ENV['TEST_ENV_NUMBER'] %>
   username: <%= ENV['RAILS_TEST_DB_USERNAME'] || 'puzzletime' %>
   password: <%= ENV['RAILS_TEST_DB_PASSWORD'] || 'timepuzzle' %>
+  variables:
+    # ponytail: DatabaseCleaner's TRUNCATE waits forever otherwise — see upgrade.html #p0
+    lock_timeout: 15000
 
 # As with config/secrets.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is

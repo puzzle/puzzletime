@@ -11,7 +11,7 @@ module DryCrud
     # consisting of a label, input field, addon, help text or
     # required mark.
     class Control
-      attr_reader :builder, :attr, :args, :options, :span, :addon, :help
+      attr_reader :builder, :attr, :args, :options, :addon, :help
 
       delegate :content_tag, :object,
                to: :builder
@@ -79,7 +79,11 @@ module DryCrud
 
         content_tag(:div, class: "form-group#{errors}") do
           label_class = "col-md-2 control-label #{'required' if required}"
-          html = builder.label(attr, caption, class: label_class)
+          html = if attr.to_s.present?
+                   builder.label(attr, caption, class: label_class)
+                 else
+                   content_tag(:label, caption, class: label_class)
+                 end
           html << content_tag(:div, content, class: "col-md-#{span}")
           html << builder.help_block(help) if help.present?
           html

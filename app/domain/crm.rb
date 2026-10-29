@@ -9,10 +9,12 @@ module Crm
   # Access the active CRM class here
   cattr_accessor :instance
 
+  # Assigns unconditionally: with no CRM configured this clears a previously
+  # initialised instance instead of leaving it in place.
   def self.init
-    return unless crm
+    Crm.instance = crm&.new
+    return unless Crm.instance
 
-    Crm.instance = crm.new
     CrmSyncJob.schedule if Delayed::Job.table_exists?
     Crm.instance
   end

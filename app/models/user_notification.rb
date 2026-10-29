@@ -23,7 +23,7 @@ class UserNotification < ApplicationRecord
   validates :date_from, :date_to, timeliness: { date: true, allow_blank: true }
   validate :validate_period
 
-  scope :list, -> { order('date_from DESC, date_to DESC') }
+  scope :list, -> { order(date_from: :desc, date_to: :desc) }
 
   class << self
     def list_during(period = nil, _current_user = nil)

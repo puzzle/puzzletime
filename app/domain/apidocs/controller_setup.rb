@@ -4,6 +4,7 @@ module Apidocs
   class ControllerSetup
     include Rails.application.routes.url_helpers
     include Helper
+
     attr_reader :controller_class, :swagger_spec, :serializer
 
     def initialize(controller_class, swagger_spec)

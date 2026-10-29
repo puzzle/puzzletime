@@ -1,6 +1,6 @@
 - @title = 'Alle Spesen'
 
-= form_tag(nil, method: :get, class: 'form-inline', role: 'filter') do
+= form_tag(nil, method: :get, class: 'form-inline', role: 'search') do
   = hidden_field_tag :page, 1
   = direct_filter_select(:status,             'Status',               @statuses)
   = direct_filter_select(:employee_id,        'Member',               @employees)

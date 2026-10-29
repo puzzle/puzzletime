@@ -17,7 +17,7 @@ class CapacityReportController < ApplicationController
       send_csv(report.to_csv, report.filename)
     else
       flash[:alert] = 'Bitte wählen Sie eine Zeitspanne für die Auslastung.'
-      redirect_back(fallback_location: root_path)
+      redirect_back_or_to(root_path)
     end
   end
 

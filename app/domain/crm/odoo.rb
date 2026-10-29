@@ -67,13 +67,12 @@ module Crm
     end
 
     def sync_clients(ids = nil)
-      context = Client.includes(:work_item)
-      context = context.where(id: ids) if ids.present?
+      context = only(Client.includes(:work_item), ids)
 
       clean_crm_keys(context)
 
       sync_crm_entities(context) do |client|
-        company = with_prefetch(:companies, client.crm_key.to_i) { ::Crm::Odoo::Company.find(_1) }
+        company = with_prefetch(:companies, client.crm_key.to_i) { ::Crm::Odoo::Company.find(it) }
         item = client.work_item
 
         next if item.name == company.name
@@ -83,13 +82,12 @@ module Crm
     end
 
     def sync_orders(ids = nil)
-      context = Order.includes(:work_item, :additional_crm_orders)
-      context = context.where(id: ids) if ids.present?
+      context = only(Order.includes(:work_item, :additional_crm_orders), ids)
 
       clean_crm_keys(context)
 
       sync_crm_entities(context) do |order|
-        lead = with_prefetch(:leads, order.crm_key.to_i) { ::Crm::Odoo::Lead.find(_1) }
+        lead = with_prefetch(:leads, order.crm_key.to_i) { ::Crm::Odoo::Lead.find(it) }
         item = order.work_item
 
         order.additional_crm_orders.each do |additional|
@@ -120,13 +118,12 @@ module Crm
 
     # Syncs existing contacts
     def sync_contacts(ids = nil)
-      context = Contact
-      context = context.where(id: ids) if ids.present?
+      context = only(Contact, ids)
 
       clean_crm_keys(context)
 
       sync_crm_entities(context) do |contact|
-        partner = with_prefetch(:partners, contact.crm_key.to_i) { ::Crm::Odoo::Partner.find(_1) }
+        partner = with_prefetch(:partners, contact.crm_key.to_i) { ::Crm::Odoo::Partner.find(it) }
         next if partner.blank?
 
         attributes = contact_attributes(partner)
@@ -137,13 +134,12 @@ module Crm
 
     # Imports missing contacts for existing clients
     def import_client_contacts(ids = nil)
-      context = Client
-      context = context.where(id: ids) if ids.present?
+      context = only(Client, ids)
 
       clean_crm_keys(context)
 
       sync_crm_entities(context) do |client|
-        partners = with_prefetch(:company_partners, client.crm_key.to_i) { ::Crm::Odoo::Company.partners_for(_1) }
+        partners = with_prefetch(:company_partners, client.crm_key.to_i) { ::Crm::Odoo::Company.partners_for(it) }
         existing = existing_contact_crm_keys(client, partners.map(&:id))
 
         partners
@@ -158,6 +154,11 @@ module Crm
     def restrict_local? = true
 
     private
+
+    # Narrows a sync to the given record ids; nil or empty syncs everything (console use).
+    def only(context, ids)
+      ids.present? ? context.where(id: ids) : context
+    end
 
     def clean_crm_keys(context)
       return unless context.has_attribute? :crm_key
@@ -177,9 +178,9 @@ module Crm
 
     def find_prefetched(group, keys)
       if group == :company_partners
-        @prefetched[:partners]&.find_all { _1.parent_id.in? Array.wrap(keys) }
+        @prefetched[:partners]&.find_all { it.parent_id.in? Array.wrap(keys) }
       else
-        @prefetched[group]&.find { _1.id.in? Array.wrap(keys) }
+        @prefetched[group]&.find { it.id.in? Array.wrap(keys) }
       end
     end
 
@@ -210,7 +211,7 @@ module Crm
           key: lead.partner_id,
           name: lead.partner_name
         }
-      }.then { false_to_nil(_1) }
+      }.then { false_to_nil(it) }
     end
 
     def contact_attributes(person)
@@ -223,7 +224,7 @@ module Crm
         phone: person.phone,
         mobile: person.mobile,
         crm_key: person.id
-      }.then { false_to_nil(_1) }
+      }.then { false_to_nil(it) }
     end
 
     def sync_crm_entities(entities)

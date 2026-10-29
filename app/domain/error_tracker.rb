@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Reports errors and context to the configured tracker: Sentry/GlitchTip or Airbrake/Errbit.
 class ErrorTracker
   class << self
     def type

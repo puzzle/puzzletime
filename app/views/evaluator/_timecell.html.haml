@@ -43,7 +43,7 @@
     -# use html link instead of link_to for performance reasons
     %a{ href: link.html_safe }= image_tag('lupe.gif', size: '19x11', alt: 'Details')
   - else
-    = image_tag('space.gif', size: '19x11')
+    = image_tag('space.gif', size: '19x11', alt: '')
 
 - if evaluation.class.planned_hours
   %td.text-right
