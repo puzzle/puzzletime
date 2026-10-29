@@ -12,6 +12,10 @@ name: Generate and push an SBOM dependency list
         type: string
         description: "what to prefix the artifacts with e.g. int-"
         default: ""
+      ref:
+        type: string
+        description: "Ref to checkout"
+        default: ""
 
     secrets:
       dependency_track_url:
@@ -50,6 +54,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.ref }}
       - name: 'Generate SBOM for ruby and npm dependencies'
         run: |
           npm install -g @cyclonedx/cdxgen
