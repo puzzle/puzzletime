@@ -4,6 +4,11 @@ name: "Manual build"
 "on":
   workflow_dispatch:
     inputs:
+      ref:
+        description: "Source branch, tag or SHA to build (empty = 'Use workflow from' branch)"
+        required: false
+        type: string
+        default: ""
       environment:
         description: "Environment to build in"
         required: true
@@ -63,16 +68,21 @@ jobs:
       checks: write
       pull-requests: write
     uses: ./.github/workflows/reusable-lint.yaml
+    with:
+      ref: ${{ inputs.ref }}
 
   test:
     if: ${{ inputs.test }}
     uses: ./.github/workflows/reusable-test.yaml
+    with:
+      ref: ${{ inputs.ref }}
 
   build-dispatch:
     needs: [lint, test]
     if: ${{ inputs.build && !failure() && !cancelled() }}
     uses: ./.github/workflows/reusable-build.yaml
     with:
+      ref: ${{ inputs.ref }}
       environment: ${{ inputs.environment }}
       project_name: ${{ inputs.project_name  }}
       push: ${{ inputs.push }}
@@ -87,6 +97,7 @@ jobs:
     uses: ./.github/workflows/reusable-sbom.yaml
     with:
       project_name: ${{ inputs.project_name }}
+      ref: ${{ inputs.ref }}
     secrets:
       dependency_track_url: ${{ secrets.DEPTRACK_URL }}
       dependency_track_api_key: ${{ secrets.DEPTRACK_API_KEY }}
