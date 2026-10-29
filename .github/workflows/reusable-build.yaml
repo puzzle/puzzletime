@@ -16,6 +16,10 @@ name: "Reusable: Build and push image"
         description: "Build and debug things without pushing to the registry"
         type: boolean
         default: false
+      no_cache:
+        description: "Ignore the registry build cache; cache-to still rewrites it"
+        type: boolean
+        default: false
       registry:
         description: "FQDN of the registry"
         type: string
@@ -83,6 +87,7 @@ jobs:
             ${{ env.BUILD_REGISTRY_URL }}:latest
             ${{ env.BUILD_REGISTRY_URL }}:git-${{ github.sha }}
           push: ${{ inputs.push }}
+          no-cache: ${{ inputs.no_cache }}
           cache-from: type=registry,ref=${{ env.BUILD_REGISTRY_URL }}:buildcache
           cache-to: type=registry,ref=${{ env.BUILD_REGISTRY_URL }}:buildcache,mode=max
 
