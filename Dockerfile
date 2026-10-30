@@ -3,7 +3,7 @@
 #################################
 
 # Versioning
-ARG RUBY_VERSION="3.2.1"
+ARG RUBY_VERSION="3.2.8"
 ARG BUNDLER_VERSION="2.6.7"
 
 # Packages

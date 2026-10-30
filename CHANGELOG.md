@@ -3,6 +3,7 @@
 * **Auftrag / Auftragsmangement**
 	* **Tab "Leistungen"**: zusätzlicher CSV-Export der erfassten Leistungen ohne Spalte 'interne Bemerkungen' (#64960)
  	* **Tab "Auftrags-Controlling"**: Auswahlfilter für Solution (= Portfolio auf Buchungsposition) eingefügt. Über den Filter "Portfolio" werden alle Aufträge angezeigt, die mindestens eine Buchungsposition der ausgewählten Solution enthalten. (#65398)
+* **Update:** Ruby auf Version 3.2.8 aktualisiert (Debian bookworm statt bullseye im Image)
  
  ## Bugfixes
  * **Auftrag / Auftragsmangement**
