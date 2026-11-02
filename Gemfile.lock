@@ -330,6 +330,14 @@ GEM
     google-protobuf (4.36.2-x86_64-linux-musl)
       bigdecimal
       rake (~> 13.3)
+    graphiti (2.2.3)
+      activesupport (>= 7.1)
+      concurrent-ruby (>= 1.2, < 2.0)
+      dry-types (>= 0.15.0, < 2.0)
+      jsonapi-renderer (~> 0.2, >= 0.2.2)
+      jsonapi-serializable (~> 0.3.0)
+      ostruct (>= 0.5)
+      rescue_registry (~> 1.1)
     haml (7.5.1)
       prism (>= 1.1.0)
       temple (>= 0.8.2)
@@ -408,6 +416,9 @@ GEM
       bindata
       faraday (~> 2.0)
       faraday-follow_redirects
+    jsonapi-renderer (0.2.2)
+    jsonapi-serializable (0.3.1)
+      jsonapi-renderer (~> 0.2.0)
     jsonapi-serializer (2.2.0)
       activesupport (>= 4.2)
     jwt (3.3.0)
@@ -698,6 +709,8 @@ GEM
     request_store (1.7.0)
       rack (>= 1.4)
     require_all (3.0.0)
+    rescue_registry (1.1.0)
+      activesupport (>= 7.1)
     responders (3.2.1)
       actionpack (>= 7.0)
       railties (>= 7.0)
@@ -908,6 +921,7 @@ DEPENDENCIES
   fabrication
   faker
   fasterer
+  graphiti
   haml
   haml-lint
   highrise
@@ -1108,6 +1122,7 @@ CHECKSUMS
   google-protobuf (4.36.2-x86_64-darwin) sha256=8d1bd2a344f7f589703b202ad2ee4cca8ef731b4ced45782ef92d385967384ba
   google-protobuf (4.36.2-x86_64-linux-gnu) sha256=d25a820873e423f1d209ae8c672a4a28b019e2429debd0901d26670a0b4e14db
   google-protobuf (4.36.2-x86_64-linux-musl) sha256=0fa17686c896da96a60a705e56ddc7d4ff56413f52787c655bd4c9fb33ffe14f
+  graphiti (2.2.3) sha256=a89dc93c13fb158e898afe5a2ba37558a2611e0762b70f070cae7698ee11ed38
   haml (7.5.1) sha256=91c5843dd85d32042cc6218d2df8c81282403459958aa53caa58fda238adc287
   haml-lint (0.999.999) sha256=5b1fb5d06dbb0db220ea092cf97771bbb5c031e6867265bee9b2edbe0e79e395
   haml_lint (0.78.0) sha256=e8840e3c3b43345eced88ea2c46adcb253be8b940b095f9e0abf4512cdad40a6
@@ -1136,6 +1151,8 @@ CHECKSUMS
   jsbundling-rails (1.3.1) sha256=0fa03f6d051c694cbf55a022d8be53399879f2c4cf38b2968f86379c62b1c2ca
   json (3.0.2) sha256=8e6d7e7b11384c21230430cef90b71f14849a34a1f4452796670f7c981bd19df
   json-jwt (1.17.2) sha256=97e37c1c3e22e9e1d74a1c0d77319c5cdc8a636226e5dbb1664b0b34eddcf1c9
+  jsonapi-renderer (0.2.2) sha256=b5c44b033d61b4abdb6500fa4ab84807ca0b36ea0e59e47a2c3ca7095a6e447b
+  jsonapi-serializable (0.3.1) sha256=221e657677659d798e268a33ec97a83ec5ea0e4233f931358db84e88056552e9
   jsonapi-serializer (2.2.0) sha256=f8141ac6f0c1e17e8513df68f8341afe2d7bffc285841d7090bc07f07efb0029
   jwt (3.3.0) sha256=44cc34fbc341c148233cf66641522b4bce0dfb1ce55e8073f05c56f44f4ee546
   kaminari (1.2.2) sha256=c4076ff9adccc6109408333f87b5c4abbda5e39dc464bd4c66d06d9f73442a3e
@@ -1247,6 +1264,7 @@ CHECKSUMS
   request_profiler (0.0.4) sha256=e1f52eb2a249248f1f291c81dbc951cf34f6f443f06a0f2846428e8b7ef536b8
   request_store (1.7.0) sha256=e1b75d5346a315f452242a68c937ef8e48b215b9453a77a6c0acdca2934c88cb
   require_all (3.0.0) sha256=937853faa2833388eab551107bf7bf87c6bba6b4800bac5ce469eda7b6a9fed0
+  rescue_registry (1.1.0) sha256=da1daee027faee83820661764d7563ff35be94227db33fd7485a978586205539
   responders (3.2.1) sha256=c2772970cbda654c0e772d852e5a851e82cd8e96f5fa958650861ba75b8ffa84
   rexml (3.4.4) sha256=19e0a2c3425dfbf2d4fc1189747bdb2f849b6c5e74180401b15734bc97b5d142
   rouge (5.1.0) sha256=b77c632842ab7f5147940212f0345808cccfbce864fd5b631d7d12a35ac85452

@@ -322,6 +322,8 @@ detectors:
       - OrderUncertaintiesController#models_label
       - OrdersController#append_crm_contacts
       - OrdersController#load_client_options
+      - OrdertimeResource#base_scope
+      - OrdertimeResource#check_worktimes_committed
       - Plannings::BaseController#build_board_for
       - Plannings::BaseController#params_with_restricted_items
       - Apidocs::Setup#collect_serializers
@@ -932,6 +934,7 @@ detectors:
   UncommunicativeModuleName:
     exclude:
       - Api::V1
+      - Api::V2
   UncommunicativeParameterName:
     exclude:
       - Invoicing::SmallInvoice::InvoiceSync#position_discount
