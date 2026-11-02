@@ -27,6 +27,7 @@ Rails.application.routes.draw do
     end
 
     mount Rswag::Ui::Engine => 'docs'
+    mount Api::V2::Root => 'v2'
     get '/docs/:api_version', to: 'apidocs#show', constraints: { api_version: /v\d+/ }
   end
 

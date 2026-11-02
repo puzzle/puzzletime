@@ -10,12 +10,15 @@ Rswag::Ui.configure do |c|
   api_versions = Rails.root.join('app/controllers/api')
                       .children.filter_map { |p| p.to_s[%r{/(v\d+)\z}, 1] }
 
-  api_versions.each do |version|
+  endpoints = api_versions.index_with { |version| "API #{version} Docs" }
+  endpoints['/api/v2/swagger_doc'] = 'API v2 Docs' # served by Api::V2::Root, not under app/controllers/api
+
+  endpoints.each do |path, title|
     if c.respond_to?(:openapi_endpoint)
-      c.openapi_endpoint version, "API #{version} Docs"
+      c.openapi_endpoint path, title
     else
       # Remove after RSwag has reached v3.0
-      c.swagger_endpoint version, "API #{version} Docs"
+      c.swagger_endpoint path, title
     end
   end
 end
