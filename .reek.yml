@@ -76,6 +76,15 @@ directories:
   "app/helpers":
     UtilityFunction:
       enabled: false
+  # The Grape API declares its routes in DSL blocks that run in the endpoint, not on the API class: they
+  # repeat the same lookups per route and can't be split into methods. Macros are class-level.
+  "app/api":
+    DuplicateMethodCall:
+      enabled: false
+    TooManyStatements:
+      enabled: false
+    UtilityFunction:
+      enabled: false
 
 # FIXME: Fix these, piece by piece
 
@@ -136,6 +145,9 @@ detectors:
     exclude:
       # reviewed 2026-10-02: keyword flags, selector arguments, case-dispatch tables, template-method hook
       - Period#business_year_label
+      # reviewed 2026-11-02: creating-or-updating switch of the Grape API's attribute whitelist
+      - Api::V2::Root#writable
+      - Expenses::ReceiptAttacher#attach
       - Plannings::OrderBoard#total_planned_hours
       - WorktimesCsv#header
       - WorktimesCsv#row
@@ -182,6 +194,9 @@ detectors:
     exclude:
       # reviewed 2026-10-02: API signature, filter/sort/evaluation protocols
       - Crm::Odoo::Api
+      # reviewed 2026-11-02: receipt file/filename pair of the extracted upload processing; request helpers of the API test
+      - Expenses::ReceiptAttacher
+      - Api::V2::OrdersTest
       - Filterable
       - Billing::Report
       - Evaluations::AbsencesEval
@@ -217,6 +232,7 @@ detectors:
       - Evaluations::EmployeesEval#sort_divisions
       - Expenses::PdfExport#add_image_receipt
       - ExpensesController#attach_image
+      - Expenses::ReceiptAttacher#attach_image
       - Filterable#filter_entries_allow_custom_mappings_by
       - Order::Services::TimeRapportPdfGenerator#build_footer
       - Order::Services::TimeRapportPdfGenerator#build_list
@@ -322,6 +338,14 @@ detectors:
       - OrderUncertaintiesController#models_label
       - OrdersController#append_crm_contacts
       - OrdersController#load_client_options
+      # reviewed 2026-11-02: Grape API helpers that validate or default one entry by design
+      - Api::V2::Resources::Expenses::Helpers#resubmit_rejected_expense
+      - Api::V2::Resources::Expenses::Helpers#validate_employment!
+      - Api::V2::Resources::Expenses::Helpers#validate_previous_employment!
+      - Api::V2::Resources::TimeEntries::Helpers#check_accounting_post
+      - Api::V2::Resources::TimeEntries::Helpers#check_worktimes_committed
+      - Api::V2::Root#save!
+      - Api::V2::Root#writable
       - Plannings::BaseController#build_board_for
       - Plannings::BaseController#params_with_restricted_items
       - Apidocs::Setup#collect_serializers
@@ -630,6 +654,11 @@ detectors:
     exclude:
       # reviewed 2026-10-02: API command, helpers whose last parameter has a default
       - Crm::Odoo::Api#model_cmd
+      # reviewed 2026-11-02: crud macro internals and resource helpers, parameters are one request's context
+      - Api::V2::Crud#declare
+      - Api::V2::Crud::EntityBuilder#expose_nested
+      - Api::V2::Resources::Accounting#save_post?
+      - Api::V2::Resources::TimeEntries#completion
       - EvaluatorHelper#times_or_plannings?
       - FilterHelper#direct_filter_date
       # extracting a Billing::Report::Loader (load_*, *_to_hash, build_entry) would fix this one
@@ -661,6 +690,8 @@ detectors:
     exclude:
       # reviewed 2026-10-02: filter_by_param_<attr> hook, total vs post rows, Ordertime vs Absencetime
       - JsonapiFilterable::Prepends#list_entries
+      # reviewed 2026-11-02: optional list scope, optional hooks of the crud macro
+      - Api::V2::Crud#crud_routes
       - CockpitCsv#cockpit_csv
       - WorktimesCsv#offered_rate
       - WorktimesCsv#amount
@@ -690,6 +721,8 @@ detectors:
   MissingSafeMethod:
     exclude:
       - ApplicationController
+      # the Grape API's helpers follow the authorize!/save! naming of Rails controllers
+      - Api::V2::Root
       - Order::Controlling
       - AccountingPost
       - Order
@@ -932,6 +965,7 @@ detectors:
   UncommunicativeModuleName:
     exclude:
       - Api::V1
+      - Api::V2
   UncommunicativeParameterName:
     exclude:
       - Invoicing::SmallInvoice::InvoiceSync#position_discount
