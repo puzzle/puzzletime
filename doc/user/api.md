@@ -43,3 +43,27 @@ Die Swagger Spezifikation liegt unter [/api/docs/v1], diese kann in [Postman] un
 [/doc/development/02_deployment.md]: /doc/development/02_deployment.md
 [/api/docs]: /api/docs
 [/api/docs/v1]: /api/docs/v1
+
+## API v2
+
+Reines JSON-API (kein json:api) für die meisten Stammdaten, erreichbar unter `/api/v2`. Die Swagger-Spezifikation liegt unter [/api/v2/swagger_doc].
+
+* **Authentifizierung:** HTTP Basic mit den geteilten API-Credentials (nur Leserechte gemäss `Ability`) oder die Session eines angemeldeten Mitarbeiters. Die Berechtigungen entsprechen denen der Weboberfläche.
+* **Schreibzugriffe** (`POST`, `PATCH`) müssen den Header `Content-Type: application/json` senden, sonst `415`.
+* **Fehler:** `401`, `403`, `404`, `422` mit `{ "errors": { "attribut": ["Meldung"] } }`.
+* **Pagination:** `page`, `per_page` (max. 100) und die oben beschriebenen Header.
+* **Beziehungen:** z.B. `GET /api/v2/departments/1/employees`.
+
+Ressourcen werden in `app/api/api/v2/root.rb` mit einer Zeile registriert, siehe `Api::V2::Crud`.
+
+### Ressourcen mit eigenen Regeln
+
+Diese Ressourcen sind pro Benutzer eingeschränkt (`scope`) und bilden die Regeln der Weboberfläche nach:
+
+* **Zeiterfassung** (`/ordertimes`, `/absencetimes`): Management sieht alle, alle anderen nur eigene Einträge. `employee_id` darf nur das Management setzen. `hours` und Zeiten akzeptieren Formate wie `8:45`. Zusätzlich `POST /ordertimes/repeat`, `POST /absencetimes/multi` (alles oder nichts) sowie `PATCH /employees/:id/worktimes_commit` und `/worktimes_review`. Der Split-Workflow ist nicht verfügbar.
+* **Spesen** (`/expenses`): eigene bzw. (Management) alle. Genehmigte Spesen sind für Nicht-Management gesperrt. Beleg als Base64 via `PUT /expenses/:id/receipt`, Beurteilung via `PATCH /expenses/:id/review` (nur Management).
+* **Anstellungen und Überzeit-Vorbezüge** (`/employments`, `/overtime_vacations`): Schreibzugriff nur Management; Funktionsanteile werden verschachtelt in `employment_roles_employments_attributes` geschrieben.
+* **Aufträge** (`/orders`, inkl. verschachteltem Work-Item, Team, Kontakten; `PATCH /orders/:id/completed|committed`; `GET`/`PATCH /orders/:id/targets`; `GET`/`PUT /orders/:id/contract`) sowie `/order_comments`, `/order_risks`, `/order_chances` und Kunden (`/clients`).
+* **Buchungspositionen** (`/accounting_posts`, Schreibzugriff über `attach_work_item` wie in der Weboberfläche). **Rechnungen** (`/invoices`) und **Planungen** (`/plannings`) sind nur lesbar.
+
+[/api/v2/swagger_doc]: /api/v2/swagger_doc
