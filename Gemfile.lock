@@ -330,6 +330,20 @@ GEM
     google-protobuf (4.36.2-x86_64-linux-musl)
       bigdecimal
       rake (~> 13.3)
+    grape (4.1.0)
+      activesupport (>= 7.2)
+      dry-configurable (>= 1.0)
+      dry-types (>= 1.1)
+      mustermann (>= 4.0)
+      rack (>= 2.2.4)
+      zeitwerk (>= 2.6)
+    grape-entity (1.1.0)
+      activesupport (>= 3.0.0)
+    grape-swagger (2.2.0)
+      grape (>= 2.1, < 5.0)
+    grape-swagger-entity (0.7.1)
+      grape-entity (~> 1)
+      grape-swagger (~> 2)
     haml (7.5.1)
       prism (>= 1.1.0)
       temple (>= 0.8.2)
@@ -469,6 +483,7 @@ GEM
     msgpack (1.8.5)
     multi_xml (0.9.1)
       bigdecimal (>= 3.1, < 5)
+    mustermann (4.0.1)
     nested_form_fields (0.8.4)
       coffee-rails (>= 3.2.1)
       jquery-rails
@@ -908,6 +923,10 @@ DEPENDENCIES
   fabrication
   faker
   fasterer
+  grape
+  grape-entity
+  grape-swagger
+  grape-swagger-entity
   haml
   haml-lint
   highrise
@@ -1108,6 +1127,10 @@ CHECKSUMS
   google-protobuf (4.36.2-x86_64-darwin) sha256=8d1bd2a344f7f589703b202ad2ee4cca8ef731b4ced45782ef92d385967384ba
   google-protobuf (4.36.2-x86_64-linux-gnu) sha256=d25a820873e423f1d209ae8c672a4a28b019e2429debd0901d26670a0b4e14db
   google-protobuf (4.36.2-x86_64-linux-musl) sha256=0fa17686c896da96a60a705e56ddc7d4ff56413f52787c655bd4c9fb33ffe14f
+  grape (4.1.0) sha256=6d10e21c441cb9985d1eb3967f7e43e729de3324f03186dc3a62248c2a753f85
+  grape-entity (1.1.0) sha256=ab6a1004e57791834e8497d5e85a3c101b72144d8ca31462a26e6d0a380c3d89
+  grape-swagger (2.2.0) sha256=e2b4a8a5d9848f4f43cc6c6f4862a4671a9767880795cff05e8dee963b3a331b
+  grape-swagger-entity (0.7.1) sha256=082144811cdd14c15b9d9f0a27a4e3ff9c27c7081130d334a3de59953769b37d
   haml (7.5.1) sha256=91c5843dd85d32042cc6218d2df8c81282403459958aa53caa58fda238adc287
   haml-lint (0.999.999) sha256=5b1fb5d06dbb0db220ea092cf97771bbb5c031e6867265bee9b2edbe0e79e395
   haml_lint (0.78.0) sha256=e8840e3c3b43345eced88ea2c46adcb253be8b940b095f9e0abf4512cdad40a6
@@ -1161,6 +1184,7 @@ CHECKSUMS
   mocha (3.1.0) sha256=75f42d69ebfb1f10b32489dff8f8431d37a418120ecdfc07afe3bc183d4e1d56
   msgpack (1.8.5) sha256=97419eaa7b35dfe3e462c0e6c1a3dfdcbfc8756605c09e46e4c6daef127517ba
   multi_xml (0.9.1) sha256=7ce766b59c17241ed62976caeae1fae9b2431b263398c35396239a68c4a64e57
+  mustermann (4.0.1) sha256=91cea92fbd21d80be193a63c5653ac45e9456c0d976039d526a277d98d29cb07
   nested_form_fields (0.8.4) sha256=e3db8e935b40c6b6027ce65b10ee0c5cf575d1ba175be85154c81d4253635b19
   net-http (0.9.1) sha256=25ba0b67c63e89df626ed8fac771d0ad24ad151a858af2cc8e6a716ca4336996
   net-imap (0.6.7) sha256=b5c9573be975d856de252ee851871724da66aa2d449b2482d5690bd12bc23660
