@@ -8,6 +8,7 @@
  ## Bugfixes
  * **Auftrag / Auftragsmangement**
 	* **Tab "Leistungen"**: CSV-Exports und Anzeigen in der App enthalten eine Variable für die Währung (CHF für CH und EUR für DE) (#65386)
+* **Odoo-Integration**: Kontakte können wieder aus Odoo 19 geladen werden (das Feld "mobile" existiert dort nicht mehr und wird nur noch abgefragt, falls vorhanden)
 
 # 2.17
 ## Features und Improvements

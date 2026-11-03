@@ -6,10 +6,12 @@ module Crm
       class_attribute :attributes
       class_attribute :local_models
       class_attribute :model
+      class_attribute :optional_attributes
       class_attribute :options
       class_attribute :parameters
 
       self.attributes = [].freeze
+      self.optional_attributes = [].freeze
       self.parameters = [].freeze
       self.options = {}.freeze
 
@@ -19,17 +21,24 @@ module Crm
         attributes.each do |attr|
           instance_variable_set(:"@#{attr}", values[attr])
         end
+
+        # Only set when the Odoo version returned the field, see #attribute?
+        optional_attributes.each do |attr|
+          instance_variable_set(:"@#{attr}", values[attr]) if values.key?(attr)
+        end
       end
+
+      def attribute?(attr) = instance_variable_defined?(:"@#{attr}")
 
       class << self
         def class_setup
-          attr_reader(*attributes) if attributes.present?
+          attr_reader(*attributes, *optional_attributes) if attributes.present?
           self.options = { fields: attributes }.freeze if options.blank?
         end
 
         def resources(parameters: [], options: {})
           parameters = [*self.parameters, *parameters]
-          options = { **self.options, **options }
+          options = request_options(options)
 
           api.search_read(model, parameters:, options:)
              .map do |resource|
@@ -40,7 +49,7 @@ module Crm
         end
 
         def resource(id, options: {})
-          options = { **self.options, **options }
+          options = request_options(options)
 
           ids =
             Array
@@ -67,7 +76,7 @@ module Crm
         end
 
         def fetch_existing(options: {})
-          options = { **self.options, **options }
+          options = request_options(options)
 
           ids =
             local_models.flat_map do |local_model|
@@ -93,6 +102,18 @@ module Crm
         private
 
         def api = Crm.instance.api
+
+        # Optional fields are only requested when this Odoo version has them
+        # (e.g. res.partner#mobile was removed in Odoo 19).
+        # ponytail: memoized for the process lifetime, restart after an Odoo upgrade.
+        def request_options(options)
+          options = { **self.options, **options }
+          return options if optional_attributes.blank?
+
+          @available_optional_attributes ||=
+            optional_attributes & api.fields_get(model, options: { attributes: %w[type] }).keys.map(&:to_sym)
+          options.merge(fields: [*options[:fields], *@available_optional_attributes])
+        end
 
         def safe_to_i(val)
           val.to_i

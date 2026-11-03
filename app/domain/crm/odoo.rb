@@ -215,15 +215,17 @@ module Crm
 
     def contact_attributes(person)
       names = person.name&.split
-      {
+      attrs = {
         lastname: names[1..].join(' '),
         firstname: names.first,
         function: person.function,
         email: person.email_normalized,
         phone: person.phone,
-        mobile: person.mobile,
         crm_key: person.id
-      }.then { false_to_nil(_1) }
+      }
+      # Leave local mobile numbers untouched when Odoo doesn't provide the field
+      attrs[:mobile] = person.mobile if person.attribute?(:mobile)
+      false_to_nil(attrs)
     end
 
     def sync_crm_entities(entities)

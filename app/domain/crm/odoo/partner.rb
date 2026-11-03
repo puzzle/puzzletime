@@ -3,7 +3,8 @@
 module Crm
   class Odoo
     class Partner < Base
-      self.attributes = %i[id parent_id name function email_normalized phone mobile active]
+      self.attributes = %i[id parent_id name function email_normalized phone active]
+      self.optional_attributes = %i[mobile] # removed in Odoo 19
       self.model = 'res.partner'
       self.local_models = %w[Contact Employee]
       self.parameters = [['is_company', '=', false]].freeze
