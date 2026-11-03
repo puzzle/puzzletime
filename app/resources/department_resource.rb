@@ -5,7 +5,10 @@
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/puzzle/puzzletime.
 
+# Departments; visible to those who may read them by `Ability`.
 class DepartmentResource < ApplicationResource
+  include AbilityScoped
+
   model Department
 
   attribute :name, :string

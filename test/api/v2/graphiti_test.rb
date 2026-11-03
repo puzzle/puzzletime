@@ -10,7 +10,7 @@ require 'test_helper'
 module Api
   module V2
     class GraphitiTest < ActionDispatch::IntegrationTest
-      JSONAPI = { 'CONTENT_TYPE' => 'application/vnd.api+json', 'ACCEPT' => 'application/vnd.api+json' }.freeze
+      include GraphitiApiHelper
 
       setup do
         ActionMailer::Base.deliveries.clear
@@ -238,33 +238,6 @@ module Api
           delete "/api/v2/ordertimes/#{worktimes(:wt_pz_allgemein).id}", headers: JSONAPI
         end
         assert_equal [@pascal.email], ActionMailer::Base.deliveries.last.to
-      end
-
-      private
-
-      def payload(type, attributes, id = nil)
-        { data: { type:, id: id&.to_s, attributes: }.compact }.to_json
-      end
-
-      def ids(path, params = {})
-        get path, params:, headers: JSONAPI
-        json_body['data'].pluck('id').map(&:to_i)
-      end
-
-      # response.parsed_body isn't used: register_encoder is global and would break other :jsonapi tests.
-      def json_body
-        JSON.parse(response.body)
-      end
-
-      def status_of(path)
-        get path, headers: JSONAPI
-        response.status
-      end
-
-      def basic_auth
-        { 'Authorization' => ActionController::HttpAuthentication::Basic.encode_credentials(
-          Settings.api_client.user, Settings.api_client.password
-        ) }
       end
     end
   end

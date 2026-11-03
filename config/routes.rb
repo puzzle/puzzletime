@@ -25,9 +25,14 @@ Rails.application.routes.draw do
         resources :employees, only: %i[index show]
       end
       namespace :v2 do
-        resources :departments
-        resources :employees, only: %i[index show]
-        resources :ordertimes
+        # one file per resource group, see config/routes/api_v2_*.rb
+        draw :api_v2_master_data
+        draw :api_v2_time_entries
+        draw :api_v2_expenses
+        draw :api_v2_orders
+        draw :api_v2_accounting
+        # Graphiti explorer (development only): `rake vandal:install`, then /api/v2/vandal
+        mount VandalUi::Engine, at: '/vandal' if Rails.env.development?
       end
     end
 

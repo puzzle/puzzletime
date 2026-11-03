@@ -22,4 +22,18 @@ class ApplicationResource < Graphiti::Resource
   before_destroy do |model|
     context.current_ability.authorize!(:destroy, model)
   end
+
+  delegate :current_user, to: :context
+
+  def management?
+    current_user.try(:management?)
+  end
+
+  # The rows of `scope` the current user may see when they belong to an employee: management all of them, an
+  # employee their own, everyone else (the api client) none.
+  def own_or_all(scope)
+    return scope.none unless current_user.is_a?(Employee)
+
+    management? ? scope : scope.where(employee_id: current_user.id)
+  end
 end

@@ -18,4 +18,8 @@ class EmployeeResource < ApplicationResource
   attribute :workplace_id, :integer
 
   belongs_to :department
+  belongs_to :workplace
+  has_many :expenses
+  has_many :overtime_vacations
+  has_many :employments
 end
