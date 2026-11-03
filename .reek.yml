@@ -136,6 +136,7 @@ detectors:
     exclude:
       # reviewed 2026-10-02: keyword flags, selector arguments, case-dispatch tables, template-method hook
       - Period#business_year_label
+      - Expenses::ReceiptAttacher#attach
       - Plannings::OrderBoard#total_planned_hours
       - WorktimesCsv#header
       - WorktimesCsv#row
@@ -182,6 +183,9 @@ detectors:
     exclude:
       # reviewed 2026-10-02: API signature, filter/sort/evaluation protocols
       - Crm::Odoo::Api
+      # reviewed 2026-11-03: receipt file/filename pair of the extracted upload processing; body/path helpers of the test
+      - Expenses::ReceiptAttacher
+      - Api::V2::GraphitiOrdersTest
       - Filterable
       - Billing::Report
       - Evaluations::AbsencesEval
@@ -217,6 +221,7 @@ detectors:
       - Evaluations::EmployeesEval#sort_divisions
       - Expenses::PdfExport#add_image_receipt
       - ExpensesController#attach_image
+      - Expenses::ReceiptAttacher#attach_image
       - Filterable#filter_entries_allow_custom_mappings_by
       - Order::Services::TimeRapportPdfGenerator#build_footer
       - Order::Services::TimeRapportPdfGenerator#build_list
@@ -322,8 +327,17 @@ detectors:
       - OrderUncertaintiesController#models_label
       - OrdersController#append_crm_contacts
       - OrdersController#load_client_options
-      - OrdertimeResource#base_scope
-      - OrdertimeResource#check_worktimes_committed
+      # reviewed 2026-11-03: Graphiti resources whose `save` override or checks validate the model they are handed
+      - ClientResource#save
+      - EmploymentResource#check_percent
+      - EmploymentResource#check_role_uniqueness
+      - OrderResource#check_work_item
+      - WorkItemResource#authorize_owner
+      - WorkItemResource#save
+      - WorktimeResource#check_worktimes_committed
+      - WritableUncertaintyResource#save
+      - Api::V2::WorktimeCompletionsController#completion_date
+      - Api::V2::GraphitiOrdersTest#order_doc
       - Plannings::BaseController#build_board_for
       - Plannings::BaseController#params_with_restricted_items
       - Apidocs::Setup#collect_serializers
@@ -632,6 +646,8 @@ detectors:
     exclude:
       # reviewed 2026-10-02: API command, helpers whose last parameter has a default
       - Crm::Odoo::Api#model_cmd
+      # reviewed 2026-11-03: test helper that builds one document from its parts
+      - Api::V2::GraphitiOrdersTest#order_doc
       - EvaluatorHelper#times_or_plannings?
       - FilterHelper#direct_filter_date
       # extracting a Billing::Report::Loader (load_*, *_to_hash, build_entry) would fix this one
@@ -764,6 +780,8 @@ detectors:
     exclude:
       # deferred 2026-10-02: column-list refactor in the PDF generator pass
       - Order::Services::TimeRapportPdfGenerator
+      # reviewed 2026-11-03: sidepost helper of the orders test
+      - Api::V2::GraphitiOrdersTest
       # reviewed 2026-10-02: one switch between two error-tracker backends
       - ErrorTracker
       - EvaluatorController
@@ -854,6 +872,8 @@ detectors:
     # offender (see upgrade.html "Follow-up").
     max_statements: 10
     exclude:
+      # reviewed 2026-11-03: builds one nested json:api document (test helper)
+      - Api::V2::GraphitiOrdersTest#order_doc
       # reviewed 2026-10-02: long, split when touched (OrderServicesController#report at 44 is worth a look)
       - BillingReportsController#index
       - Crm::Odoo#log_taken_error
@@ -1152,6 +1172,8 @@ detectors:
     # Private methods are a class's own steps; only flag public ones that could live elsewhere.
     public_methods_only: true
     exclude:
+      # reviewed 2026-11-03: resource scope that only needs the passed model
+      - EmploymentRolesEmploymentResource#base_scope
       # job entry point called by the scheduler
       - NotBilledTimesReminderJob#perform
       - DryCrud::GenericModel#ivar_name
