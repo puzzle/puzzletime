@@ -215,15 +215,19 @@ module Crm
 
     def contact_attributes(person)
       names = person.name&.split
-      {
+      attrs = {
         lastname: names[1..].join(' '),
         firstname: names.first,
         function: person.function,
         email: person.email_normalized,
         phone: person.phone,
-        mobile: person.mobile,
         crm_key: person.id
-      }.then { false_to_nil(_1) }
+      }
+      # mobile (Odoo < 19) was renamed to phone2 (Odoo 19).
+      # Leave local mobile numbers untouched when Odoo provides neither field.
+      has_mobile = person.attribute?(:mobile) || person.attribute?(:phone2)
+      attrs[:mobile] = person.mobile.presence || person.phone2.presence if has_mobile
+      false_to_nil(attrs)
     end
 
     def sync_crm_entities(entities)
