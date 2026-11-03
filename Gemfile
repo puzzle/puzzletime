@@ -110,6 +110,7 @@ group :development do
   gem 'bullet'
   gem 'ruby-lsp'
   gem 'spring'
+  gem 'vandal_ui' # Graphiti explorer, see .graphiticfg.yml and `rake vandal:install`
   gem 'web-console'
 end
 

@@ -854,6 +854,7 @@ GEM
     validates_timeliness (8.0.0)
       activemodel (>= 8.0.0, < 9)
       timeliness (>= 0.3.10, < 1)
+    vandal_ui (0.4.5)
     version_gem (1.1.15)
     warden (1.2.9)
       rack (>= 2.0.9)
@@ -996,6 +997,7 @@ DEPENDENCIES
   turbolinks
   validates_by_schema
   validates_timeliness
+  vandal_ui
   web-console
   webmock
   xmlrpc
@@ -1335,6 +1337,7 @@ CHECKSUMS
   useragent (0.16.11) sha256=700e6413ad4bb954bb63547fa098dddf7b0ebe75b40cc6f93b8d54255b173844
   validates_by_schema (0.5.2) sha256=0556e6d6773e3dd0d14e47647ae9114e2bce5d739fef0f8aa089afccba34c1b7
   validates_timeliness (8.0.0) sha256=4c621b5d938170d96c1668600547112ee2f433315677c0a16b8b89b2877c7696
+  vandal_ui (0.4.5) sha256=397844446384faa87d472369c6456e7a7597834719e6d1fc4ff87c80718483f3
   version_gem (1.1.15) sha256=a73241587b29252e3567e0c818ded80730eb754d43b508f6ce4db22ca9ba27d0
   warden (1.2.9) sha256=46684f885d35a69dbb883deabf85a222c8e427a957804719e143005df7a1efd0
   web-console (4.3.0) sha256=e13b71301cdfc2093f155b5aa3a622db80b4672d1f2f713119cc7ec7ac6a6da4
