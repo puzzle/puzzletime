@@ -52,7 +52,8 @@ module Forms
       @worktime ? @worktime.errors : {}
     end
 
-    def save
+    # The absences to book, unsaved.
+    def build
       absences = []
       period.step do |date|
         employment = @employee.employment_at(date)
@@ -61,6 +62,11 @@ module Forms
           absences << worktime_template(date, must) if must.positive?
         end
       end
+      absences
+    end
+
+    def save
+      absences = build
       absences.each(&:save)
       absences
     end

@@ -25,6 +25,16 @@ module Completable
     helper_method :completable_attr
   end
 
+  # Months the user may mark as completed (nil = clear); shared with the API.
+  def self.completion_dates(user)
+    today = Time.zone.today
+    if user.management?
+      Array.new(12) { |months_ago| (today - months_ago.months).end_of_month } + [nil]
+    else
+      [today - 1.month, today].collect(&:end_of_month)
+    end
+  end
+
   private
 
   def validate_date
@@ -55,12 +65,7 @@ module Completable
   end
 
   def completion_dates
-    today = Time.zone.today
-    if current_user.management?
-      Array.new(12) { |i| (today - i.months).end_of_month } + [nil]
-    else
-      [today - 1.month, today].collect(&:end_of_month)
-    end
+    Completable.completion_dates(current_user)
   end
 
   def js_entry

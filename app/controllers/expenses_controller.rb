@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class ExpensesController < ManageController
-  require 'ruby-vips'
   include Filterable
 
   self.optional_nesting = [Employee]
@@ -122,36 +121,8 @@ class ExpensesController < ManageController
   def attach_resized_receipt
     return unless receipt_param
 
-    case receipt_param.content_type
-    when 'application/pdf' then attach_pdf
-    when /image/ then attach_image
-    end
-  end
-
-  def attach_image
-    resized = ::ImageProcessing::Vips
-              .source(receipt_param.tempfile)
-              .resize_to_limit(Settings.expenses.receipt.max_pixel, Settings.expenses.receipt.max_pixel)
-              .saver(quality: Settings.expenses.receipt.quality)
-              .convert('jpg')
-              .loader(page: 0)
-              .call
-
-    target_filename = "#{File.basename(receipt_param.original_filename.to_s, '.*')}.jpg"
-
-    entry.receipt.attach(io: File.open(resized), filename: target_filename, content_type: 'image/jpeg')
-  end
-
-  def attach_pdf
-    tmp_file = receipt_param.tempfile
-    filename = "#{File.basename(receipt_param.original_filename.to_s, '.*')}.pdf"
-    page_count = pdf_pages_amount(tmp_file.path)
-
-    entry.receipt.attach(io: File.open(tmp_file), filename:, content_type: 'application/pdf', metadata: { page_count: })
-  end
-
-  def pdf_pages_amount(filepath_pdf)
-    first_page = ::Vips::Image.new_from_file(filepath_pdf, page: 0, n: 1)
-    first_page.get('n-pages')
+    Expenses::ReceiptAttacher.new(entry).attach(receipt_param.tempfile,
+                                                filename: receipt_param.original_filename,
+                                                content_type: receipt_param.content_type)
   end
 end
