@@ -28,8 +28,11 @@ module Forms
               if: :work_date
 
     # The dates within the repetitions on which the employee is employed.
+    # Full holidays after the chosen start date are left out, the period is not extended.
     def dates
-      (work_date..end_date).select { |date| employee.employment_at(date) }
+      (work_date..end_date).select do |date|
+        employee.employment_at(date) && (date == work_date || !Holiday.musttime(date).zero?)
+      end
     end
 
     def max_allowed_repetitions
