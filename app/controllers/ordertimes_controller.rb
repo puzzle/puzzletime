@@ -14,18 +14,20 @@ class OrdertimesController < WorktimesController
   def create
     repetitions = params[:ordertime][:repetitions].to_i.nonzero? || 1
     if repetitions > 1
-      @multi_form = Forms::MultiOrdertime.new(params.require(:ordertime).permit(permitted_attrs + [:repetitions]))
-      @multi_form.employee = Employee.find_by(id: employee_id)
+      multi_form = Forms::MultiOrdertime.new(work_date: params[:ordertime][:work_date], repetitions:)
+      multi_form.employee = Employee.find_by(id: employee_id)
+      dates = multi_form.dates
 
-      @multi_form.prepare_each.with_index do |ot_params, idx|
-        @_params = ot_params
+      dates.each_with_index do |date, idx|
+        # Only the date differs per repetition, all other params (incl. employee_id, back_url) are kept
+        params[:ordertime][:work_date] = date
         # Otherwise only one entity will be created and afterward updated with each cycle
         model_ivar_set(Ordertime.new)
 
-        is_last = idx == repetitions - 1
+        is_last = idx == dates.size - 1
         super do |format|
           if is_last
-            flash[:notice] = "#{repetitions} Arbeitszeiten wurden erfasst"
+            flash[:notice] = "#{dates.size} Arbeitszeiten wurden erfasst"
           else
             format.html
           end
