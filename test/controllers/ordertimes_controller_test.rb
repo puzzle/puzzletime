@@ -261,6 +261,63 @@ class OrdertimesControllerTest < ActionController::TestCase
     assert_equal expected_dates, created_dates
   end
 
+  def test_create_repeated_ordertimes_with_meal_compensation
+    reps = 2
+    login_as :long_time_john
+
+    assert_difference 'Ordertime.count', reps do
+      post :create, params: {
+        ordertime: {
+          account_id: work_items(:allgemein),
+          work_date: Date.parse('2026-01-05'),
+          hours: '5:30',
+          repetitions: reps,
+          meal_compensation: '1'
+        }
+      }
+    end
+
+    assert Ordertime.last(reps).all?(&:meal_compensation)
+  end
+
+  def test_create_repeated_ordertimes_beyond_week_end_is_rejected
+    login_as :long_time_john
+
+    assert_no_difference 'Ordertime.count' do
+      post :create, params: {
+        ordertime: {
+          account_id: work_items(:allgemein),
+          work_date: Date.parse('2026-01-07'), # Wednesday, max. 3 repetitions
+          hours: '5:30',
+          repetitions: 4
+        }
+      }
+    end
+
+    assert_response :unprocessable_content
+    assert_includes assigns(:worktime).errors.full_messages,
+                    'Wiederholungen an Folgetagen muss kleiner oder gleich 3 sein'
+  end
+
+  def test_create_repeated_ordertimes_for_other_employee
+    reps = 2
+    login_as :mark
+
+    assert_difference 'Ordertime.count', reps do
+      post :create, params: {
+        ordertime: {
+          account_id: work_items(:allgemein),
+          work_date: Date.parse('2026-01-05'),
+          hours: '5:30',
+          repetitions: reps,
+          employee_id: employees(:long_time_john).id
+        }
+      }
+    end
+
+    assert_equal [employees(:long_time_john)] * reps, Ordertime.last(reps).map(&:employee)
+  end
+
   def test_create_other
     work_items(:allgemein).update(closed: false)
     post :create, params: {

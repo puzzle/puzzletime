@@ -6,20 +6,14 @@
 #  https://github.com/puzzle/puzzletime.
 
 module Forms
+  # Form object that books the same ordertime on consecutive days, up to the end of the week.
+  # Only knows the dates; all other ordertime attributes stay in the request params.
   class MultiOrdertime
     include ActiveModel::Model
     include ActiveModel::Attributes
 
-    attribute :account_id, :integer
-    attribute :ticket, :string
-    attribute :description, :string
-    attribute :internal_description, :string
     attribute :work_date, :date
     attribute :repetitions, :integer, default: 1
-    attribute :hours, :decimal
-    attribute :billable, :boolean
-    attribute :from_start_time, :string
-    attribute :to_end_time, :string
 
     attr_accessor :employee
 
@@ -33,14 +27,11 @@ module Forms
               },
               if: :work_date
 
-    def prepare_each
-      return enum_for(:prepare_each) unless block_given?
-
-      period.step do |date|
-        employment = employee.employment_at(date)
-        next unless employment
-
-        yield build_params(date)
+    # The dates within the repetitions on which the employee is employed.
+    # Full holidays after the chosen start date are left out, the period is not extended.
+    def dates
+      (work_date..end_date).select do |date|
+        employee.employment_at(date) && (date == work_date || !Holiday.musttime(date).zero?)
       end
     end
 
@@ -59,17 +50,6 @@ module Forms
 
     def end_date
       work_date + repetitions - 1
-    end
-
-    def period
-      Period.new(work_date, end_date)
-    end
-
-    def build_params(date)
-      p = attributes.except('repetitions')
-      p['work_date'] = date
-
-      ActionController::Parameters.new(ordertime: p)
     end
   end
 end

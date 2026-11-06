@@ -41,5 +41,33 @@ module Forms
 
       assert_predicate form, :valid?
     end
+
+    test 'dates leave out holidays without extending the period' do
+      Holiday.create!(holiday_date: Date.parse('2026-01-07'), musthours_day: 0)
+      Holiday.clear_cache
+
+      assert_equal %w[2026-01-05 2026-01-06 2026-01-08].map { |day| Date.parse(day) },
+                   multi_form(work_date: '2026-01-05', repetitions: 4).dates
+    end
+
+    test 'dates keep half holidays' do
+      Holiday.create!(holiday_date: Date.parse('2026-01-06'), musthours_day: 4)
+      Holiday.clear_cache
+
+      assert_includes multi_form(work_date: '2026-01-05', repetitions: 2).dates, Date.parse('2026-01-06')
+    end
+
+    test 'dates keep the chosen start date even on a holiday' do
+      Holiday.create!(holiday_date: Date.parse('2026-01-05'), musthours_day: 0)
+      Holiday.clear_cache
+
+      assert_includes multi_form(work_date: '2026-01-05', repetitions: 2).dates, Date.parse('2026-01-05')
+    end
+
+    private
+
+    def multi_form(**attrs)
+      Forms::MultiOrdertime.new(**attrs, employee: employees(:long_time_john))
+    end
   end
 end

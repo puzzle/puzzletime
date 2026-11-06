@@ -14,18 +14,22 @@ class OrdertimesController < WorktimesController
   def create
     repetitions = params[:ordertime][:repetitions].to_i.nonzero? || 1
     if repetitions > 1
-      @multi_form = Forms::MultiOrdertime.new(params.require(:ordertime).permit(permitted_attrs + [:repetitions]))
-      @multi_form.employee = Employee.find_by(id: employee_id)
+      multi_form = Forms::MultiOrdertime.new(work_date: params[:ordertime][:work_date], repetitions:)
+      multi_form.employee = Employee.find_by(id: employee_id)
+      return render_invalid_repetitions(multi_form) unless multi_form.valid?
 
-      @multi_form.prepare_each.with_index do |ot_params, idx|
-        @_params = ot_params
+      dates = multi_form.dates
+
+      dates.each_with_index do |date, idx|
+        # Only the date differs per repetition, all other params (incl. employee_id, back_url) are kept
+        params[:ordertime][:work_date] = date
         # Otherwise only one entity will be created and afterward updated with each cycle
         model_ivar_set(Ordertime.new)
 
-        is_last = idx == repetitions - 1
+        is_last = idx == dates.size - 1
         super do |format|
           if is_last
-            flash[:notice] = "#{repetitions} Arbeitszeiten wurden erfasst"
+            flash[:notice] = "#{dates.size} Arbeitszeiten wurden erfasst"
           else
             format.html
           end
@@ -86,6 +90,15 @@ class OrdertimesController < WorktimesController
   end
 
   private
+
+  # Re-renders the form with the entered values and the repetition errors, without saving anything.
+  def render_invalid_repetitions(multi_form)
+    assign_attributes
+    multi_form.errors.each do |error|
+      entry.errors.add(:base, "Wiederholungen an Folgetagen #{error.message}")
+    end
+    render :new, status: :unprocessable_content
+  end
 
   def split_complete?
     splitable.complete? || (params[:commit] == FINISH && splitable.incomplete_finish)
