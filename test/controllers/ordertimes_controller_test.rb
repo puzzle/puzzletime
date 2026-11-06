@@ -280,6 +280,25 @@ class OrdertimesControllerTest < ActionController::TestCase
     assert Ordertime.last(reps).all?(&:meal_compensation)
   end
 
+  def test_create_repeated_ordertimes_beyond_week_end_is_rejected
+    login_as :long_time_john
+
+    assert_no_difference 'Ordertime.count' do
+      post :create, params: {
+        ordertime: {
+          account_id: work_items(:allgemein),
+          work_date: Date.parse('2026-01-07'), # Wednesday, max. 3 repetitions
+          hours: '5:30',
+          repetitions: 4
+        }
+      }
+    end
+
+    assert_response :unprocessable_content
+    assert_includes assigns(:worktime).errors.full_messages,
+                    'Wiederholungen an Folgetagen muss kleiner oder gleich 3 sein'
+  end
+
   def test_create_repeated_ordertimes_for_other_employee
     reps = 2
     login_as :mark

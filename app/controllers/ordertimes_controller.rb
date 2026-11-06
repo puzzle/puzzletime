@@ -16,6 +16,8 @@ class OrdertimesController < WorktimesController
     if repetitions > 1
       multi_form = Forms::MultiOrdertime.new(work_date: params[:ordertime][:work_date], repetitions:)
       multi_form.employee = Employee.find_by(id: employee_id)
+      return render_invalid_repetitions(multi_form) unless multi_form.valid?
+
       dates = multi_form.dates
 
       dates.each_with_index do |date, idx|
@@ -88,6 +90,15 @@ class OrdertimesController < WorktimesController
   end
 
   private
+
+  # Re-renders the form with the entered values and the repetition errors, without saving anything.
+  def render_invalid_repetitions(multi_form)
+    assign_attributes
+    multi_form.errors.each do |error|
+      entry.errors.add(:base, "Wiederholungen an Folgetagen #{error.message}")
+    end
+    render :new, status: :unprocessable_content
+  end
 
   def split_complete?
     splitable.complete? || (params[:commit] == FINISH && splitable.incomplete_finish)
