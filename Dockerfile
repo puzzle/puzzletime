@@ -68,7 +68,7 @@ ARG SKIP_MEMCACHE_CHECK=true
 #          Build Stage          #
 #################################
 
-FROM ruby:${RUBY_VERSION} AS build
+FROM ruby:${RUBY_VERSION}-bookworm AS build
 
 # arguments for steps
 ARG PRE_INSTALL_SCRIPT
@@ -142,7 +142,7 @@ RUN rm -rf vendor/cache/ .git spec/ node_modules/
 #################################
 
 # This image will be replaced by Openshift
-FROM ruby:${RUBY_VERSION}-slim AS app
+FROM ruby:${RUBY_VERSION}-slim-bookworm AS app
 
 # Set runtime shell
 SHELL ["/bin/bash", "-c"]
