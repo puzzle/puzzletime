@@ -52,6 +52,7 @@ File.write(HTML_PATH, <<~HTML)
   <style>
     @import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500');
     :root {
+      color-scheme: light dark;
       --bg: #ffffff;
       --surface: #ffffff;
       --text: #4a4a4a;
@@ -84,12 +85,14 @@ File.write(HTML_PATH, <<~HTML)
       }
     }
     :root[data-theme="dark"] {
+      color-scheme: dark;
       --bg: #1b1f24; --surface: #22262c; --text: #e4e4e2; --muted: #9a9a9a;
       --border: #383d44; --header-bg: #282d34; --hover-row: #24344a;
       --accent: #3fa8e0; --accent-dark: #238bca; --accent-contrast: #0d1310;
       --billable: #7cc766; --nonbillable: #f4bd6e; --shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
     }
     :root[data-theme="light"] {
+      color-scheme: light;
       --bg: #ffffff; --surface: #ffffff; --text: #4a4a4a; --muted: #999999;
       --border: #d8d8d8; --header-bg: #f5f5f5; --hover-row: #e9f0f8;
       --accent: #238bca; --accent-dark: #1e5a96; --accent-contrast: #ffffff;
@@ -174,7 +177,20 @@ File.write(HTML_PATH, <<~HTML)
     .dot { display: inline-block; width: 0.55em; height: 0.55em; border-radius: 50%; margin-right: 0.4em; }
     .dot.billable { background: var(--billable); }
     .dot.nonbillable { background: var(--nonbillable); }
+    .header-controls { display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; justify-content: flex-end; }
+    .theme-field { display: flex; align-items: center; gap: 0.6rem; border: 0; margin: 0; padding: 0; font-size: 0.85rem; color: var(--muted); }
+    .theme-field legend { float: left; padding: 0; margin-right: 0.6rem; }
+    .segmented { display: inline-flex; border: 1px solid var(--border); border-radius: 3px; overflow: hidden; }
+    .segmented label { position: relative; padding: 0.2rem 0.65rem; cursor: pointer; color: var(--text); }
+    .segmented label + label { border-left: 1px solid var(--border); }
+    .segmented input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+    .segmented label:has(input:checked) { background: var(--accent); color: var(--accent-contrast); font-weight: 400; }
+    .segmented label:has(input:focus-visible) { outline: 2px solid var(--accent); outline-offset: 1px; }
   </style>
+  <script>
+    // Apply the saved theme before first paint to avoid a flash of the wrong colours.
+    try { const t = localStorage.getItem('ptime-report-theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+  </script>
   </head>
   <body class="fixed-width">
   <header>
@@ -184,13 +200,23 @@ File.write(HTML_PATH, <<~HTML)
         <h1>Dienstleistungs-Auswertung</h1>
         <div class="period">#{FROM} bis #{TO} · Basis: geleistete Stunden pro Monat</div>
       </div>
-      <label class="switch-field">
-        <span>Breite fixieren</span>
-        <span class="switch">
-          <input type="checkbox" id="fixed-width" checked>
-          <span class="switch-track"></span>
-        </span>
-      </label>
+      <div class="header-controls">
+        <fieldset class="theme-field">
+          <legend>Darstellung</legend>
+          <span class="segmented">
+            <label><input type="radio" name="theme" value="light">Hell</label>
+            <label><input type="radio" name="theme" value="dark">Dunkel</label>
+            <label><input type="radio" name="theme" value="" checked>System</label>
+          </span>
+        </fieldset>
+        <label class="switch-field">
+          <span>Breite fixieren</span>
+          <span class="switch">
+            <input type="checkbox" id="fixed-width" checked>
+            <span class="switch-track"></span>
+          </span>
+        </label>
+      </div>
     </div>
   </header>
 
@@ -315,6 +341,18 @@ File.write(HTML_PATH, <<~HTML)
   document.getElementById('billable').addEventListener('change', render);
   document.getElementById('fixed-width').addEventListener('change', e =>
     document.body.classList.toggle('fixed-width', e.target.checked));
+  const themeInputs = document.querySelectorAll('input[name="theme"]');
+  themeInputs.forEach(input => {
+    input.checked = input.value === (document.documentElement.dataset.theme ?? '');
+    input.addEventListener('change', () => {
+      if (input.value) document.documentElement.dataset.theme = input.value;
+      else delete document.documentElement.dataset.theme;
+      try {
+        if (input.value) localStorage.setItem('ptime-report-theme', input.value);
+        else localStorage.removeItem('ptime-report-theme');
+      } catch (e) {}
+    });
+  });
   document.getElementById('download-source').addEventListener('click', () =>
     downloadCsv(data.map(r => [r.month, r.service, r.billable, r.hours]), ['month', 'service', 'billable', 'hours'], 'department_export_source.csv'));
   document.getElementById('download-totals').addEventListener('click', () =>
