@@ -8,7 +8,7 @@ ARG BUNDLER_VERSION="2.6.7"
 
 # Packages
 # ARG BUILD_PACKAGES="nodejs build-essential libc6"
-ARG BUILD_PACKAGES
+ARG BUILD_PACKAGES="libvips42"
 ARG RUN_PACKAGES="bash libpq5 libvips42 libvips-dev neovim postgresql-client"
 
 # Scripts
@@ -72,7 +72,7 @@ FROM ruby:${RUBY_VERSION}-bookworm AS build
 
 # arguments for steps
 ARG PRE_INSTALL_SCRIPT
-ARG BUILD_PACKAGES
+ARG BUILD_PACKAGES="libvips42"
 ARG INSTALL_SCRIPT
 ARG BUNDLER_VERSION
 ARG PRE_BUILD_SCRIPT
