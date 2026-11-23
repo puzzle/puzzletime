@@ -128,6 +128,17 @@ class Employment < ApplicationRecord
     date ? I18n.l(date) : 'offen'
   end
 
+  # Defines if confirmation before save is needed when vacation days are left empty
+  # Applies when latest employment is not older than one year and had vacation days set
+  def needs_vacation_days_confirmation?
+    latest = Employment.where(employee_id: employee_id)
+                       .order(start_date: :desc).first
+    return false unless latest
+    return false if latest.end_date && latest.end_date < 1.year.ago.to_date
+
+    latest.vacation_days_per_year.present? && vacation_days_per_year.blank?
+  end
+
   private
 
   def vacations_per_period(period, days_per_year)
