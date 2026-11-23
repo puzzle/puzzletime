@@ -76,6 +76,7 @@ File.write(HTML_PATH, <<~HTML)
   <style>
     @import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500');
     :root {
+      color-scheme: light dark;
       --bg: #ffffff; --surface: #ffffff; --text: #4a4a4a; --muted: #6b6b6b;
       --border: #d8d8d8; --header-bg: #f5f5f5; --hover-row: #e9f0f8;
       --accent: #1a73a8; --accent-dark: #1e5a96; --accent-contrast: #ffffff; --wordmark: #1e5a96;
@@ -94,6 +95,7 @@ File.write(HTML_PATH, <<~HTML)
       }
     }
     :root[data-theme="dark"] {
+      color-scheme: dark;
       --bg: #1b1f24; --surface: #22262c; --text: #e4e4e2; --muted: #9a9a9a;
       --border: #383d44; --header-bg: #282d34; --hover-row: #24344a;
       --accent: #3fa8e0; --accent-dark: #238bca; --accent-contrast: #0d1310; --wordmark: #3fa8e0;
@@ -102,6 +104,7 @@ File.write(HTML_PATH, <<~HTML)
       --shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
     }
     :root[data-theme="light"] {
+      color-scheme: light;
       --bg: #ffffff; --surface: #ffffff; --text: #4a4a4a; --muted: #6b6b6b;
       --border: #d8d8d8; --header-bg: #f5f5f5; --hover-row: #e9f0f8;
       --accent: #1a73a8; --accent-dark: #1e5a96; --accent-contrast: #ffffff; --wordmark: #1e5a96;
@@ -125,6 +128,15 @@ File.write(HTML_PATH, <<~HTML)
     h1 { font-size: 1.5rem; font-weight: 500; margin: 0; text-wrap: balance; letter-spacing: -0.01em; }
     .period { color: var(--muted); font-size: 0.95rem; }
     .content { display: flex; flex-direction: column; gap: 1.75rem; padding: 0 clamp(1rem, 4vw, 3.5rem); }
+    .header-controls { display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; justify-content: flex-end; }
+    .theme-field { display: flex; align-items: center; gap: 0.6rem; border: 0; margin: 0; padding: 0; font-size: 0.85rem; color: var(--muted); }
+    .theme-field legend { float: left; padding: 0; margin-right: 0.6rem; }
+    .segmented { display: inline-flex; border: 1px solid var(--border); border-radius: 3px; overflow: hidden; }
+    .segmented label { position: relative; padding: 0.2rem 0.65rem; cursor: pointer; color: var(--text); }
+    .segmented label + label { border-left: 1px solid var(--border); }
+    .segmented input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+    .segmented label:has(input:checked) { background: var(--accent); color: var(--accent-contrast); font-weight: 400; }
+    .segmented label:has(input:focus-visible) { outline: 2px solid var(--accent); outline-offset: 1px; }
     .switch-field { display: flex; align-items: center; gap: 0.6rem; font-size: 0.85rem; color: var(--muted); cursor: pointer; white-space: nowrap; }
     .switch { position: relative; display: inline-block; width: 2.4rem; height: 1.4rem; flex-shrink: 0; }
     .switch input { position: absolute; opacity: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
@@ -191,6 +203,10 @@ File.write(HTML_PATH, <<~HTML)
     .badge.low { background: var(--low-bg); }
     .gap { color: var(--high); font-weight: 400; }
   </style>
+  <script>
+    // Apply the saved theme before first paint to avoid a flash of the wrong colours.
+    try { const t = localStorage.getItem('ptime-report-theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+  </script>
   </head>
   <body class="fixed-width">
   <header>
@@ -200,13 +216,23 @@ File.write(HTML_PATH, <<~HTML)
         <h1>Chancen &amp; Risiken</h1>
         <div class="period">Auftragsübergreifende Übersicht · Stand #{STAND} · Stärke = Eintrittswahrscheinlichkeit × Auswirkung</div>
       </div>
-      <label class="switch-field">
-        <span>Breite fixieren</span>
-        <span class="switch">
-          <input type="checkbox" id="fixed-width" checked>
-          <span class="switch-track"></span>
-        </span>
-      </label>
+      <div class="header-controls">
+        <fieldset class="theme-field">
+          <legend>Darstellung</legend>
+          <span class="segmented">
+            <label><input type="radio" name="theme" value="light">Hell</label>
+            <label><input type="radio" name="theme" value="dark">Dunkel</label>
+            <label><input type="radio" name="theme" value="" checked>System</label>
+          </span>
+        </fieldset>
+        <label class="switch-field">
+          <span>Breite fixieren</span>
+          <span class="switch">
+            <input type="checkbox" id="fixed-width" checked>
+            <span class="switch-track"></span>
+          </span>
+        </label>
+      </div>
     </div>
   </header>
 
@@ -469,6 +495,19 @@ File.write(HTML_PATH, <<~HTML)
     });
   });
   $('fixed-width').addEventListener('change', e => document.body.classList.toggle('fixed-width', e.target.checked));
+
+  const themeInputs = document.querySelectorAll('input[name="theme"]');
+  themeInputs.forEach(input => {
+    input.checked = input.value === (document.documentElement.dataset.theme ?? '');
+    input.addEventListener('change', () => {
+      if (input.value) document.documentElement.dataset.theme = input.value;
+      else delete document.documentElement.dataset.theme;
+      try {
+        if (input.value) localStorage.setItem('ptime-report-theme', input.value);
+        else localStorage.removeItem('ptime-report-theme');
+      } catch (e) {}
+    });
+  });
 
   $('download-source').addEventListener('click', () => downloadCsv(
     entries.map(e => [e.order.label, e.order.client, e.order.responsible, e.order.department, e.order.status,
