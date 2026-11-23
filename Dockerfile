@@ -59,11 +59,11 @@ ARG SKIP_MEMCACHE_CHECK=true
 #          Build Stage          #
 #################################
 
-FROM ruby:${RUBY_VERSION}-bookworm AS build
+FROM ruby:${RUBY_VERSION} AS build
 
 # arguments for steps
 ARG PRE_INSTALL_SCRIPT
-ARG BUILD_PACKAGES="libvips42"
+ARG BUILD_PACKAGES
 ARG INSTALL_SCRIPT
 ARG BUNDLER_VERSION
 ARG NULLDB_VERSION
@@ -133,7 +133,7 @@ RUN bash -vxc "${BUILD_SCRIPT:-"echo 'no BUILD_SCRIPT provided'"}" \
 #################################
 
 # This image will be replaced by Openshift
-FROM ruby:${RUBY_VERSION}-slim-bookworm AS app
+FROM ruby:${RUBY_VERSION}-slim AS app
 
 # Set runtime shell
 SHELL ["/bin/bash", "-c"]
