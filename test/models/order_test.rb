@@ -172,4 +172,10 @@ class OrderTest < ActiveSupport::TestCase
     assert_equal :high, Order.new(major_chance_value: 12).major_chance
     assert_equal :high, Order.new(major_chance_value: 16).major_chance
   end
+
+  test 'crm key with label' do
+    order = Fabricate(:order, work_item: Fabricate(:work_item, parent: clients(:swisstopo).work_item, name: 'Foo'), crm_key: '123')
+
+    assert_equal '123: Foo', order.crm_key_with_label
+  end
 end
