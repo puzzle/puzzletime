@@ -1,9 +1,12 @@
+#!/usr/bin/env ruby
 # frozen_string_literal: true
 
 # One-time export: Chancen & Risiken across all orders as a self-contained HTML file.
 # Run with: bin/rails runner script/order_uncertainty_export.rb
 # Preview with fixture data instead of the DB: PREVIEW=1 bin/rails runner script/order_uncertainty_export.rb
 # ponytail: one-off report script, not a permanent feature. Delete after use.
+
+exec('/usr/bin/env', 'rails', 'runner', $PROGRAM_NAME, *ARGV) unless defined?(Rails)
 
 require 'json'
 
