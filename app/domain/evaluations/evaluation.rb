@@ -274,8 +274,8 @@ module Evaluations
 
     def query_grouped_time_sums(query, group_by_column)
       result = query.pluck(group_by_column, *hours_and_billable_hours_columns)
-      result.each_with_object({}) do |e, h|
-        h[e[0]] = { hours: e[1].to_f, billable_hours: e[2].to_f }
+      result.to_h do |e|
+        [e[0], { hours: e[1].to_f, billable_hours: e[2].to_f }]
       end
     end
 

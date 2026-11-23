@@ -90,7 +90,7 @@ module Billing
     test 'sort by client' do
       report(sort: 'client', sort_dir: 'desc')
 
-      assert_equal orders(:allgemein, :puzzletime, :webauftritt), report.entries.collect(&:order)
+      assert_equal orders(:webauftritt, :puzzletime, :allgemein), report.entries.collect(&:order)
     end
 
     test 'sort by target time' do
@@ -103,6 +103,15 @@ module Billing
       report(sort: 'not_billed_amount', sort_dir: 'desc')
 
       assert_equal orders(:webauftritt, :puzzletime, :allgemein), report.entries.collect(&:order)
+    end
+
+    test 'sort by an entry method that is no column leaves entries unsorted' do
+      unsorted = report.entries.collect(&:order)
+      %w[post_hours order invoices].each do |sort|
+        sorted = Billing::Report.new(Period.new(nil, nil), sort:).entries.collect(&:order)
+
+        assert_equal unsorted, sorted, sort
+      end
     end
 
     ### calculating

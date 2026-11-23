@@ -4,18 +4,45 @@ inherits_from: .haml-lint_todo.yml
 exclude:
   - 'vendor/**/*'
 
+# A linter's `exclude` here replaces (not merges with) the one in
+# .haml-lint_todo.yml, so InlineStyles and ViewLength keep their whole list here.
 linters:
+  ClassesBeforeIds:
+    EnforcedStyle: id
+
   InlineStyles:
     exclude:
       - 'app/views/layouts/mailer.html.haml'
       - 'app/views/employee_mailer/**/*'
+      # display: none toggled by jQuery .show(): the [hidden] attribute loses to it (upgrade.html §4.2)
+      - 'app/views/plannings/base/_panel.html.haml'
+      - 'app/views/plannings/employees/_add_row.html.haml'
+      - 'app/views/plannings/orders/_add_row.html.haml'
+      - 'app/views/workload_report/_list.html.haml'
+      # computed values: CSS custom properties
+      - 'app/views/plannings/employees/_board.html.haml'
+      - 'app/views/plannings/orders/_board.html.haml'
+      # FIXME: static styles, move into the stylesheets
+      - 'app/views/list/_search.html.haml'
+      - 'app/views/order_reports/_list.html.haml'
+      - 'app/views/order_services/_filters.html.haml'
+      - 'app/views/order_targets/_fields.html.haml'
+      - 'app/views/order_targets/_target.html.haml'
+      - 'app/views/ordertimes/running.html.haml'
+      - 'app/views/vacations/show.html.haml'
+      - 'app/views/workload_report/_summary.html.haml'
+      - 'app/views/worktimes_report/_report_header.html.haml'
 
   ViewLength:
     exclude:
       - 'app/views/layouts/mailer.html.haml'
       - 'app/views/design_guide/index.html.haml'
+      # FIXME: split into partials
+      - 'app/views/evaluator/_employee_info.html.haml'
+      - 'app/views/invoice_reports/_list.html.haml'
+      - 'app/views/order_reports/_list.html.haml'
 
-  Rubocop:
+  RuboCop:
     enabled: false
 
 ...

@@ -23,7 +23,7 @@ module OrderCostsHelper
   end
 
   def summed_expenses_row(entries)
-    content_tag(:tr, class: 'orders-cost-total_sum') do
+    content_tag(:tr, class: 'orders-cost-total-sum') do
       footer_row = content_tag(:td) +
                    content_tag(:td, 'Total', class: 'right') +
                    content_tag(:td, f(entries.to_a.sum(&:amount)), class: 'right') +
@@ -49,7 +49,7 @@ module OrderCostsHelper
   end
 
   def summed_meal_compensations_row(entries)
-    content_tag(:tr, class: 'orders-cost-total_sum right') do
+    content_tag(:tr, class: 'orders-cost-total-sum right') do
       content_tag(:td, 'Total', class: 'right') +
         content_tag(:td, f(meal_compensations_total(entries)))
     end

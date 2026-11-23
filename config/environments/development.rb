@@ -16,7 +16,9 @@ Rails.application.configure do
   # In the development environment your application's code is reloaded any time
   # it changes. This slows down response time but is perfect for development
   # since you don't have to restart the web server when you make code changes.
-  config.cache_classes = false
+  config.enable_reloading = true
+
+  config.secret_key_base = 'b6ac4fc2b3e8280398babba54e7fba04f8f0bcd9864079bf1ec1b9ae5be252166d5a802f504ecfd9c67d9a3b44f4866c4eb953b0d4ca6ab308df6eeafb011cf0'
 
   # Do not eager load code on boot.
   config.eager_load = false
@@ -81,13 +83,8 @@ Rails.application.configure do
   # Highlight code that triggered database queries in logs.
   config.active_record.verbose_query_logs = true
 
-  # Debug mode disables concatenation and preprocessing of assets.
-  # This option may cause significant delays in view rendering with a large
-  # number of complex assets.
-  config.assets.debug = true
-
-  # Suppress logger output for asset requests.
-  config.assets.quiet = true
+  # Highlight code that enqueued background job in logs.
+  config.active_job.verbose_enqueue_logs = true
 
   # Raises error for missing translations.
   # config.i18n.raise_on_missing_translations = true
@@ -101,6 +98,9 @@ Rails.application.configure do
 
   # Uncomment if you wish to allow Action Cable access from any origin.
   # config.action_cable.disable_request_forgery_protection = true
+
+  # Raise error when a before_action's only/except options reference missing actions
+  config.action_controller.raise_on_missing_callback_actions = true
 
   config.middleware.insert_before ActionDispatch::Cookies, Rack::RequestProfiler, printer: RubyProf::CallStackPrinter
 

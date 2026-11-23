@@ -103,7 +103,7 @@ class WorktimesController < CrudController
     overlaps = Worktime.where(conditions).includes(:work_item).to_a
     return if overlaps.blank?
 
-    flash[:warning] = "#{@worktime}: Es besteht eine Überlappung mit mindestens einem anderen Eintrag:\n".html_safe
+    flash[:warning] = "#{ERB::Util.h(@worktime)}: Es besteht eine Überlappung mit mindestens einem anderen Eintrag:\n".html_safe
     flash[:warning] += overlaps.collect { |o| ERB::Util.h(o) }.join("\n").html_safe
   end
 
@@ -124,7 +124,7 @@ class WorktimesController < CrudController
   def set_existing
     @work_date = @worktime.work_date
     @existing = Worktime.where('employee_id = ? AND work_date = ?', @worktime.employee_id, @work_date)
-                        .order('type DESC, from_start_time, work_item_id')
+                        .order(type: :desc, from_start_time: :asc, work_item_id: :asc)
                         .includes(:work_item, :absence)
   end
 
@@ -151,7 +151,7 @@ class WorktimesController < CrudController
     @worktimes = Worktime.where('employee_id = ? AND work_date >= ? AND work_date <= ?',
                                 @user.id, @week_days.first, @week_days.last)
                          .includes(:work_item, :absence, :employee, :invoice)
-                         .order('work_date, from_start_time, work_item_id')
+                         .order(:work_date, :from_start_time, :work_item_id)
     @daily_worktimes = @worktimes.group_by(&:work_date)
     @worktimes
   end

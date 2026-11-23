@@ -107,6 +107,9 @@ Testen eines einzelnen Tests/Files:
     # Bsp.
     rake test TEST=test/models/employment_test.rb:30
 
+Hängende oder mit `Ferrum::DeadBrowserError` fehlschlagende Integration Tests sind meist auf verwaiste
+Browser-Prozesse zurückzuführen, siehe [Tests](04_testing.md).
+
 ### Github actions
 
 Die Github actions build pipeline kann zum Debugging auch lokal ausgeführt werden.

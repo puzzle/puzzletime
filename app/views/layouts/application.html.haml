@@ -19,6 +19,7 @@
     = favicon_link_tag 'favicon.png'
 
     = stylesheet_link_tag 'https://fonts.googleapis.com/css?family=Roboto:300,400,500', :media => 'all', 'data-turbolinks-track' => 'reload'
+    = stylesheet_link_tag 'tailwind', :media => 'all', 'data-turbolinks-track' => 'reload'
     = stylesheet_link_tag 'application', :media => 'all', 'data-turbolinks-track' => 'reload'
     = javascript_include_tag "application", 'data-turbolinks-track' => 'reload'
 
@@ -26,7 +27,7 @@
     %header#main-header
       = render 'layouts/headerbar'
       - if @user
-        %nav
+        %nav{'aria-label' => 'Hauptnavigation'}
           = render 'layouts/menu'
 
           #submenu.navbar.navbar.navbar-default
@@ -42,7 +43,7 @@
     %main#content{ role: 'main' }
       - if content_for?(:content_header)
         = yield :content_header
-      - else
+      - elsif @title.present?
         %h1.h3= @title
 
       #flash

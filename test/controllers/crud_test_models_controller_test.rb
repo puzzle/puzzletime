@@ -19,7 +19,9 @@ class CrudTestModelsControllerTest < ActionController::TestCase
 
   attr_accessor :models
 
-  setup :reset_db, :setup_db, :create_test_data, :special_routing, :login
+  with_routing { |set| set.draw { resources :crud_test_models } }
+
+  setup :reset_db, :setup_db, :create_test_data, :login
 
   teardown :reset_db
 
@@ -36,8 +38,6 @@ class CrudTestModelsControllerTest < ActionController::TestCase
   end
 
   def test_index
-    skip 'These tests are currently broken'
-
     super
 
     assert_equal 6, entries.size
@@ -56,8 +56,6 @@ class CrudTestModelsControllerTest < ActionController::TestCase
   end
 
   def test_index_search
-    skip 'These tests are currently broken'
-
     super
 
     assert_equal 1, entries.size
@@ -65,8 +63,6 @@ class CrudTestModelsControllerTest < ActionController::TestCase
   end
 
   def test_index_with_custom_options
-    skip 'These tests are currently broken'
-
     get :index, params: { filter: true }
 
     assert_response :success
@@ -77,8 +73,6 @@ class CrudTestModelsControllerTest < ActionController::TestCase
   end
 
   def test_index_search_with_custom_options
-    skip 'These tests are currently broken'
-
     get :index, params: { q: 'DDD', filter: true }
 
     assert_response :success
@@ -90,8 +84,6 @@ class CrudTestModelsControllerTest < ActionController::TestCase
   end
 
   def test_sort_given_column
-    skip 'These tests are currently broken'
-
     get :index, params: { sort: 'children', sort_dir: 'asc' }
 
     assert_response :success
@@ -104,8 +96,6 @@ class CrudTestModelsControllerTest < ActionController::TestCase
   end
 
   def test_sort_virtual_column
-    skip 'These tests are currently broken'
-
     get :index, params: { sort: 'chatty', sort_dir: 'desc' }
 
     assert_response :success
@@ -127,8 +117,6 @@ class CrudTestModelsControllerTest < ActionController::TestCase
   end
 
   def test_sort_with_search
-    skip 'These tests are currently broken'
-
     get :index, params: { q: 'DDD', sort: 'chatty', sort_dir: 'asc' }
 
     assert_response :success
@@ -141,8 +129,6 @@ class CrudTestModelsControllerTest < ActionController::TestCase
   end
 
   def test_index_returning
-    skip 'These tests are currently broken'
-
     session[:list_params] = {}
     session[:list_params]['/crud_test_models'] = { q: 'DDD',
                                                    sort: 'chatty',
@@ -160,8 +146,6 @@ class CrudTestModelsControllerTest < ActionController::TestCase
   end
 
   def test_new
-    skip 'These tests are currently broken'
-
     super
 
     assert assigns(:companions)
@@ -193,8 +177,6 @@ class CrudTestModelsControllerTest < ActionController::TestCase
   end
 
   def test_edit
-    skip 'These tests are currently broken'
-
     super
 
     assert_equal @controller.send(:entry), assigns(:crud_test_model)
@@ -225,12 +207,10 @@ class CrudTestModelsControllerTest < ActionController::TestCase
   end
 
   def test_create_with_before_callback
-    skip 'These tests are currently broken'
-
     assert_no_difference('CrudTestModel.count') do
       post :create, params: { crud_test_model: { name: 'illegal', children: 2 } }
     end
-    assert_response :unprocessable_entity
+    assert_response :unprocessable_content
     assert_template 'new'
     assert_predicate entry, :new_record?
     assert_predicate assigns(:companions), :present?
@@ -258,12 +238,10 @@ class CrudTestModelsControllerTest < ActionController::TestCase
   end
 
   def test_create_with_failure
-    skip 'These tests are currently broken'
-
     assert_no_difference('CrudTestModel.count') do
       post :create, params: { crud_test_model: { children: 2 } }
     end
-    assert_response :unprocessable_entity
+    assert_response :unprocessable_content
     assert_template 'new'
     assert_predicate entry, :new_record?
     assert assigns(:companions)
@@ -279,17 +257,15 @@ class CrudTestModelsControllerTest < ActionController::TestCase
     assert_no_difference('CrudTestModel.count') do
       post :create, params: { crud_test_model: { children: 2 } }, format: 'json'
     end
-    assert_response :unprocessable_entity
+    assert_response :unprocessable_content
     assert_predicate entry, :new_record?
     assert_equal %i[before_create before_save], @controller.called_callbacks
   end
 
   def test_update_with_failure
-    skip 'These tests are currently broken'
-
     put :update, params: { id: test_entry.id, crud_test_model: { rating: 20 } }
 
-    assert_response :unprocessable_entity
+    assert_response :unprocessable_content
     assert_template 'edit'
     assert_predicate entry, :changed?
     assert_predicate flash[:notice], :blank?
@@ -307,7 +283,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
                  },
                  format: 'json'
 
-    assert_response :unprocessable_entity
+    assert_response :unprocessable_content
     assert_predicate entry, :changed?
     assert_predicate flash[:notice], :blank?
     assert_equal 20, entry.rating
@@ -341,7 +317,7 @@ class CrudTestModelsControllerTest < ActionController::TestCase
       delete :destroy, params: test_params(id: crud_test_models(:BBBBB).id,
                                            format: 'json')
     end
-    assert_response :unprocessable_entity
+    assert_response :unprocessable_content
     assert_predicate flash[:notice], :blank?
   end
 

@@ -3,6 +3,8 @@
 //  or later. See the COPYING file at the top-level directory or at
 //  https://github.com/puzzle/puzzletime.
 
+@use "sass:color";
+@use "sass:math";
 
 $cell-width: 36px;
 $cell-height: 4rem;
@@ -208,7 +210,7 @@ body.order_plannings {
   .rowtotals {
     margin-left: auto;
     display: flex;
-    width: 0.35*$legend-width;
+    width: 0.35 * $legend-width;
   }
 }
 
@@ -398,7 +400,7 @@ body.order_plannings {
   }
 
   @for $i from 1 through 9 {
-    $lightBlue: lighten($blue, (100 - $i * 10) / 4);
+    $lightBlue: color.adjust($blue, $lightness: math.div((100 - $i * 10), 4));
     $gradient: linear-gradient(0deg, $lightBlue, $lightBlue);
 
     &.-percent-#{$i * 10} {

@@ -6,17 +6,17 @@
 = render 'orders/header'
 
 - if Settings.meal_compensation.active
-  = form_tag(nil, method: :get, id: :cost_type_filter_form, class: 'form-inline', role: 'filter') do
+  = form_tag(nil, method: :get, id: :cost_type_filter_form, class: 'form-inline', role: 'search') do
     = direct_filter_select(:cost_type, 'Kostenart', [IdValue.new('expenses', 'Spesen'), IdValue.new('meal_compensation', 'Verpflegungsentschädigung')], prompt: 'Alle')
 
 - if params['cost_type'].blank? || !Settings.meal_compensation.active || params['cost_type'] == 'expenses'
   .orders-cost-tablecontainer
     %h3= t('activerecord.attributes.order_cost.expense')
-    .orders-cost-table-medium#expenses-list
+    #expenses-list.orders-cost-table-medium
       = summed_expenses_table(@associated_expenses)
 
 - if Settings.meal_compensation.active && (params['cost_type'].blank? ||  params['cost_type'] == 'meal_compensation')
   .orders-cost-tablecontainer
     %h3= t('activerecord.attributes.order_cost.meal_compensation')
-    .orders-cost-table-small#meal-compensations-list
+    #meal-compensations-list.orders-cost-table-small
       = summed_meal_compensations_table(@associated_meal_compensations, @meal_compensation_members)

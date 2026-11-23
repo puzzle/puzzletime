@@ -4,7 +4,7 @@
 -#  https://github.com/puzzle/puzzletime.
 
 
-= form_tag(nil, method: :get, class: 'form-inline', role: 'filter', remote: true, data: { spin: true }) do
+= form_tag(nil, method: :get, class: 'form-inline', role: 'search', remote: true, data: { spin: true }) do
   = direct_filter_select(:department_id, 'OE', @departments)
 
   .form-group

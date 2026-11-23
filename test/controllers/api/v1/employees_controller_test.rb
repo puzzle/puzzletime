@@ -26,7 +26,7 @@ module Api
       test 'show with unknown includes parameter' do
         get :show, params: { id: employees(:long_time_john).id, include: 'current_employment' }
 
-        assert_response :unprocessable_entity
+        assert_response :unprocessable_content
         assert_match %r{\Aapplication/vnd\.api\+json}, response.headers['Content-Type']
         assert_equal '422', response_json.dig(:errors, 0, :status)
         assert_equal 'error', response_json.dig(:errors, 0, :code)

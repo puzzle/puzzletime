@@ -31,11 +31,11 @@ module TableHelper
 
   # Renders a #plain_table for the given entries.
   # If entries is empty, an appropriate message is rendered.
-  def plain_table_or_message(entries, *attrs, &block)
+  def plain_table_or_message(entries, *attrs, &)
     entries.to_a # force evaluation of relations
     if entries.present?
       content_tag(:div, class: 'unindented') do
-        plain_table(entries, *attrs, &block)
+        plain_table(entries, *attrs, &)
       end
     else
       content_tag(:div, ti(:no_list_entries), class: 'table')

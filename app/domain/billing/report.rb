@@ -6,8 +6,14 @@
 #  https://github.com/puzzle/puzzletime.
 
 module Billing
+  # Billing report: one entry per order with billable hours not yet invoiced in the period.
   class Report
     include Filterable
+    include ReportFilters
+
+    NUMERIC_SORT_COLUMNS = %w[offered_amount offered_rate supplied_amount supplied_hours
+                              billable_amount billable_hours billed_amount
+                              not_billed_amount not_billed_hours].freeze
 
     attr_reader :period, :params
 
@@ -43,12 +49,6 @@ module Billing
 
     delegate :present?, to: :entries
 
-    def filters_defined?
-      filters = params.except(:action, :controller, :format, :utf8, :page,
-                              :clear)
-      filters.present? && filters.values.any?(&:present?)
-    end
-
     private
 
     def load_entries
@@ -57,7 +57,7 @@ module Billing
       accounting_posts = accounting_posts_to_hash(load_accounting_posts(orders))
       hours = hours_to_hash(load_accounting_post_hours(accounting_posts.values))
       invoices = invoices_to_hash(load_invoices(orders))
-      entries = orders.filter_map { |o| build_entry(o, worktimes, accounting_posts, hours, invoices) }
+      entries = orders.filter_map { |order| build_entry(order, worktimes, accounting_posts, hours, invoices) }
       entries.filter { |e| e.not_billed_hours.positive? } # Only show if there are unbilled HOURS
     end
 
@@ -168,16 +168,14 @@ module Billing
     end
 
     def sort_by_number?
-      Billing::Report::Entry.public_instance_methods(false)
-                            .collect(&:to_s)
-                            .include?(params[:sort])
+      NUMERIC_SORT_COLUMNS.include?(params[:sort])
     end
 
     def sort_by_string(entries, dir)
       sorted = entries.sort_by do |e|
         e.send(params[:sort])
       end
-      sorted.reverse! if dir.positive?
+      sorted.reverse! if dir.negative?
       sorted
     end
 

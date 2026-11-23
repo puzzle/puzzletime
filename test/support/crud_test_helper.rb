@@ -124,20 +124,6 @@ module CrudTestHelper
     end
   end
 
-  def special_routing
-    # test:unit uses instance variable, rspec the method
-    controller = @controller || @_controller || controller
-    @routes = ActionDispatch::Routing::RouteSet.new
-    _routes = @routes
-
-    controller.singleton_class.send(:include, _routes.url_helpers)
-    controller.view_context_class = Class.new(controller.view_context_class) do
-      include _routes.url_helpers
-    end
-
-    @routes.draw { resources :crud_test_models }
-  end
-
   def create(index, companion)
     c = str(index)
     m = CrudTestModel.new(

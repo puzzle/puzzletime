@@ -4,6 +4,10 @@ name: "Reusable: Build and push image"
 "on":
   workflow_call:
     inputs:
+      ref:
+        description: "Branch, tag or SHA to build; empty = the triggering commit"
+        type: string
+        default: ""
       environment:
         description: "Environment to run in"
         type: string
@@ -14,6 +18,10 @@ name: "Reusable: Build and push image"
         required: true
       push:
         description: "Build and debug things without pushing to the registry"
+        type: boolean
+        default: false
+      no_cache:
+        description: "Ignore the registry build cache; cache-to still rewrites it"
         type: boolean
         default: false
       registry:
@@ -63,24 +71,59 @@ jobs:
 
           exit "${exit_code}"
 
-      - uses: docker/setup-buildx-action@v3
-      - uses: docker/login-action@v3
+      # Resolve to a full SHA so the image tag, BUILD_COMMIT and the git build
+      # context all point at the same commit.
+      - name: Resolve source ref
+        id: src
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REF: ${{ inputs.ref }}
+        run: |
+          if [ -z "${REF}" ]; then
+            echo "sha=${GITHUB_SHA}" >> "$GITHUB_OUTPUT"
+            echo "ref_name=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
+          else
+            sha="$(gh api "repos/${GITHUB_REPOSITORY}/commits/${REF}" --jq .sha)"
+            echo "sha=${sha}" >> "$GITHUB_OUTPUT"
+            echo "ref_name=${REF}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: docker/setup-buildx-action@v4
+      - uses: docker/login-action@v4
         with:
           registry: ${{ env.BUILD_REGISTRY }}
           username: ${{ secrets.PUZZLE_REGISTRY_USERNAME }}
           password: ${{ secrets.PUZZLE_REGISTRY_TOKEN }}
-      - uses: docker/build-push-action@v4
+      - uses: docker/build-push-action@v7
+        id: build
         with:
+          context: ${{ github.server_url }}/${{ github.repository }}.git#${{ steps.src.outputs.sha }}
           file: Dockerfile
           build-args: |
-            GITHUB_REF_NAME=${{ github.ref_name }}
+            GITHUB_REF_NAME=${{ steps.src.outputs.ref_name }}
             GITHUB_REPOSITORY=${{ github.repository }}
             GITHUB_REPOSITORY_URL=${{ github.repositoryUrl }}
-            GITHUB_SHA=${{ github.sha }}
+            GITHUB_SHA=${{ steps.src.outputs.sha }}
           target: app
           tags: |
             ${{ env.BUILD_REGISTRY_URL }}:latest
-            ${{ env.BUILD_REGISTRY_URL }}:git-${{ github.sha }}
+            ${{ env.BUILD_REGISTRY_URL }}:git-${{ steps.src.outputs.sha }}
           push: ${{ inputs.push }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          no-cache: ${{ inputs.no_cache }}
+          cache-from: type=registry,ref=${{ env.BUILD_REGISTRY_URL }}:buildcache
+          cache-to: type=registry,ref=${{ env.BUILD_REGISTRY_URL }}:buildcache,mode=max
+
+      - name: 'Report image tags'
+        if: inputs.push
+        env:
+          SHA: ${{ steps.src.outputs.sha }}
+        run: |
+          echo "::notice title=Image pushed::${BUILD_REGISTRY_URL}:latest, ${BUILD_REGISTRY_URL}:git-${SHA} (digest ${{ steps.build.outputs.digest }})"
+          {
+            echo '### Image pushed'
+            echo
+            echo '| Tag | Digest |'
+            echo '| --- | --- |'
+            echo "| \`${BUILD_REGISTRY_URL}:latest\` | \`${{ steps.build.outputs.digest }}\` |"
+            echo "| \`${BUILD_REGISTRY_URL}:git-${SHA}\` | \`${{ steps.build.outputs.digest }}\` |"
+          } >> "$GITHUB_STEP_SUMMARY"

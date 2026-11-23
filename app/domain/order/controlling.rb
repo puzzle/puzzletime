@@ -43,7 +43,7 @@ class Order
     def grouped_worktimes
       load_worktimes
         .group('week, worktimes.billable')
-        .order('week')
+        .order(:week)
         .pluck(Arel.sql('DATE_TRUNC(\'week\', work_date) week, worktimes.billable, SUM(hours * offered_rate), SUM(hours)'))
     end
 
@@ -51,7 +51,7 @@ class Order
       load_plannings
         .in_period(Period.with(date, nil))
         .group('week, offered_rate, definitive')
-        .order('week')
+        .order(:week)
         .pluck(Arel.sql('DATE_TRUNC(\'week\', date) week, offered_rate, definitive, SUM(percent)'))
     end
 

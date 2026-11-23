@@ -42,20 +42,13 @@ module Expenses
       pdf.number_pages('Seite <page>/<total>', at: [pdf.bounds.right - 60, pdf.bounds.bottom + 5])
     end
 
+    # One entry per printed receipt page; a multi-page PDF receipt gets one per page.
     def pages
       expenses.flat_map do |exp|
-        if exp.receipt.content_type == 'application/pdf' && page_count(exp) > 1
-          (1..exp.receipt.metadata[:page_count]).to_a.flat_map do |page_num|
-            { header: page_num == 1, expense: exp, page: page_num }
-          end
-        else
-          { header: true, expense: exp, page: 1 }
-        end
+        receipt = exp.receipt
+        count = receipt.content_type == 'application/pdf' ? receipt.metadata[:page_count].to_i : 1
+        (1..[count, 1].max).map { |page| { header: page == 1, expense: exp, page: } }
       end
-    end
-
-    def page_count(exp)
-      exp.receipt.metadata[:page_count]
     end
 
     def generate

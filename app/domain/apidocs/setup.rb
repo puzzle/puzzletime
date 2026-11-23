@@ -35,6 +35,7 @@ module Apidocs
     def setup_metadata
       swagger_spec.instance_exec(self) do |helper|
         include Swagger::Blocks
+
         swagger_root do
           key :swagger, '2.0'
           info do

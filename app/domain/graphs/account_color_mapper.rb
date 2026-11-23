@@ -51,7 +51,7 @@ module Graphs
     end
 
     def accounts(type)
-      @map.keys.select { |key| key.is_a? type }
+      @map.keys.grep(type)
     end
   end
 end

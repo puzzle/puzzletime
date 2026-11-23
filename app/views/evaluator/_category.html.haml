@@ -16,7 +16,7 @@
     %tr
       %th
         = evaluation.class.sortable_division_header ? sort_link(:name, evaluation.division_header) : evaluation.division_header
-      -if evaluation.sub_work_items_eval
+      - if evaluation.sub_work_items_eval
         %th
       - @periods.each do |p|
         %th.periodHead{colspan: evaluation.class.planned_hours ? 3 : nil}
@@ -31,7 +31,7 @@
     - if evaluation.class.planned_hours
       %tr
         %th.subhead
-        -if evaluation.sub_work_items_eval
+        - if evaluation.sub_work_items_eval
           %th.subhead
         - @periods.each do |p|
           %th.subhead.period-subhead

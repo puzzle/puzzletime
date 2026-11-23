@@ -32,7 +32,7 @@
               .groupheader-title
                 %span{ title: post }
                   %strong #{post.work_item.path_shortnames}:
-                  =post.work_item.name
+                  = post.work_item.name
                   - if post.work_item.closed?
                     %span.subtle-hint (geschlossen)
                 %i.glyphicon.glyphicon-chevron-down
@@ -49,7 +49,7 @@
                      legend: employee,
                      items: items,
                      row_total: @board.total_row_planned_hours(employee.id, post.work_item_id),
-                     row_total_period: @board.total_row_planned_hours(employee.id, post.work_item_id, only_for_active_period=true),
+                     row_total_period: @board.total_row_planned_hours(employee.id, post.work_item_id, active_period_only: true),
                      row_total_overall: true
 
       - if can?(:manage_plannings, @board.subject)

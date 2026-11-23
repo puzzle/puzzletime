@@ -59,7 +59,7 @@ module Plannings
       is_order_board = @board.is_a? Plannings::OrderBoard
 
       @board.rows.map do |ids, items|
-        period = @board.total_row_planned_hours(*ids, true) if is_order_board
+        period = @board.total_row_planned_hours(*ids, active_period_only: true) if is_order_board
         {
           ids: ids,
           locals: {

@@ -24,7 +24,7 @@ class OrderPlanningsController < Plannings::OrdersController
   private
 
   def order
-    @order ||= Order.find(params[:order_id])
+    @order ||= Order.find(params.expect(:order_id))
   end
   alias subject order
 end

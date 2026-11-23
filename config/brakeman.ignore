@@ -1,25 +1,367 @@
 {
+  "brakeman_version": "4.4.0",
   "ignored_warnings": [
     {
-      "warning_type": "Cross-Site Scripting",
-      "warning_code": 2,
-      "fingerprint": "1ffd6d5fbbef6f0dfdb57053f33c97fdc4dd5d0ab066593675554226127cc86d",
       "check_name": "CrossSiteScripting",
-      "message": "Unescaped model attribute",
+      "code": "Order::Controlling.new(order).offered_hours.round(2)",
+      "confidence": "Weak",
+      "cwe_id": [
+        79
+      ],
       "file": "app/views/order_controlling/show.html.haml",
+      "fingerprint": "084841c9dde4846df597375822b9afe972dfde93bff144440f354ab54dfaccb5",
+      "line": 16,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "location": {
+        "template": "order_controlling/show",
+        "type": "template"
+      },
+      "message": "Unescaped model attribute",
+      "note": "value is a numeric/internal string, not user input",
+      "render_path": [
+        {
+          "class": "OrderControllingController",
+          "file": "app/controllers/order_controlling_controller.rb",
+          "line": 16,
+          "method": "show",
+          "rendered": {
+            "file": "app/views/order_controlling/show.html.haml",
+            "name": "order_controlling/show"
+          },
+          "type": "controller"
+        }
+      ],
+      "user_input": "Order::Controlling.new(order)",
+      "warning_code": 2,
+      "warning_type": "Cross-Site Scripting"
+    },
+    {
+      "check_name": "Send",
+      "code": "e.send(params[:sort])",
+      "confidence": "High",
+      "cwe_id": [
+        77
+      ],
+      "file": "app/domain/invoice/report.rb",
+      "fingerprint": "15be5a78ba8c0e58de6ad1af4ec77074508a9745af23b4f9e15a0ad307a9e42a",
+      "line": 119,
+      "link": "https://brakemanscanner.org/docs/warning_types/dangerous_send/",
+      "location": {
+        "class": "Invoice::Report",
+        "method": "sort_by_number",
+        "type": "method"
+      },
+      "message": "User controlled method execution",
+      "note": "sort column validated against an allowlist in sort_by_*? before dispatch",
+      "render_path": null,
+      "user_input": "params[:sort]",
+      "warning_code": 23,
+      "warning_type": "Dangerous Send"
+    },
+    {
+      "check_name": "SQL",
+      "code": "receiver.worktimes.where(:type => worktime_type).in_period(period).where(\"? = #{category_ref}\", category_id)",
+      "confidence": "Weak",
+      "cwe_id": [
+        89
+      ],
+      "file": "app/domain/evaluations/evaluation.rb",
+      "fingerprint": "1770ecb8fe11f167da33a6eab55c33d405a07353979a5cd7adb8687e73b5c690",
+      "line": 120,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "location": {
+        "class": "Evaluations::Evaluation",
+        "method": "worktime_query",
+        "type": "method"
+      },
+      "message": "Possible SQL injection",
+      "note": "interpolated value is an internal constant/integer, not user input",
+      "render_path": null,
+      "user_input": "category_ref",
+      "warning_code": 0,
+      "warning_type": "SQL Injection"
+    },
+    {
+      "check_name": "CrossSiteScripting",
+      "code": "Order::Controlling.new(order).offered_total.round(2)",
+      "confidence": "Weak",
+      "file": "app/views/order_controlling/show.html.haml",
+      "fingerprint": "1ffd6d5fbbef6f0dfdb57053f33c97fdc4dd5d0ab066593675554226127cc86d",
       "line": 15,
       "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
-      "code": "Order::Controlling.new(order).offered_total.round(2)",
-      "render_path": [{"type":"controller","class":"OrderControllingController","method":"show","line":16,"file":"app/controllers/order_controlling_controller.rb","rendered":{"name":"order_controlling/show","file":"/code/ptime/app/views/order_controlling/show.html.haml"}}],
       "location": {
-        "type": "template",
-        "template": "order_controlling/show"
+        "template": "order_controlling/show",
+        "type": "template"
       },
+      "message": "Unescaped model attribute",
+      "note": "",
+      "render_path": [
+        {
+          "class": "OrderControllingController",
+          "file": "app/controllers/order_controlling_controller.rb",
+          "line": 16,
+          "method": "show",
+          "rendered": {
+            "file": "/code/ptime/app/views/order_controlling/show.html.haml",
+            "name": "order_controlling/show"
+          },
+          "type": "controller"
+        }
+      ],
       "user_input": "Order::Controlling.new(order)",
+      "warning_code": 2,
+      "warning_type": "Cross-Site Scripting"
+    },
+    {
+      "check_name": "Send",
+      "code": "e.send(params[:sort])",
+      "confidence": "High",
+      "cwe_id": [
+        77
+      ],
+      "file": "app/domain/reports/workload.rb",
+      "fingerprint": "33429de372a87f0169f93d849d2a3eba1f9b5b2429e50fbe0e5ef3d150f53106",
+      "line": 147,
+      "link": "https://brakemanscanner.org/docs/warning_types/dangerous_send/",
+      "location": {
+        "class": "Reports::Workload",
+        "method": "sort_by_number",
+        "type": "method"
+      },
+      "message": "User controlled method execution",
+      "note": "sort column validated against an allowlist in sort_by_*? before dispatch",
+      "render_path": null,
+      "user_input": "params[:sort]",
+      "warning_code": 23,
+      "warning_type": "Dangerous Send"
+    },
+    {
+      "check_name": "Send",
+      "code": "e.send(params[:sort])",
+      "confidence": "High",
+      "cwe_id": [
+        77
+      ],
+      "file": "app/domain/billing/report.rb",
+      "fingerprint": "663f9aa59ddff0dba58cda3bebab54b2f6ba06e05ff9bb3307cc04431761e3d2",
+      "line": 186,
+      "link": "https://brakemanscanner.org/docs/warning_types/dangerous_send/",
+      "location": {
+        "class": "Billing::Report",
+        "method": "sort_by_number",
+        "type": "method"
+      },
+      "message": "User controlled method execution",
+      "note": "sort column validated against an allowlist in sort_by_*? before dispatch",
+      "render_path": null,
+      "user_input": "params[:sort]",
+      "warning_code": 23,
+      "warning_type": "Dangerous Send"
+    },
+    {
+      "check_name": "Send",
+      "code": "e.send(params[:sort])",
+      "confidence": "High",
+      "cwe_id": [
+        77
+      ],
+      "file": "app/domain/invoice/report.rb",
+      "fingerprint": "67caceaa459616f9e7bede586a46165be6b0dec2b1aa14ba33ed578536d4566c",
+      "line": 111,
+      "link": "https://brakemanscanner.org/docs/warning_types/dangerous_send/",
+      "location": {
+        "class": "Invoice::Report",
+        "method": "sort_by_string",
+        "type": "method"
+      },
+      "message": "User controlled method execution",
+      "note": "sort column validated against an allowlist in sort_by_*? before dispatch",
+      "render_path": null,
+      "user_input": "params[:sort]",
+      "warning_code": 23,
+      "warning_type": "Dangerous Send"
+    },
+    {
+      "check_name": "CrossSiteScripting",
+      "code": "::Haml::AttributeBuilder.build_class(true, \"alert alert-#{flash_class((Unresolved Model).new)}\")",
       "confidence": "Weak",
-      "note": ""
+      "cwe_id": [
+        79
+      ],
+      "file": "app/views/layouts/_flash.html.haml",
+      "fingerprint": "73d0718c09bf4a84d126536979b7b484f821bb2713743a2371c6ccf837403bed",
+      "line": 8,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "location": {
+        "template": "layouts/_flash",
+        "type": "template"
+      },
+      "message": "Unescaped model attribute",
+      "note": "value is a numeric/internal string, not user input",
+      "render_path": [
+        {
+          "file": "app/views/layouts/application.html.haml",
+          "line": 50,
+          "name": "layouts/application",
+          "rendered": {
+            "file": "app/views/layouts/_flash.html.haml",
+            "name": "layouts/_flash"
+          },
+          "type": "template"
+        }
+      ],
+      "user_input": "(Unresolved Model).new",
+      "warning_code": 2,
+      "warning_type": "Cross-Site Scripting"
+    },
+    {
+      "check_name": "Send",
+      "code": "e.send(params[:sort])",
+      "confidence": "High",
+      "cwe_id": [
+        77
+      ],
+      "file": "app/domain/order/report.rb",
+      "fingerprint": "b6f37c9554b4d49a833e78dbe62abf620850484816eacf605f905e4c2cebca6c",
+      "line": 250,
+      "link": "https://brakemanscanner.org/docs/warning_types/dangerous_send/",
+      "location": {
+        "class": "Order::Report",
+        "method": "sort_by_number",
+        "type": "method"
+      },
+      "message": "User controlled method execution",
+      "note": "sort column validated against an allowlist in sort_by_*? before dispatch",
+      "render_path": null,
+      "user_input": "params[:sort]",
+      "warning_code": 23,
+      "warning_type": "Dangerous Send"
+    },
+    {
+      "check_name": "Send",
+      "code": "e.send(params[:sort])",
+      "confidence": "High",
+      "cwe_id": [
+        77
+      ],
+      "file": "app/domain/billing/report.rb",
+      "fingerprint": "cf8314fa7913c422cff7ce6aeb988878a13082c0c963d9643530474d66711ddf",
+      "line": 178,
+      "link": "https://brakemanscanner.org/docs/warning_types/dangerous_send/",
+      "location": {
+        "class": "Billing::Report",
+        "method": "sort_by_string",
+        "type": "method"
+      },
+      "message": "User controlled method execution",
+      "note": "sort column validated against an allowlist in sort_by_*? before dispatch",
+      "render_path": null,
+      "user_input": "params[:sort]",
+      "warning_code": 23,
+      "warning_type": "Dangerous Send"
+    },
+    {
+      "check_name": "SQL",
+      "code": "receiver.plannings.joins(:work_item).joins(Arel.sql(\"INNER JOIN accounting_posts ON accounting_posts.work_item_id = ANY (work_items.path_ids)\")).definitive.where(\"? = #{category_ref}\", category_id)",
+      "confidence": "Weak",
+      "cwe_id": [
+        89
+      ],
+      "file": "app/domain/evaluations/evaluation.rb",
+      "fingerprint": "dba77e6737505f3a4f41b59d76df6aa1624e0fa831f96359679d801c4e908bad",
+      "line": 145,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "location": {
+        "class": "Evaluations::Evaluation",
+        "method": "planning_query",
+        "type": "method"
+      },
+      "message": "Possible SQL injection",
+      "note": "interpolated value is an internal constant/integer, not user input",
+      "render_path": null,
+      "user_input": "category_ref",
+      "warning_code": 0,
+      "warning_type": "SQL Injection"
+    },
+    {
+      "check_name": "Send",
+      "code": "e.send(params[:sort])",
+      "confidence": "High",
+      "cwe_id": [
+        77
+      ],
+      "file": "app/domain/order/report.rb",
+      "fingerprint": "f3e5cab1ca366bb3d94dd806a2635136def66716317aa8aa5bce901a6040fc6a",
+      "line": 242,
+      "link": "https://brakemanscanner.org/docs/warning_types/dangerous_send/",
+      "location": {
+        "class": "Order::Report",
+        "method": "sort_by_string",
+        "type": "method"
+      },
+      "message": "User controlled method execution",
+      "note": "sort column validated against an allowlist in sort_by_*? before dispatch",
+      "render_path": null,
+      "user_input": "params[:sort]",
+      "warning_code": 23,
+      "warning_type": "Dangerous Send"
+    },
+    {
+      "check_name": "SQL",
+      "code": "Arel.sql(\"work_items.path_ids[#{(category.path_ids.size + 1)}]\")",
+      "confidence": "Medium",
+      "cwe_id": [
+        89
+      ],
+      "file": "app/domain/evaluations/sub_work_items_eval.rb",
+      "fingerprint": "f889a876ed9de0f6f5b4ddf29f5bd78e018b67515eadf40fb469213f72cbd0ec",
+      "line": 31,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "location": {
+        "class": "Evaluations::SubWorkItemsEval",
+        "method": "division_column",
+        "type": "method"
+      },
+      "message": "Possible SQL injection",
+      "note": "interpolated value is an internal constant/integer, not user input",
+      "render_path": null,
+      "user_input": "(category.path_ids.size + 1)",
+      "warning_code": 0,
+      "warning_type": "SQL Injection"
+    },
+    {
+      "check_name": "CrossSiteScripting",
+      "code": "::Haml::AttributeBuilder.build_class(true, \"weeknav-element day\", overview_day_class(@worktimes, (Unresolved Model).new))",
+      "confidence": "Weak",
+      "cwe_id": [
+        79
+      ],
+      "file": "app/views/worktimes/_overview_day.html.haml",
+      "fingerprint": "fe537ab1dcd9f96213a291de1532736de61cf86037a42995824c25bc4b200154",
+      "line": 7,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "location": {
+        "template": "worktimes/_overview_day",
+        "type": "template"
+      },
+      "message": "Unescaped model attribute",
+      "note": "value is a numeric/internal string, not user input",
+      "render_path": [
+        {
+          "file": "app/views/worktimes/index.html.haml",
+          "line": 63,
+          "name": "worktimes/index",
+          "rendered": {
+            "file": "app/views/worktimes/_overview_day.html.haml",
+            "name": "worktimes/_overview_day"
+          },
+          "type": "template"
+        }
+      ],
+      "user_input": "(Unresolved Model).new",
+      "warning_code": 2,
+      "warning_type": "Cross-Site Scripting"
     }
   ],
-  "updated": "2019-02-07 17:45:27 +0100",
-  "brakeman_version": "4.4.0"
+  "updated": "2019-02-07 17:45:27 +0100"
 }

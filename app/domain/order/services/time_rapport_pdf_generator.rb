@@ -7,6 +7,7 @@
 
 class Order
   module Services
+    # Renders an order's time report (per worktime or per ticket) as a PDF with Prawn.
     class TimeRapportPdfGenerator
       # Predictable content length -> sized to fit exactly, nothing more.
       FIXED_COLUMN_HEADERS = { date: 'Datum', hours: 'Stunden', from: 'Von', to: 'Bis' }.freeze
@@ -97,7 +98,7 @@ class Order
           cells.borders = %i[bottom top] # Only horizontal lines
           cells.border_color = 'dddddd'
 
-          (0..row_length - 1).each do |index|
+          (0..(row_length - 1)).each do |index|
             cells[index, 0].font_style = :bold
           end
         end
@@ -135,13 +136,13 @@ class Order
         data << header
 
         # Add table rows
-        @worktimes.each do |w|
-          row = [w.date_string, format('%.2f', w.hours)]
-          row << (f_hour(w.from_start_time) || '') << (f_hour(w.to_end_time) || '') if params[:start_stop]
-          row << w.employee.to_s
-          row << w.work_item.to_s if params[:show_work_item]
-          row << w.ticket if params[:show_ticket]
-          row << w.description if params[:description]
+        @worktimes.each do |worktime|
+          row = [worktime.date_string, format('%.2f', worktime.hours)]
+          row << (f_hour(worktime.from_start_time) || '') << (f_hour(worktime.to_end_time) || '') if params[:start_stop]
+          row << worktime.employee.to_s
+          row << worktime.work_item.to_s if params[:show_work_item]
+          row << worktime.ticket if params[:show_ticket]
+          row << worktime.description if params[:description]
 
           data << row
         end
@@ -177,13 +178,13 @@ class Order
         # Add table rows
         @tickets.each do |tckt_key, tckt_val|
           row = [tckt_key, format('%.2f', tckt_val[:sum])]
-          row << f_date(tckt_val[:date][0]) << f_date(tckt_val[:date][0]) if params[:start_stop]
+          row << f_date(tckt_val[:date][0]) << f_date(tckt_val[:date][1]) if params[:start_stop]
           if params[:combine] == 'ticket'
             row << tckt_val[:employees].keys.sort.map { |e| @employees[e] }.join(', ')
           elsif params[:combine] == 'ticket_employee'
-            a = []
-            tckt_val[:employees].each_pair { |k, v| a << "#{@employees[k]} (#{v[0].round(2)}h)" }
-            row << a.sort.join(', ')
+            employee_hours = []
+            tckt_val[:employees].each_pair { |k, v| employee_hours << "#{@employees[k]} (#{v[0].round(2)}h)" }
+            row << employee_hours.sort.join(', ')
           end
           row << tckt_val[:descriptions].join(', ') if params[:description]
 
@@ -248,7 +249,7 @@ class Order
           table.row(0).background_color = 'f0f0f0'  # Light gray
           table.row(0).text_color = '333333'        # Dark gray
 
-          (1..table.row_length - 1).each do |index|
+          (1..(table.row_length - 1)).each do |index|
             table.row(index).background_color = index.even? ? 'f0f0f0' : 'ffffff'
           end
 

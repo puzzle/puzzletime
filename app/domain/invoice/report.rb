@@ -6,8 +6,10 @@
 #  https://github.com/puzzle/puzzletime.
 
 class Invoice
+  # Invoice report: invoices of the period, filtered, sorted and paginated.
   class Report
     include Filterable
+    include ReportFilters
 
     attr_reader :period, :params
 
@@ -47,12 +49,6 @@ class Invoice
 
     delegate :present?, to: :entries
 
-    def filters_defined?
-      filters = params.except(:action, :controller, :format, :utf8, :page,
-                              :clear)
-      filters.present? && filters.values.any?(&:present?)
-    end
-
     private
 
     def load_entries
@@ -61,7 +57,7 @@ class Invoice
     end
 
     def load_invoices
-      entries = Invoice.list.includes([order: %i[work_item responsible department]])
+      entries = Invoice.list.includes([{ order: %i[work_item responsible department] }])
       entries = filter_by_parent(entries).distinct
       entries = filter_by_order_property(entries, :kind_id, :responsible_id, :department_id).distinct
       entries = entries.in_period(@period)
