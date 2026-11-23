@@ -66,4 +66,4 @@ Naming/AccessorMethodName:
 
 Style/SymbolProc:
   Exclude:
-    - "app/serializers/api/v1/employee_serializer.rb"
+    - "app/serializers/api/**/*"

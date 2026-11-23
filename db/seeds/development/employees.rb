@@ -12,54 +12,63 @@ employees = Employee.seed(
     shortname: 'MW',
     password: 'a',
     email: 'waber@puzzle.ch',
+    ldapname: 'mwaber',
     management: true },
   { firstname: 'Andreas',
     lastname: 'Rava',
     shortname: 'AR',
     password: 'a',
     email: 'rava@puzzle.ch',
+    ldapname: 'arava',
     management: true },
   { firstname: 'Pascal',
     lastname: 'Zumkehr',
     shortname: 'PZ',
     password: 'a',
     email: 'zumkehr@puzzle.ch',
+    ldapname: 'pzumkehr',
     management: false },
   { firstname: 'Bruno',
     lastname: 'Santschi',
     shortname: 'BS',
     password: 'a',
     email: 'santschi@puzzle.ch',
+    ldapname: 'bsantschi',
     management: false },
   { firstname: 'Daniel',
     lastname: 'Illi',
     shortname: 'DI',
     password: 'a',
     email: 'illi@puzzle.ch',
+    ldapname: 'dilli',
     management: true },
   { firstname: 'Päscu',
     lastname: 'Simon',
     shortname: 'PSI',
     password: 'a',
     email: 'simon@puzzle.ch',
+    ldapname: 'psimon',
     management: false },
   { firstname: 'Thomas',
     lastname: 'Burkhalter',
     shortname: 'TBU',
     password: 'a',
     email: 'burkhalter@puzzle.ch',
+    ldapname: 'tburkhalter',
     management: false },
   { firstname: 'Andreas',
     lastname: 'Zuber',
     shortname: 'AZ',
     password: 'a',
     email: 'zuber@puzzle.ch',
+    ldapname: 'azuber',
     management: false },
   { firstname: 'Anna ',
     lastname: 'Mund',
     shortname: 'AM',
     password: 'a',
     email: 'mund@puzzle.ch',
+    ldapname: 'amund',
     management: false }
 )
 
@@ -97,7 +106,7 @@ employments = Employment.seed(
 )
 
 categories = EmploymentRoleCategory.seed(
-  :id,
+  :name,
   { name: 'Management' },
   { name: 'Unterstützend' },
   { name: 'Techboard' },
@@ -107,7 +116,7 @@ categories = EmploymentRoleCategory.seed(
 )
 
 roles = EmploymentRole.seed(
-  :id,
+  :name,
   { name: 'Software Engineer', billable: true, level: true, employment_role_category_id: nil },
   { name: 'Berufsbildner', billable: false, level: false, employment_role_category_id: categories[3].id },
   { name: 'Mitglied Technical Board', billable: false, level: false, employment_role_category_id: categories[2].id },
@@ -128,3 +137,12 @@ EmploymentRolesEmployment.seed(
   { employment_id: employments[7].id, employment_role_id: roles[1].id, employment_role_level_id: 3, percent: 30 },
   { employment_id: employments[8].id, employment_role_id: roles[0].id, employment_role_level_id: 4, percent: 60 }
 )
+
+authentications =
+  employees
+  .product(Authentication::PROVIDERS)
+  .map do |employee, provider|
+    { employee_id: employee.id, uid: employee.id, provider: provider, token: SecureRandom.hex(6), token_secret: SecureRandom.hex(6) }
+  end
+
+Authentication.seed(:employee_id, :provider, *authentications)

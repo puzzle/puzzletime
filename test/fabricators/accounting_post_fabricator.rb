@@ -22,6 +22,7 @@
 #  from_to_times_required  :boolean          default(FALSE), not null
 #  closed                  :boolean          default(FALSE), not null
 #  service_id              :integer
+#  meal_compensation       :boolean          default(FALSE), not null
 #  billing_reminder_active :boolean          default(TRUE), not null
 #
 

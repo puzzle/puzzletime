@@ -4,5 +4,9 @@
 	},
 	"Gemfile": {
 		"type": "gemfile"
+	},
+	"test/fabricators/*_fabricator.rb": {
+		"type": "fabricators",
+		"alternate": "app/models/{}.rb"
 	}
 }

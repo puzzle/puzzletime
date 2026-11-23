@@ -149,8 +149,6 @@ Rails.application.configure do
     Bullet.add_safelist type: :unused_eager_loading, class_name: 'Order',          association: :targets
     Bullet.add_safelist type: :unused_eager_loading, class_name: 'Order',          association: :order_uncertainties
     Bullet.add_safelist type: :unused_eager_loading, class_name: 'Expense',        association: :reviewer
-    Bullet.add_safelist type: :n_plus_one_query,     class_name: 'Order',          association: :order_team_members
-    Bullet.add_safelist type: :n_plus_one_query,     class_name: 'Order',          association: :team_members
     Bullet.add_safelist type: :n_plus_one_query,     class_name: 'Order',          association: :order_contacts
     Bullet.add_safelist type: :n_plus_one_query,     class_name: 'WorkItem',       association: :parent
     Bullet.add_safelist type: :n_plus_one_query,     class_name: 'BillingAddress', association: :client

@@ -24,10 +24,11 @@ module Evaluations
 
       divisions = @evaluation.divisions.list
 
-      assert_equal 3, divisions.size
-      assert_equal work_items(:pbs), divisions[0]
-      assert_equal work_items(:puzzle), divisions[1]
-      assert_equal work_items(:swisstopo), divisions[2]
+      assert_equal 4, divisions.size
+      assert_equal work_items(:api_client), divisions[0] # APINX sorts before PBS/PITC/STOP
+      assert_equal work_items(:pbs), divisions[1]
+      assert_equal work_items(:puzzle), divisions[2]
+      assert_equal work_items(:swisstopo), divisions[3]
 
       assert_sum_times 0, 20, 32, 33, work_items(:puzzle)
       assert_sum_times 3, 10, 21, 21, work_items(:swisstopo)
