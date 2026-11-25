@@ -6,6 +6,7 @@
 #  https://github.com/puzzle/puzzletime.
 
 module Plannings
+  # Shows, edits and saves a member's markdown planning note inside the company planning modal.
   class CompanyNotesController < ApplicationController
     before_action :set_employee
 
@@ -24,8 +25,8 @@ module Plannings
       authorize!(:update_planning_note, @employee)
 
       if @employee.update(planning_note_params)
-        # Response shape expected by processCreatedEntry (app/assets/javascripts/modal_create.js.coffee)
-        render plain: "'#{helpers.escape_javascript({ content: note_link_html }.to_json)}'"
+        # Response shape expected by processCreatedEntry (app/javascript/modal_create.js): JSON string, JSON-encoded twice
+        render plain: { content: note_link_html }.to_json.to_json
       else
         render :edit, formats: :html, layout: false, status: :unprocessable_content
       end
