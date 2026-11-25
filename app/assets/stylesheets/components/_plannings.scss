@@ -494,6 +494,49 @@ table.company-planning.table-condensed {
   $company-week-width: 34px;
   width: 100%;
 
+  // main is the scroll container; pin both header rows to its top.
+  // Header cells are opaque (see .table-stripedbody), so rows don't show through.
+  $first-header-row-height: 18px;
+  // -1px: with collapsed borders, rows scrolling underneath peek out above a cell at top: 0
+  $sticky-top: -1px;
+  thead tr.head > * {
+    position: sticky;
+    top: $sticky-top;
+    z-index: 2;
+  }
+  thead tr.head + tr.head > * {
+    top: $sticky-top + $first-header-row-height;
+  }
+
+  // totals row stays pinned directly below the two header rows
+  tr.planning-company-totals > td {
+    position: sticky;
+    top: $sticky-top + $first-header-row-height * 2;
+    z-index: 2;
+  }
+  tr.planning-company-totals > td.head {
+    background-color: #fff;
+  }
+
+  // name column stays visible on horizontal scroll; -1px hides cells peeking out under the collapsed border
+  td.planning-name {
+    position: sticky;
+    left: -1px;
+    z-index: 1;
+    background-color: #fff;
+    box-shadow: 1px 0 0 #ddd;
+  }
+  // the note preview popup lives inside this cell: lift it above the sticky name cells of the rows below
+  td.planning-name:hover,
+  td.planning-name:focus-within {
+    z-index: 2;
+  }
+  // corner cells are pinned on both axes: keep them above everything else
+  thead tr.head > td.planning-name,
+  tr.planning-company-totals > td.planning-name {
+    z-index: 3;
+  }
+
   th,
   td {
     min-width: $company-week-width;
@@ -620,6 +663,13 @@ table.company-planning.table-condensed {
     ol {
       margin: 0 0 0.25em;
     }
+    // compact preview: GitHub's heading sizes and rules are too large for a 320px popup
+    h1, h2, h3, h4, h5, h6 {
+      margin: 0.5em 0 0.25em;
+      padding: 0;
+      border: 0;
+      font-size: 1.1em;
+    }
     > .planning-note-markdown > :last-child {
       margin-bottom: 0;
     }
@@ -656,14 +706,43 @@ table.company-planning.table-condensed {
     }
   }
 
+  // Striped member rows. Bootstrap's checkerboard striping is nearly invisible, and the
+  // zero-heat cells are white !important, so both are overridden here. Cells stay opaque
+  // because the name column is sticky.
+  $stripe-color: #f0f2f5;
+  > tbody > tr > td {
+    background-color: #fff;
+  }
+  > tbody > tr.planning-stripe > td {
+    background-color: $stripe-color;
+  }
+  > tbody > tr.planning-stripe > td.heat-0 {
+    background-color: $stripe-color !important;
+  }
+
+  // Detail rows: blue-tinted band with an accent bar on the name, planned cells highlighted,
+  // so they read as belonging to the member row above and not as more members.
+  $details-bg: #eef5fb;
+  $details-accent: #238BCA;
   tr.planning-details {
     font-size: 10px;
-    color: #777;
-    background-color: #fafafa;
+    color: #4a6379;
+
+    > td,
+    > td:nth-child(n) {
+      background-color: $details-bg;
+    }
+
+    > td.planning-details-value {
+      background-color: #cfe4f5;
+      color: #1b4a6e;
+      font-weight: 500;
+    }
 
     td.head {
       padding-left: 1.5em;
       font-weight: normal;
+      box-shadow: inset 3px 0 0 $details-accent, 1px 0 0 #ddd;
     }
 
     // zero intrinsic width: long work item labels take the column width and are truncated instead of widening it
@@ -680,26 +759,20 @@ table.company-planning.table-condensed {
   }
 }
 
-.planning-note-markdown {
+// Typography comes from vendor/github-markdown (.markdown-body); only adapt it to the surrounding UI.
+.planning-note-markdown.markdown-body {
+  background: transparent;
+  color: inherit;
+  font-size: inherit;
+  line-height: 1.5;
   text-align: left;
   overflow-wrap: break-word;
+}
 
-  > :first-child {
-    margin-top: 0;
-  }
-  > :last-child {
-    margin-bottom: 0;
-  }
-
-  // notes are short: keep headings close to body size
-  h1, h2, h3, h4, h5, h6 {
-    margin: 0.6em 0 0.3em;
-    font-weight: bold;
-    line-height: 1.2;
-  }
-  h1 { font-size: 1.4em; }
-  h2 { font-size: 1.25em; }
-  h3, h4, h5, h6 { font-size: 1.1em; }
+// edit button in the note preview modal: right-aligned, spaced from the text
+.planning-note-actions {
+  margin: 1.2em 0 0;
+  text-align: right;
 }
 
 .planning-note-source {

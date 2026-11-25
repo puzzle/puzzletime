@@ -15,7 +15,7 @@
 -# which makes the HTML parser close the outer link early and move the preview out of it
 - if filled
   .planning-note-preview
-    .planning-note-markdown
+    .planning-note-markdown.markdown-body
       = planning_note_markdown(lines.first(10).join)
       - if lines.size > 10
         %p …

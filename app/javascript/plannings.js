@@ -307,6 +307,15 @@ $(document).on('turbolinks:load', function () {
   app.plannings.destroy()
   return app.plannings.init()
 })
+
+// company planning: the +/- in front of a member shows or hides its detail rows
+$(document).on('click', '.planning-details-toggle', function (event) {
+  event.preventDefault()
+  const collapsed = $(this).hasClass('collapsed')
+  $(this).toggleClass('collapsed', !collapsed).attr('aria-expanded', String(collapsed))
+  $($(this).data('target')).toggleClass('hidden', !collapsed)
+})
+
 function __guard__ (value, transform) {
   return (typeof value !== 'undefined' && value !== null) ? transform(value) : undefined
 }

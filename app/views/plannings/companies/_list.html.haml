@@ -21,11 +21,11 @@
               = weekly_planned_of_total_percent(@overview, date)
               %br
               FTE = Anzahl Vollzeitstellen
-    - @overview.boards.each do |board|
-      %tr
+    - @overview.boards.each_with_index do |board, index|
+      %tr{ class: ('planning-stripe' if index.odd?) }
         %td.head.nowrap.planning-name
           - if board.detail_rows.present?
-            %a.planning-details-toggle.collapsed{ href: "#planning-details-#{board.employee.id}", role: 'button', title: 'Detailplanung ein-/ausblenden', 'aria-expanded': 'false', data: { toggle: 'collapse', target: ".planning-details-#{board.employee.id}" } }
+            %a.planning-details-toggle.collapsed{ href: "#planning-details-#{board.employee.id}", role: 'button', title: 'Detailplanung ein-/ausblenden', 'aria-expanded': 'false', data: { target: ".planning-details-#{board.employee.id}" } }
           - else
             %span.planning-details-placeholder
           = render 'note', employee: board.employee
@@ -38,6 +38,3 @@
               = board.weekly_planned_percent(date).to_f.round
               %span= weekly_planned_of_total_percent(board, date)
       = render 'details', board: board
-
-  %tfoot
-    = render 'header'

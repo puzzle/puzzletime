@@ -1,10 +1,10 @@
 - if @employee.planning_note.present?
-  .planning-note-markdown= planning_note_markdown(@employee.planning_note)
+  .planning-note-markdown.markdown-body= planning_note_markdown(@employee.planning_note)
 - else
   %p.text-muted Keine Notiz
 
 - if can?(:update_planning_note, @employee)
-  %p
+  %p.planning-note-actions
     = link_to edit_plannings_company_note_path(@employee),
               class: 'btn btn-default btn-sm',
               data: { modal: '#modal',

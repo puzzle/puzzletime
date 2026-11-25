@@ -3,13 +3,13 @@
 -#  or later. See the COPYING file at the top-level directory or at
 -#  https://github.com/puzzle/puzzletime.
 
--# The first row's id lets Bootstrap's collapse find exactly this member's toggle (it looks up
--# triggers by href="#<target id>"; without an id it matched every toggle with href="#").
+-# Rows start hidden (Tailwind's `hidden`); the .planning-details-toggle click handler in plannings.js toggles it.
+-# The first row's id is the toggle's href target (aria only).
 - board.detail_rows.each_with_index do |(label, percents), index|
-  %tr.planning-details.collapse{ class: "planning-details-#{board.employee.id}",
+  %tr.planning-details.hidden{ class: "planning-details-#{board.employee.id}",
                                  id: index.zero? ? "planning-details-#{board.employee.id}" : nil }
     %td.head.small.planning-name{ title: label }
       %span.planning-name-label= label
     - @period.step(7) do |date|
       - value = percents[date].to_f
-      %td= value.nonzero? ? value.round : nil
+      %td{ class: ('planning-details-value' if value.nonzero?) }= value.nonzero? ? value.round : nil
